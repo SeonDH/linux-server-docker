@@ -1,0 +1,138 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>7. Docker 활용: 파일 연결과 결과 보존 | 리눅스 응용 보충 과정</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a aria-current="page" href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="docker-----">7. Docker 활용: 파일 연결과 결과 보존</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#local-mount">문이 하나 더 생긴 같은 보관함</a></li><li><a href="#pc-">[실습] 따라 하기 · 결과를 PC에 남기기</a></li><li><a href="#section">[실습] 반복 연습 · 결과 보관함 바꾸기</a></li><li><a href="#section-4">확인 질문</a></li><li><a href="#section-5">이 장의 정리</a></li></ul></details>
+
+<blockquote>
+  <p><strong>실습 환경:</strong> 호스트 Bash
+<strong>준비:</strong> 0장의 input·output 폴더</p>
+</blockquote>
+
+<p><strong>학습 목표:</strong> 컨테이너에서 만든 결과를 PC 폴더에 남길 수 있습니다.</p>
+
+<h2 id="local-mount">문이 하나 더 생긴 같은 보관함</h2>
+<p>PC의 폴더를 컨테이너에서도 사용할 수 있게 연결하면, 같은 보관함에 다른 문이 생긴 것처럼 두 경로에서 파일을 봅니다. 파일을 자동으로 복사하는 방식이 아닙니다. 이 연결을 bind mount라고 합니다.</p>
+
+<pre><code class="language-text">PC의 output 폴더 ↔ 컨테이너의 /output
+           연결된 같은 파일
+
+</code></pre>
+
+<h2 id="pc-">[실습] 따라 하기 · 결과를 PC에 남기기</h2>
+<p><strong>실습 환경: 호스트 Bash.</strong> Windows는 WSL Ubuntu, macOS는 터미널입니다. course-linux 안이라면 exit로 나옵니다.</p>
+
+<pre><code class="language-bash">cd "$HOME/linux-server-lab"
+mkdir -p output
+docker run --rm \
+  --user "$(id -u):$(id -g)" \
+  --mount "type=bind,src=$PWD/input,dst=/input,readonly" \
+  --mount "type=bind,src=$PWD/output,dst=/output" \
+  alpine:3.21 sh -c 'wc -l /input/samples.tsv &gt; /output/line-count.txt'
+cat output/line-count.txt
+
+</code></pre>
+<p><strong>기대 결과:</strong> 헤더를 포함한 4줄입니다. 표시 예시는 <code>4 /input/samples.tsv</code>입니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>부분</th>
+      <th>뜻</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>src=…/input</td>
+      <td>PC 쪽 입력 폴더</td>
+    </tr>
+    <tr>
+      <td>dst=/input</td>
+      <td>컨테이너에서 보는 입력 경로</td>
+    </tr>
+    <tr>
+      <td>readonly</td>
+      <td>입력을 바꾸지 않는 설정</td>
+    </tr>
+    <tr>
+      <td>src=…/output</td>
+      <td>PC 쪽 결과 폴더</td>
+    </tr>
+    <tr>
+      <td>dst=/output</td>
+      <td>컨테이너가 결과를 쓰는 경로</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><code>--user</code>는 PC 쪽 사용자 ID로 쓰는 설정입니다. 특히 Linux에서 결과가 root 소유가 되는 문제를 줄입니다. 지금은 모두 외우지 말고 입력·출력의 연결 경로를 읽는 데 집중하세요.</p>
+
+<p>컨테이너는 –rm으로 없어졌지만 line-count.txt는 PC 폴더에 남았습니다. Windows에서는 WSL Ubuntu 홈 폴더, macOS에서는 Mac 홈 폴더입니다.</p>
+
+<h2 id="section">[실습] 반복 연습 · 결과 보관함 바꾸기</h2>
+<p><strong>20~25분 · 호스트 Bash.</strong> 앞의 line-count.txt 생성이 성공한 다음 진행합니다.</p>
+
+<h3 id="section-1">바꿔 보기</h3>
+<p>결과를 output 대신 <code>output-review</code>에 저장하려고 합니다. PC에 새 폴더를 만듭니다.</p>
+
+<pre><code class="language-bash">cd "$HOME/linux-server-lab"
+mkdir -p output-review
+
+</code></pre>
+<p>따라 하기 명령에서 <strong>PC 쪽 출력 경로만</strong> 바꿔 실행하세요. 컨테이너의 출력 경로 /output은 그대로 둡니다.</p>
+<details>
+  <summary>힌트 보기</summary>
+  <p>출력 mount의 src를 $PWD/output-review로 바꿉니다. dst는 바꾸지 않습니다.</p>
+</details>
+<details>
+  <summary>[답지] 해설 보기</summary>
+
+  <pre><code class="language-bash">docker run --rm \
+  --user "$(id -u):$(id -g)" \
+  --mount "type=bind,src=$PWD/input,dst=/input,readonly" \
+  --mount "type=bind,src=$PWD/output-review,dst=/output" \
+  alpine:3.21 sh -c 'wc -l /input/samples.tsv &gt; /output/line-count.txt'
+cat output-review/line-count.txt
+
+</code></pre>
+  <p>4줄이라는 결과가 새 PC 폴더에 남습니다. 출력 파일이 이미 있으면 덮어씁니다.</p>
+</details>
+
+<h3 id="section-2">고쳐 보기</h3>
+<p>다음 명령은 PC에 예제 파일이 있어도 실패합니다. 빠진 연결을 찾아 고치세요.</p>
+
+<pre><code class="language-bash">docker run --rm alpine:3.21 cat /input/samples.tsv
+
+</code></pre>
+<details>
+  <summary>힌트 보기</summary>
+  <p>PC의 input 폴더가 컨테이너의 /input에 자동으로 연결되지는 않습니다.</p>
+</details>
+<details>
+  <summary>[답지] 해설 보기</summary>
+
+  <pre><code class="language-bash">docker run --rm \
+  --mount "type=bind,src=$PWD/input,dst=/input,readonly" \
+  alpine:3.21 cat /input/samples.tsv
+
+</code></pre>
+  <p>4줄의 예제 내용이 보이면 성공입니다. 호스트의 작업 폴더에서 실행합니다.</p>
+</details>
+
+<h3 id="section-3">설명하기</h3>
+<p>PC의 폴더 이름은 output-review인데 컨테이너에서는 왜 /output에 썼을까요? 컨테이너가 삭제된 뒤에도 결과가 남는 이유를 말하세요. Windows는 WSL Ubuntu의 폴더, macOS는 홈 폴더의 실제 결과도 확인합니다.</p>
+
+<h2 id="section-4">확인 질문</h2>
+<p>결과 파일은 이미지 안에 들어 있나요? 컨테이너를 삭제하면 위 결과도 사라지나요?</p>
+<details><summary>[답지] 해설 보기</summary>
+결과는 연결한 PC 폴더에 있습니다. 컨테이너를 삭제해도 PC 폴더의 결과는 남습니다. 연결한 파일을 컨테이너에서 삭제하면 PC에서도 삭제될 수 있으므로 개인 실습 폴더만 사용합니다.
+</details>
+
+<p>볼륨 비교, 읽기 전용 오류와 Dockerfile 만들기는 <a href="deep-dive.html">선택 자료</a>입니다. 모두 지금 따라 할 필요는 없습니다.</p>
+
+<p>문제가 생겼다면 <a href="08-troubleshooting.html#docker-trouble">8장 Docker 오류 실습</a>에서 같은 증상을 찾아본다.</p>
+
+<h2 id="section-5">이 장의 정리</h2>
+
+<ul>
+  <li>호스트 경로와 컨테이너 경로는 다를 수 있다.</li>
+  <li>연결한 PC 폴더의 결과는 컨테이너 삭제 후에도 남는다.</li>
+</ul>
+</article><footer><a href="06-process.html">← 6. 프로세스와 자원</a><a href="08-troubleshooting.html">8. 트러블슈팅 →</a></footer><p class="context-note">리눅스 응용 보충 과정 · 개인 실습 폴더와 자신의 작업을 확인한다.</p></main><script src="assets/app.js"></script></body></html>

@@ -1,0 +1,132 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>핵심 용어 다시 보기 | 리눅스 응용 보충 과정</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><div class="nav-group">참고 자료</div><a aria-current="page" href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="section">핵심 용어 다시 보기</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#section-1">자주 헷갈리는 쌍</a></li></ul></details>
+<p>## 처음에는 한 문장으로 이해한다</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>용어</th>
+      <th>쉬운 뜻</th>
+      <th>관련 장</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CPU</td>
+      <td>계산하고 명령을 처리하는 자원</td>
+      <td>1장</td>
+    </tr>
+    <tr>
+      <td>메모리 RAM</td>
+      <td>작업 중 자료를 올리는 공간</td>
+      <td>1장</td>
+    </tr>
+    <tr>
+      <td>디스크·스토리지</td>
+      <td>파일을 보관하는 공간</td>
+      <td>1·5장</td>
+    </tr>
+    <tr>
+      <td>I/O</td>
+      <td>파일이나 장치에 읽고 쓰는 일</td>
+      <td>1·4장</td>
+    </tr>
+    <tr>
+      <td>디렉터리</td>
+      <td>파일을 담는 폴더</td>
+      <td>3장</td>
+    </tr>
+    <tr>
+      <td>경로</td>
+      <td>파일과 폴더를 찾는 주소</td>
+      <td>3장</td>
+    </tr>
+    <tr>
+      <td>PATH</td>
+      <td>실행할 명령을 찾는 폴더 목록</td>
+      <td>3장</td>
+    </tr>
+    <tr>
+      <td>권한</td>
+      <td>누가 읽고 쓰고 실행할 수 있는지의 허가</td>
+      <td>3장</td>
+    </tr>
+    <tr>
+      <td>프로세스·PID</td>
+      <td>실행 중인 프로그램과 그 번호</td>
+      <td>6장</td>
+    </tr>
+    <tr>
+      <td>로그</td>
+      <td>실행 중 메시지와 오류를 남긴 기록</td>
+      <td>4·8장</td>
+    </tr>
+    <tr>
+      <td>이미지</td>
+      <td>도구와 필요한 파일이 준비된 원본</td>
+      <td>2장</td>
+    </tr>
+    <tr>
+      <td>컨테이너</td>
+      <td>이미지로 만든 개별 작업 공간</td>
+      <td>2장</td>
+    </tr>
+    <tr>
+      <td>bind mount</td>
+      <td>지정한 호스트 폴더를 컨테이너에 연결</td>
+      <td>7장</td>
+    </tr>
+    <tr>
+      <td>볼륨</td>
+      <td>Docker가 관리하는 별도 저장공간</td>
+      <td>2장</td>
+    </tr>
+    <tr>
+      <td>호스트</td>
+      <td>여기서는 Docker를 조작하는 PC·WSL 환경</td>
+      <td>0·7장</td>
+    </tr>
+    <tr>
+      <td>Docker CLI</td>
+      <td>요청을 보내는 docker 명령</td>
+      <td>2장</td>
+    </tr>
+    <tr>
+      <td>Docker Engine</td>
+      <td>요청을 처리하고 컨테이너를 실행하는 엔진</td>
+      <td>2장</td>
+    </tr>
+    <tr>
+      <td>Docker Desktop</td>
+      <td>PC에서 엔진과 Linux 환경을 준비하는 앱</td>
+      <td>0·2장</td>
+    </tr>
+    <tr>
+      <td>마운트</td>
+      <td>파일시스템 등을 특정 경로에 연결</td>
+      <td>5장</td>
+    </tr>
+    <tr>
+      <td>OOM</td>
+      <td>메모리 부족</td>
+      <td>메모리 실습</td>
+    </tr>
+    <tr>
+      <td>SIF</td>
+      <td>Apptainer 등에서 쓰는 이미지 파일 형식</td>
+      <td>9장</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="section-1">자주 헷갈리는 쌍</h2>
+<ul>
+  <li>이미지와 컨테이너: 준비된 원본과 개별 작업 공간이다.</li>
+  <li>메모리와 디스크: 작업 중 공간과 파일 보관 공간이다.</li>
+  <li>한도와 사용량: 허용된 최대 범위와 실제 사용하는 양이다.</li>
+  <li>정지와 삭제: 멈춰 보관하는 것과 작업 공간을 없애는 것이다.</li>
+  <li>호스트 경로와 컨테이너 경로: 같은 파일을 연결해도 보이는 주소는 다를 수 있다.</li>
+</ul>
+
+<p>모든 용어를 외우지 않아도 된다. 실습 중 헷갈릴 때 이 표에서 다시 확인한다.</p>
+</article><footer><span></span><a href="checklist.html">작업 체크리스트 →</a></footer><p class="context-note">리눅스 응용 보충 과정 · 개인 실습 폴더와 자신의 작업을 확인한다.</p></main><script src="assets/app.js"></script></body></html>

@@ -1,0 +1,118 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>1. 컴퓨터 자원에 대한 이해 | 리눅스 응용 보충 과정</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a aria-current="page" href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="section">1. 컴퓨터 자원에 대한 이해</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#section-1">책상에서 일을 하는 모습으로 생각해 보기</a></li><li><a href="#section-2">[실습] 따라 하기 · 내 작업 공간의 자원 보기</a></li><li><a href="#section-3">[실습] 반복 활동 · 숫자보다 자원의 종류 구분하기</a></li><li><a href="#section-7">확인 질문</a></li><li><a href="#section-8">이 장의 정리</a></li></ul></details>
+
+<blockquote>
+  <p><strong>실습 환경:</strong> course-linux 컨테이너
+<strong>준비:</strong> 0장 완료</p>
+</blockquote>
+
+<p><strong>학습 목표:</strong> CPU는 계산하고, 메모리는 작업 중인 자료를 놓고, 디스크는 파일을 보관합니다.</p>
+
+<h2 id="section-1">책상에서 일을 하는 모습으로 생각해 보기</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>컴퓨터 용어</th>
+      <th>책상에 비유하면</th>
+      <th>하는 일</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CPU</td>
+      <td>일하는 사람</td>
+      <td>명령을 처리하고 계산합니다.</td>
+    </tr>
+    <tr>
+      <td>메모리 RAM</td>
+      <td>책상 위 작업 공간</td>
+      <td>지금 사용하는 자료를 올려 둡니다.</td>
+    </tr>
+    <tr>
+      <td>디스크</td>
+      <td>서랍</td>
+      <td>파일을 오래 보관합니다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>서랍이 크다고 책상 위 공간도 커지는 것은 아닙니다. 그래서 디스크가 넉넉해도 메모리가 부족할 수 있습니다. 프로그램이 느리면 계산 중인지, 파일을 읽거나 쓰느라 기다리는지도 생각해야 합니다. 파일 읽기·쓰기를 <strong>I/O</strong>라고 합니다.</p>
+
+<p>코어는 CPU 안의 계산 단위입니다. 여러 코어는 여러 작업을 함께 처리할 수 있습니다. 스레드는 프로그램 안의 일하는 흐름입니다. 지금은 <strong>“많은 일을 동시에 시키면 CPU와 메모리를 더 사용할 수 있다”</strong>는 정도부터 이해하세요.</p>
+
+<h2 id="section-2">[실습] 따라 하기 · 내 작업 공간의 자원 보기</h2>
+<p><strong>실습 환경:</strong> 0장의 course-linux 컨테이너. 아직 들어오지 않았다면 호스트에서 <code>docker start -ai course-linux</code>를 실행하세요.</p>
+
+<pre><code class="language-bash">nproc
+free -h
+df -h .
+
+</code></pre>
+
+<table>
+  <thead>
+    <tr>
+      <th>명령</th>
+      <th>무엇을 보나요?</th>
+      <th>처음에는 이 부분만</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>nproc</td>
+      <td>사용 가능한 것으로 보고되는 CPU 수</td>
+      <td>출력된 숫자</td>
+    </tr>
+    <tr>
+      <td>free -h</td>
+      <td>메모리 상태</td>
+      <td>available: 사용할 수 있는 메모리</td>
+    </tr>
+    <tr>
+      <td>df -h .</td>
+      <td>현재 경로의 저장공간</td>
+      <td>Avail: 여유, Use%: 사용 비율</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>숫자를 외우지 않아도 됩니다. “CPU·메모리·디스크는 다른 자원”임을 구분하세요. 컨테이너에서 보는 값은 PC 전체의 값이나 실행 제한과 다를 수 있습니다. 실제 서버에서는 관리자가 할당한 범위 안에서 작업합니다.</p>
+
+<h2 id="section-3">[실습] 반복 활동 · 숫자보다 자원의 종류 구분하기</h2>
+<p><strong>10분 · 관찰·비교 활동.</strong> 앞의 자원 보기를 따라 한 뒤 진행합니다.</p>
+
+<h3 id="section-4">바꿔 보기</h3>
+<p>macOS의 활성 상태 보기 또는 Windows 작업 관리자를 열어 CPU·메모리를 찾아보세요. 컨테이너에서 본 화면과 항목 이름이 달라도 괜찮습니다. 각 화면에서 CPU·메모리·디스크 정보를 어디서 확인했는지 적습니다.</p>
+
+<h3 id="section-5">고쳐 보기</h3>
+<p>다음 설명 중 잘못된 부분을 찾아 바르게 말하세요.
+- “디스크가 1 TB니까 메모리도 충분하다.”
+- “서버 CPU가 많이 보이니까 나 혼자 전부 써도 된다.”</p>
+<details>
+  <summary>힌트 보기</summary>
+  <p>책상 위 공간과 서랍은 다른 자원입니다. 공유 서버에는 다른 사용자도 있습니다.</p>
+</details>
+<details>
+  <summary>[답지] 해설 보기</summary>
+  <p>디스크는 파일 보관, 메모리는 작업 중 자료를 놓는 공간입니다. 둘은 별도로 확인합니다. 사용할 CPU는 보이는 전체 수가 아니라 할당받은 범위를 기준으로 합니다.</p>
+</details>
+
+<h3 id="section-6">설명하기</h3>
+<p>짝에게 CPU·메모리·디스크를 책상 비유로 각각 한 문장씩 설명하세요. 어려우면 앞의 표를 보면서 말해도 됩니다.</p>
+
+<h2 id="section-7">확인 질문</h2>
+<p>“파일 저장 공간이 부족하다”는 오류에 CPU를 늘리면 해결될까요?</p>
+<details><summary>[답지] 해설 보기</summary>
+아니요. 계산할 사람을 늘려도 서랍은 커지지 않습니다. 저장할 경로의 디스크 공간을 확인해야 합니다.
+</details>
+
+<p><a href="deep-dive.html">더 자세한 자원 설명</a>은 나중에 읽어도 됩니다.</p>
+
+<h2 id="section-8">이 장의 정리</h2>
+
+<ul>
+  <li>CPU는 계산, 메모리는 작업 중 자료, 디스크는 파일 보관을 맡는다.</li>
+  <li>같은 서버의 자원을 다른 사용자와 공유한다.</li>
+</ul>
+</article><footer><a href="setup.html">← 0. Docker 설치</a><a href="02-docker.html">2. Docker 개념 →</a></footer><p class="context-note">리눅스 응용 보충 과정 · 개인 실습 폴더와 자신의 작업을 확인한다.</p></main><script src="assets/app.js"></script></body></html>

@@ -1,0 +1,129 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>[실습] 메모리 부족과 오류 확인 - 15분 | 리눅스 응용 보충 과정</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a aria-current="page" href="practice-memory.html">[실습] 메모리 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="section">[실습] 메모리 부족과 오류 확인 - 15분</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#memory-limit-demo">메모리가 부족하면 어떻게 될까요?</a></li></ul></details>
+
+<blockquote>
+  <p><strong>실습 환경:</strong> 호스트 Bash. Windows는 WSL Ubuntu, macOS는 터미널에서 실행한다.
+<strong>준비:</strong> Docker Desktop 실행 및 0장 완료.</p>
+</blockquote>
+
+<h2 id="memory-limit-demo">메모리가 부족하면 어떻게 될까요?</h2>
+<p><strong>비교 실습 · 10~15분 · 호스트 Bash.</strong></p>
+
+<h3 id="section-1">서랍은 크지만 책상이 너무 작은 상황</h3>
+<p>프로그램이 64 MiB 자료를 책상 위에 올리려고 합니다. 책상에 허용된 공간은 32 MiB뿐이면 일을 계속할 수 없겠죠? 이번 실습은 같은 프로그램을 좁은 책상과 넓은 책상에서 실행합니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>실행</th>
+      <th>프로그램이 요청하는 자료</th>
+      <th>메모리 한도</th>
+      <th>예상</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>첫 번째</td>
+      <td>64 MiB</td>
+      <td>32 MiB</td>
+      <td>메모리 부족으로 작업 종료</td>
+    </tr>
+    <tr>
+      <td>두 번째</td>
+      <td>같은 64 MiB</td>
+      <td>128 MiB</td>
+      <td>요청 성공·정상 종료</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Python 자체도 메모리를 사용하므로 자료 크기만큼의 한도만 주면 충분하다고 가정하지 않습니다. 큰 파일을 전부 메모리에 올리는 분석에서도 같은 원리가 적용됩니다.</p>
+
+<h3 id="section-2">따라 하기 · 비교 도구 실행</h3>
+<p><a href="labs/memory-limit.sh">메모리 실습 스크립트 내려받기</a>를 저장한 <strong>호스트 Bash</strong>에서 실행합니다. 저장소를 내려받았다면 labs 폴더의 파일을 사용합니다.</p>
+
+<pre><code class="language-bash">bash memory-limit.sh
+
+</code></pre>
+<p>저장소 루트에서는 <code>bash labs/memory-limit.sh</code>로 실행합니다. 첫 실행은 Python 이미지 다운로드가 필요합니다. 컨테이너별 메모리만 작게 제한하며 PC 메모리를 채우는 작업은 하지 않습니다. 각 실행에는 CPU 0.25 한도와 30초 종료 장치를 두었습니다. 스크립트는 자신의 실습 컨테이너만 자동 정리합니다.</p>
+
+<h3 id="section-3">결과 읽기</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>결과 항목</th>
+      <th>뜻</th>
+      <th>예상 출력</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Requesting 64 MiB</td>
+      <td>자료를 메모리에 올리려 함</td>
+      <td>두 경우에 모두 표시</td>
+    </tr>
+    <tr>
+      <td>Allocation succeeded</td>
+      <td>자료를 올리는 데 성공</td>
+      <td>128 MiB 한도에서 표시</td>
+    </tr>
+    <tr>
+      <td>Exit code</td>
+      <td>프로그램이 어떻게 끝났는지</td>
+      <td>실패는 0이 아님, 성공은 0</td>
+    </tr>
+    <tr>
+      <td>OOMKilled</td>
+      <td>메모리 부족으로 종료됐다는 컨테이너 상태</td>
+      <td>32 MiB는 true, 128 MiB는 false</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>OOM은 Out Of Memory, 메모리 부족을 뜻합니다. 낮은 한도에서는 보통 종료 코드 137이 관찰될 수 있습니다. <strong>137만으로 OOM이라고 단정하지 말고 OOMKilled와 로그를 함께 확인합니다.</strong> 환경에 따라 예상과 다르면 한도 설정·로그·종료 상태를 함께 기록하고 비교합니다.</p>
+
+<h3 id="section-4">실제 검증에서 관찰한 예시</h3>
+<p>같은 PC에서 64 MiB를 요청한 결과입니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>메모리 한도</th>
+      <th>관찰</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>32 MiB</td>
+      <td>종료 코드 137, OOMKilled=true, 성공 메시지 없음</td>
+    </tr>
+    <tr>
+      <td>128 MiB</td>
+      <td>할당 성공 메시지, 종료 코드 0, OOMKilled=false</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>이 결과는 컨테이너별 한도 안에서 검증했습니다. 제한 없는 작업으로 PC 전체 메모리를 고갈시키지는 않았습니다.</p>
+
+<h3 id="section-5">바꿔 보기 · 해결 방법을 말로 선택하기</h3>
+<p>이 작업을 성공시키려면 어떤 방법이 있을까요?
+- 필요한 메모리를 충분히 할당받아 한도를 조정한다.
+- 프로그램이 지원하면 자료를 나누어 처리한다.
+- 동시에 실행하는 작업 수를 줄여 전체 메모리 사용을 줄인다.</p>
+
+<p>한도 조정은 해당 작업의 실패를 피하는 방법이지만, 서버 전체 여유를 확인하지 않고 무조건 늘리지는 않습니다. 여러 작업의 합산 사용량과 기관의 할당을 함께 고려합니다.</p>
+
+<h3 id="section-6">고쳐 보기와 설명하기</h3>
+<p>“디스크가 많이 남았으니 메모리 부족은 아니다”, “메모리 제한을 없애면 모두 안전해진다”는 설명을 고치세요.</p>
+<details>
+  <summary>쉬운 해설</summary>
+  <p>디스크와 메모리는 서랍과 책상처럼 다릅니다. 메모리 제한 없이 큰 작업을 실행하면 가용 메모리를 많이 사용해 다른 작업도 느려지거나 종료될 수 있습니다. 적절한 한도는 서버를 함께 쓰기 위한 장치지만, 내 프로그램에 필요한 메모리보다 너무 작으면 내 작업이 실패합니다. 필요한 양과 할당받은 양을 함께 확인합니다.</p>
+</details>
+
+<h3 id="cpu---">CPU 예제와 비교해서 기억하기</h3>
+<p>CPU는 시간의 한도를 줄이면 계산이 느려질 수 있습니다. 메모리는 작업에 필요한 공간보다 작으면 느려지는 수준을 넘어 실패할 수 있습니다. 실제 상황에는 swap과 I/O도 영향을 줍니다. 이번 실습은 차이를 분명히 보기 위해 RAM 한도와 RAM+swap 한도를 같게 설정해 컨테이너의 swap 사용을 막습니다. 이 설정을 모든 실제 분석에 그대로 적용해야 한다는 뜻은 아닙니다.</p>
+
+<p><a href="06-process.html">6장으로 돌아가기</a></p>
+</article><footer><a href="practice-cpu-sharing.html">← [실습] CPU 공유</a><a href="index.html">과정 목차로 돌아가기</a></footer><p class="context-note">리눅스 응용 보충 과정 · 개인 실습 폴더와 자신의 작업을 확인한다.</p></main><script src="assets/app.js"></script></body></html>

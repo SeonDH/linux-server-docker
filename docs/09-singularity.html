@@ -1,0 +1,124 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>9. Singularity와 Apptainer의 이해 | 리눅스 응용 보충 과정</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a aria-current="page" href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="singularity-apptainer-">9. Singularity와 Apptainer의 이해</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#section">먼저 비유로 이해하기: 준비된 도구로 작업하기</a></li><li><a href="#section-2">도구 이름과 준비 환경</a></li><li><a href="#section-3">짧은 비교 활동 · 명령어 없이 설명하기</a></li><li><a href="#sif---">SIF는 이름만 알아 두세요</a></li><li><a href="#section-4">반복 비교 활동 · 실행하지 않고 설명하기</a></li><li><a href="#section-8">확인 질문</a></li><li><a href="#section-9">이 장의 정리</a></li></ul></details>
+
+<blockquote>
+  <p><strong>실습 환경:</strong> 이론·비교 활동, 설치 불필요
+<strong>준비:</strong> 2장의 이미지·컨테이너 개념</p>
+</blockquote>
+
+<p><strong>이론·비교 학습 · 목표:</strong> Docker에서 배운 이미지·컨테이너·파일 연결 개념을 연구 서버의 컨테이너 도구와 연결합니다. 이 장에서는 설치와 실행 실습을 하지 않습니다.</p>
+
+<h2 id="section">먼저 비유로 이해하기: 준비된 도구로 작업하기</h2>
+<p>종이의 길이를 재는 작업을 한다고 생각해 보세요. 자와 가위가 필요합니다. 그런데 장소를 옮길 때마다 도구를 다시 구하고 준비하면 번거롭습니다. 컴퓨터에서도 분석 프로그램과 라이브러리를 매번 설치하면 같은 어려움이 생깁니다.</p>
+
+<p>컨테이너 도구는 <strong>필요한 도구가 준비된 환경으로 작업을 시작하도록 돕습니다.</strong> Docker와 Singularity/Apptainer 모두 이 목적을 가집니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>비유 속 대상</th>
+      <th>컴퓨터에서의 대상</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>자·가위가 준비된 도구 구성의 원본</td>
+      <td>이미지: 프로그램과 필요한 파일이 준비된 원본</td>
+    </tr>
+    <tr>
+      <td>그 구성을 사용해 마련한 작업 자리</td>
+      <td>컨테이너 실행 환경</td>
+    </tr>
+    <tr>
+      <td>작업 자리에서 실제로 자르는 일</td>
+      <td>실행 중인 프로그램·프로세스</td>
+    </tr>
+    <tr>
+      <td>잘라야 할 종이</td>
+      <td>입력 데이터</td>
+    </tr>
+    <tr>
+      <td>완성품을 따로 보관하는 서랍</td>
+      <td>연결한 결과 폴더 또는 저장공간</td>
+    </tr>
+    <tr>
+      <td>작업자를 위한 자리와 책상 공간</td>
+      <td>CPU와 메모리 자원</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>비유의 핵심은 <strong>도구 준비, 작업 실행, 결과 보관은 서로 다른 일</strong>이라는 점입니다. 이미지는 물리 도구 상자가 아니라 실행 환경을 담은 것이며, CPU와 메모리는 실제 PC·서버의 자원을 사용합니다.</p>
+
+<h3 id="docker------">Docker: 관리자가 작업 자리를 만들어 주는 방식</h3>
+<p>Docker Engine을 작업실 관리자라고 생각해 보세요. 우리는 “이 도구 구성으로 작업 자리를 만들어 주세요”라고 요청합니다. 관리자는 요청에 따라 컨테이너를 만들고 실행 상태를 관리합니다.</p>
+
+<p>Docker Desktop은 개인 PC에서 이 관리자와 작업 환경을 쉽게 준비해 주는 앱입니다. 터미널의 docker 명령은 관리자에게 요청을 보내는 창구에 해당합니다.</p>
+
+<h3 id="singularityapptainer-------">Singularity/Apptainer: 준비된 도구 꾸러미를 지정해 연구실에서 사용하는 방식</h3>
+<p>연구실에 준비된 <code>분석도구.sif</code> 꾸러미를 가져왔다고 생각해 보세요. “이 꾸러미에 있는 도구로 내 파일을 처리하겠다”고 지정해 실행합니다. 기본적인 사용에서는 내가 가진 사용자 권한으로 작업하고, 연구실의 CPU·메모리 사용 규칙을 따릅니다.</p>
+
+<p>Docker도 공유 서버에서 사용할 수 있고 Apptainer도 개인 Linux에서 사용할 수 있습니다. 이 비유는 특정 장소에만 사용할 수 있다는 뜻이 아니라, <strong>Docker는 엔진에게 요청하는 흐름, Apptainer는 이미지 파일을 지정해 명령을 실행하는 흐름</strong>을 이해하기 위한 것입니다.</p>
+
+<h3 id="section-1">둘 다 결과는 작업 자리 밖에 보관합니다</h3>
+<p>작업 자리를 정리할 때 완성품까지 버리면 안 되겠죠? 중요한 결과는 따로 연결한 폴더에 남깁니다. Docker든 Apptainer든 입력·출력 경로와 보관 방법을 확인하는 이유는 같습니다.</p>
+
+<h3 id="linux-----">Linux는 도구를 사용할 수 있는 작업실입니다</h3>
+<p>어떤 장비는 정해진 시설에서만 사용할 수 있습니다. Singularity/Apptainer를 실행하는 데 필요한 작업실은 Linux 환경입니다. Windows에서는 WSL2로, macOS에서는 Linux VM 등으로 그 환경을 추가 준비할 수 있습니다.</p>
+
+<p>이번 수업에서는 새 작업실을 준비하지 않고 <strong>도구와 사용 방식만 비교</strong>합니다. 설치 명령이나 SIF 실행을 따라 하지 않아도 됩니다.</p>
+
+<h2 id="section-2">도구 이름과 준비 환경</h2>
+<p>SingularityCE와 Apptainer는 공통 역사를 가진 별도 프로젝트입니다. 연구실에서 어떤 도구와 버전을 쓰는지 확인하면 됩니다. 이 수업에서는 명령 이름을 외우지 않습니다.</p>
+
+<p>실제로 실행하려면 Linux와 별도 설치가 필요합니다. Windows는 WSL2, macOS는 Linux VM 등을 준비해야 하므로 이번에는 이론만 진행합니다. Docker Desktop만 설치하면 Apptainer도 실행되는 것은 아닙니다.</p>
+
+<h2 id="section-3">짧은 비교 활동 · 명령어 없이 설명하기</h2>
+<p>짝에게 다음 세 가지를 말해 보세요.</p>
+
+<ol>
+  <li>준비된 도구 꾸러미는 무엇인가요? → 이미지</li>
+  <li>실제로 작업하는 공간은 무엇인가요? → 컨테이너 실행 환경</li>
+  <li>완성한 결과는 어디에 남길까요? → 별도로 연결한 결과 폴더</li>
+</ol>
+
+<p>Docker는 엔진에게 작업 실행을 요청하고, Apptainer는 준비된 이미지 파일을 지정해 명령을 실행하는 흐름입니다. 둘 다 PC·서버의 CPU·메모리·디스크를 사용합니다.</p>
+
+<h2 id="sif---">SIF는 이름만 알아 두세요</h2>
+<p>Apptainer에서는 실행 환경을 <code>.sif</code> 파일로 보관할 수 있습니다. 이 파일은 준비된 꾸러미이며 아직 실행 중인 작업은 아닙니다. 꾸러미를 가지고 있는 것과 실제로 작업하는 것은 다릅니다.</p>
+
+<h2 id="section-4">반복 비교 활동 · 실행하지 않고 설명하기</h2>
+<p><strong>5~10분 · 이론 활동, 설치 불필요.</strong></p>
+
+<h3 id="section-5">바꿔 보기</h3>
+<p>Docker의 작업실 관리자 비유를 “연구실에서 준비된 도구 꾸러미를 지정해 작업하는 Apptainer”로 바꿔 설명하세요. 둘 다 필요한 도구와 결과 보관 장소가 있다는 점을 찾습니다.</p>
+
+<h3 id="section-6">고쳐 보기</h3>
+<p>“Docker Desktop이 있으니 Apptainer도 바로 실행된다”, “SIF 파일이 있으니 분석이 이미 실행 중이다”는 말에서 잘못된 부분을 찾으세요.</p>
+<details>
+  <summary>힌트 보기</summary>
+  <p>도구가 준비된 꾸러미와 실제 작업은 다릅니다. 실행할 도구와 Linux 환경도 별도로 필요합니다.</p>
+</details>
+<details>
+  <summary>[답지] 해설 보기</summary>
+  <p>Docker Desktop 설치는 Apptainer 설치와 다릅니다. 실제 사용에는 Linux 환경과 해당 도구가 필요합니다. SIF는 준비된 이미지 파일이며 실행 중인 프로세스가 아닙니다. 이번 교육은 설치·실행 없이 개념만 비교합니다.</p>
+</details>
+
+<h3 id="section-7">설명하기</h3>
+<p>“도구가 달라도 경로·권한·자원을 확인해야 한다”는 이유를 한 문장으로 말하세요.</p>
+
+<h2 id="section-8">확인 질문</h2>
+<p>연구 서버에서 컨테이너를 쓰면 다른 사용자에게 영향을 주지 않고 자원을 무제한으로 쓸 수 있을까요?</p>
+<details><summary>[답지] 해설 보기</summary>
+아니요. 같은 서버의 CPU·메모리·디스크를 사용하므로 할당받은 범위를 지킵니다. 파일 권한과 결과 저장 위치도 확인합니다.
+</details>
+
+<p>참고: <a href="https://apptainer.org/docs/user/latest/quick_start.html">Apptainer 공식 안내</a>.</p>
+
+<h2 id="section-9">이 장의 정리</h2>
+
+<ul>
+  <li>컨테이너 도구가 달라도 입력·결과·권한·자원을 확인한다.</li>
+  <li>이번 과정은 별도 Linux 설치 없이 이론과 비교로 진행한다.</li>
+</ul>
+</article><footer><a href="08-troubleshooting.html">← 8. 트러블슈팅</a><a href="index.html">과정 목차로 돌아가기</a></footer><p class="context-note">리눅스 응용 보충 과정 · 개인 실습 폴더와 자신의 작업을 확인한다.</p></main><script src="assets/app.js"></script></body></html>

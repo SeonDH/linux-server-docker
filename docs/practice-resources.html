@@ -1,0 +1,243 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>[실습] Docker CPU·메모리 관찰 - 20분 | 리눅스 응용 보충 과정</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a aria-current="page" href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="docker-cpu----20">[실습] Docker CPU·메모리 관찰 - 20분</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#docker-resources">Docker는 PC의 CPU와 메모리를 어떻게 쓰나요?</a></li></ul></details>
+
+<blockquote>
+  <p><strong>실습 환경:</strong> 호스트 Bash. Windows는 WSL Ubuntu, macOS는 터미널에서 실행한다.
+<strong>준비:</strong> Docker Desktop 실행 및 0장 완료.</p>
+</blockquote>
+
+<h2 id="docker-resources">Docker는 PC의 CPU와 메모리를 어떻게 쓰나요?</h2>
+<p><strong>관찰 실습 · 15~20분 · 호스트 Bash.</strong> 컨테이너 안이라면 exit로 나옵니다.</p>
+
+<p>컨테이너는 새 CPU나 메모리를 만드는 것이 아닙니다. PC의 자원을 사용합니다. Docker Desktop에서는 Linux 실행 환경을 거쳐 컨테이너가 동작합니다.</p>
+
+<pre><code class="language-text">내 PC의 CPU·메모리
+       ↓
+Docker Desktop의 Linux 환경
+       ↓
+각 컨테이너의 프로그램
+
+</code></pre>
+
+<h3 id="section">먼저 구분하기: 한도와 실제 사용량</h3>
+<p>“책상을 최대 이만큼 쓸 수 있다”는 허가와 “지금 실제로 놓인 자료의 크기”는 다릅니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>설정·수치</th>
+      <th>뜻</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>–cpus=0.25</td>
+      <td>CPU 한 개의 계산 시간 중 약 1/4까지 사용할 수 있는 한도</td>
+    </tr>
+    <tr>
+      <td>–memory=128m</td>
+      <td>컨테이너 메모리 한도 128 MiB</td>
+    </tr>
+    <tr>
+      <td>실제 CPU 사용률</td>
+      <td>지금 얼마나 계산하고 있는지</td>
+    </tr>
+    <tr>
+      <td>실제 메모리 사용량</td>
+      <td>지금 작업이 사용하는 메모리</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>한도를 늘린다고 사용량이 저절로 늘지는 않습니다. 기다리는 sleep은 CPU를 거의 쓰지 않습니다. 기본적으로 별도 제한을 주지 않은 컨테이너는 실행 환경에서 허용되는 자원을 사용할 수 있습니다.</p>
+
+<h3 id="section-1">같은 작업을 세 화면에서 관찰하기</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>화면</th>
+      <th>확인할 것</th>
+      <th>범위</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>호스트의 docker stats</td>
+      <td>컨테이너별 CPU·메모리</td>
+      <td>이번 실습의 기준 화면</td>
+    </tr>
+    <tr>
+      <td>컨테이너 안의 top</td>
+      <td>그 안의 프로그램</td>
+      <td>프로그램별 활동</td>
+    </tr>
+    <tr>
+      <td>작업 관리자·활성 상태 보기</td>
+      <td>Docker·Linux VM 관련 프로세스와 PC 전체</td>
+      <td>실행 환경과 다른 작업을 포함</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Windows에서는 작업 관리자, Mac에서는 활성 상태 보기를 열어 CPU와 메모리 열을 봅니다. Linux VM 관련 프로세스 이름은 OS·Docker 버전에 따라 달라집니다. 컨테이너 이름이 PC의 프로세스 목록에 그대로 나타날 필요는 없습니다.</p>
+
+<p><strong>세 화면의 숫자는 똑같을 필요가 없습니다.</strong> 집 전체 전기 사용량과 방 하나의 전기 사용량처럼 보는 범위가 다릅니다. CPU의 100%를 세는 기준, 메모리 캐시·VM 자체 사용량과 측정 시점도 달라집니다. Docker stats는 CPU 한 개를 바쁘게 쓰면 대략 100%로 표시할 수 있어 여러 CPU를 쓰면 100%를 넘을 수도 있습니다. PC 전체 CPU 비율과 바로 비교하지 않습니다.</p>
+
+<h3 id="cpu-">1. 따라 하기 · 작은 계산 작업의 CPU 보기</h3>
+<p>Alpine 이미지로 CPU 한 개의 약 1/4까지 사용하는 짧은 실습 작업을 시작합니다. <strong>120초 뒤 자동 종료</strong>하며 실제 분석 데이터는 쓰지 않습니다.</p>
+
+<pre><code class="language-bash">docker run -d --name course-cpu-watch \
+  --cpus=0.25 --memory=128m \
+  alpine:3.21 timeout 120 sh -c 'while :; do :; done'
+docker stats course-cpu-watch
+
+</code></pre>
+<p>CPU %와 MEM USAGE / LIMIT를 봅니다. 실습 CPU 사용률은 조건에 따라 약 25% 부근으로 관찰될 수 있으며 정확히 같은 숫자가 보장되지는 않습니다. 메모리는 한도 128 MiB보다 훨씬 적게 사용할 수 있습니다. <strong>Ctrl+C는 stats 관찰만 끝내며 컨테이너를 종료하지 않습니다.</strong></p>
+
+<p>같은 작업을 호스트의 작업 관리자·활성 상태 보기에서도 봅니다. 전체 PC CPU에서 변화가 작아 보여도 docker stats에서 컨테이너의 활동을 확인할 수 있습니다.</p>
+
+<h3 id="cpu---">2. 바꿔 보기 · CPU 한도만 늘려 보기</h3>
+<p>120초가 지나기 전에 실행합니다. 이미 종료됐다면 방금 만든 실습 컨테이너를 정리한 뒤 따라 하기부터 다시 시작합니다.</p>
+
+<pre><code class="language-bash">docker update --cpus=0.5 course-cpu-watch
+docker stats course-cpu-watch
+
+</code></pre>
+<p>CPU 한도가 1/4에서 1/2로 커졌습니다. 같은 계산 작업의 CPU 사용률이 높아지는 경향을 관찰합니다. 한도 자체가 사용량을 만드는 것이 아니라, 이 작업이 계속 계산하기 때문에 차이를 볼 수 있습니다. Ctrl+C로 관찰을 마칩니다.</p>
+
+<h3 id="top-">3. 컨테이너 안의 top으로도 보기</h3>
+<p>컨테이너가 아직 실행 중일 때 호스트에서 실행합니다. -it는 대화형 관찰을 위한 옵션입니다.</p>
+
+<pre><code class="language-bash">docker exec -it course-cpu-watch top
+
+</code></pre>
+<p>q로 top을 나옵니다. Alpine의 top은 0장 Ubuntu에서 본 화면과 다를 수 있습니다. top의 CPU 비율은 표시 방식에 따라 docker stats와 다를 수 있으므로 동일한 숫자를 기대하지 않습니다.</p>
+
+<h3 id="section-2">4. 정리하기</h3>
+<p>이 실습에서 만든 컨테이너만 정리합니다. 120초 뒤 이미 종료됐어도 이름이 남아 있을 수 있습니다.</p>
+
+<pre><code class="language-bash">docker stop course-cpu-watch
+docker rm course-cpu-watch
+
+</code></pre>
+<p>이름이 이미 사용 중이라는 오류는 이전 실습 대상인지 docker ps -a로 먼저 확인합니다.</p>
+
+<h3 id="section-3">메모리 한도와 사용량 비교 · 기다리는 작업 두 개</h3>
+<p>계산 부하 없이 64 MiB와 128 MiB 한도를 비교합니다.</p>
+
+<pre><code class="language-bash">docker run -d --name course-mem-small --memory=64m alpine:3.21 sleep 120
+docker run -d --name course-mem-large --memory=128m alpine:3.21 sleep 120
+docker stats --no-stream course-mem-small course-mem-large
+
+</code></pre>
+<p>LIMIT는 다르지만 두 sleep의 실제 USAGE는 비슷하게 작을 수 있습니다. 메모리 제한을 두 배로 주었다고 두 배를 사용하는 것은 아닙니다. 한 번의 snapshot에서 CPU가 0%처럼 보일 수 있으며 활동의 정확한 비교에는 연속 관찰을 사용합니다.</p>
+
+<pre><code class="language-bash">docker stop course-mem-small course-mem-large
+docker rm course-mem-small course-mem-large
+
+</code></pre>
+<p>실제 메모리 사용량이 커지는 실험은 기본 수업에서는 하지 않습니다. 위 관찰은 <strong>한도와 사용량 구분</strong>을 배우는 실습입니다.</p>
+
+<h3 id="section-4">한도를 주었을 때와 주지 않았을 때</h3>
+<p>책상에서 일하는 사람에게 “이만큼만 사용하세요”라고 정하는 것과, 별도 한도를 정하지 않는 것은 다릅니다. <strong>한도가 없다는 말은 항상 모든 자원을 쓴다는 뜻이 아닙니다.</strong> 실제 사용량은 실행하는 프로그램에 따라 달라집니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>한도를 준 경우</th>
+      <th>컨테이너별 한도를 주지 않은 경우</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CPU</td>
+      <td>–cpus 값에 맞춰 계산 시간을 제한</td>
+      <td>실행 환경에서 허용되고 프로그램이 요구하는 CPU 시간을 사용</td>
+    </tr>
+    <tr>
+      <td>메모리</td>
+      <td>–memory로 지정한 RAM 한도 안에서 사용</td>
+      <td>실행 환경에서 허용되는 메모리를 프로그램이 필요로 하는 만큼 사용</td>
+    </tr>
+    <tr>
+      <td>다른 사용자 영향</td>
+      <td>한도가 영향 완화에 도움을 주지만 합산 사용량도 고려</td>
+      <td>큰 작업이나 여러 작업이 다른 사용자와 자원을 더 많이 경쟁할 수 있음</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Docker Desktop에서는 Linux VM·WSL 환경과 PC 자체의 한도도 있습니다. 실제 Linux 서버에서는 운영 정책과 상위 자원 제한이 적용될 수 있습니다. 컨테이너별 한도를 생략해도 이 경계가 없어지는 것은 아닙니다.</p>
+
+<h4 id="section-5">프로그램에 따라 얼마나 쓸까요?</h4>
+<p>아래는 <strong>설명용 예상 경향</strong>이며 모든 PC에서 같은 수치를 보장하는 표가 아닙니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>프로그램</th>
+      <th>CPU 한도 0.25</th>
+      <th>컨테이너 CPU 한도 없음</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>기다리는 sleep</td>
+      <td>거의 계산하지 않아 사용률이 낮음</td>
+      <td>여전히 낮음</td>
+    </tr>
+    <tr>
+      <td>한 실행 흐름으로 계속 계산</td>
+      <td>충분히 실행하면 약 25% 부근으로 제한될 수 있음</td>
+      <td>가용 자원이 충분하면 CPU 한 개 기준 약 100%에 가까워질 수 있음</td>
+    </tr>
+    <tr>
+      <td>여러 실행 흐름으로 계산</td>
+      <td>총 CPU 시간 한도로 제약</td>
+      <td>프로그램이 병렬로 일하면 여러 CPU를 사용해 docker stats에서 100%를 넘을 수 있음</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>CPU 수와 PC 전체 사용률의 기준은 구분합니다. 제한을 제거했다고 항상 더 빨라지는 것도 아닙니다. 파일 읽기·쓰기나 메모리가 병목일 수 있습니다.</p>
+
+<p>메모리도 마찬가지입니다. 20 MiB가 필요한 작업은 128 MiB 한도에서도, 한도 없이도 비슷한 양을 사용할 수 있습니다. 큰 작업이 RAM 한도를 넘으면 swap 설정에 따라 느려지거나 메모리 부족으로 종료될 수 있습니다. 한도 없이 실행한 큰 작업은 가용 자원을 많이 사용해 다른 작업에 영향을 줄 수 있습니다. 정확한 사용량은 로그와 docker stats로 확인합니다.</p>
+
+<h4 id="sleep--sleep">작은 비교 실습 · 제한 없는 sleep과 제한한 sleep</h4>
+<p><strong>호스트 Bash에서 실행합니다.</strong> 자원을 과도하게 쓰는 분석 대신 작은 대기 작업을 비교합니다. 120초 뒤 각각 끝납니다.</p>
+
+<pre><code class="language-bash">docker run -d --name course-with-limit \
+  --cpus=0.25 --memory=64m alpine:3.21 sleep 120
+docker run -d --name course-without-limit alpine:3.21 sleep 120
+docker stats --no-stream course-with-limit course-without-limit
+
+</code></pre>
+<p>두 컨테이너의 실제 CPU·메모리 사용은 모두 작을 수 있습니다. 메모리 LIMIT는 제한한 컨테이너가 64 MiB, 제한하지 않은 컨테이너는 엔진이 보는 실행 환경의 메모리 범위로 표시될 수 있습니다. 컨테이너별 설정도 확인합니다.</p>
+
+<pre><code class="language-bash">docker inspect course-with-limit --format 'NanoCPUs={{.HostConfig.NanoCpus}} Memory={{.HostConfig.Memory}}'
+docker inspect course-without-limit --format 'NanoCPUs={{.HostConfig.NanoCpus}} Memory={{.HostConfig.Memory}}'
+
+</code></pre>
+<p>제한한 경우는 250000000과 67108864, 제한하지 않은 경우는 0과 0이 기대됩니다. <strong>여기서 0은 자원을 못 쓴다는 뜻이 아니라 컨테이너별 해당 한도를 지정하지 않았다는 뜻입니다.</strong></p>
+
+<p>정리합니다.</p>
+
+<pre><code class="language-bash">docker stop course-with-limit course-without-limit
+docker rm course-with-limit course-without-limit
+
+</code></pre>
+<p>기본 수업에서는 한도 없는 고부하 작업을 실제로 실행하지 않습니다. 계산량 변화는 앞의 제한된 CPU 실습으로 관찰하고, 제한 없는 대기 작업으로 “한도 없음 ≠ 항상 많이 사용”을 확인합니다.</p>
+
+<h3 id="section-6">고쳐 보기와 설명하기</h3>
+<p>“–memory=128m을 주었으니 항상 메모리 128 MiB를 쓴다”, “컨테이너 CPU가 50%니까 PC 전체도 50%여야 한다”는 말을 고쳐 보세요.</p>
+<details>
+  <summary>쉬운 해설</summary>
+  <p>128 MiB는 한도이고 실제 사용량은 프로그램에 따라 다릅니다. CPU 비율도 컨테이너 화면과 PC 전체 화면의 기준이 달라 같을 필요가 없습니다. 개별 작업은 docker stats, 내부 프로그램은 top, PC 전체 영향은 작업 관리자·활성 상태 보기로 연결해 관찰합니다.</p>
+</details>
+
+<p>참고: <a href="https://docs.docker.com/engine/containers/resource_constraints/">Docker 자원 제한</a>, <a href="https://docs.docker.com/reference/cli/docker/container/stats/">docker stats</a>.</p>
+
+<p><a href="06-process.html">6장으로 돌아가기</a></p>
+</article><footer><span></span><a href="practice-cpu-sharing.html">[실습] CPU 공유 →</a></footer><p class="context-note">리눅스 응용 보충 과정 · 개인 실습 폴더와 자신의 작업을 확인한다.</p></main><script src="assets/app.js"></script></body></html>

@@ -1,0 +1,225 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>8. 서버와 Docker 트러블슈팅 | 리눅스 응용 보충 과정</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a aria-current="page" href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="docker-">8. 서버와 Docker 트러블슈팅</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#section">먼저 네 가지 질문</a></li><li><a href="#a----">[실습] A · 파일을 못 찾겠어요</a></li><li><a href="#b------">[실습] B · 파일은 있는데 실행이 안 돼요</a></li><li><a href="#c---">[실습] C · 결과가 비었어요</a></li><li><a href="#section-1">서버 문제는 어떤 정보로 도움을 요청할까요?</a></li><li><a href="#section-2">말로 설명하는 마무리</a></li><li><a href="#section-3">[실습] 반복 활동 · 짝에게 문제 해결을 인계하기</a></li><li><a href="#docker-trouble">[실습] Docker에서 자주 만나는 오류</a></li><li><a href="#section-10">이 장의 정리</a></li></ul></details>
+
+<blockquote>
+  <p><strong>실습 환경:</strong> 각 실습의 컨테이너·호스트 표시 확인
+<strong>준비:</strong> 0~7장 대표 실습</p>
+</blockquote>
+
+<p><strong>학습 목표:</strong> 오류를 한 번에 해결하려고 하지 않고 증거를 하나씩 확인합니다.</p>
+
+<h2 id="section">먼저 네 가지 질문</h2>
+<ol>
+  <li>나는 어디에서 실행했나요? 호스트인가요, 컨테이너인가요?</li>
+  <li>현재 위치와 파일 이름이 맞나요?</li>
+  <li>오류 메시지는 뭐라고 하나요?</li>
+  <li>수정한 뒤 다시 실행하면 결과가 맞나요?</li>
+</ol>
+
+<h2 id="a----">[실습] A · 파일을 못 찾겠어요</h2>
+<p><strong>실습 환경: course-linux 컨테이너.</strong></p>
+
+<pre><code class="language-bash">cd "$HOME/linux-server-lab"
+cat input/sample.tsv
+ls input
+
+</code></pre>
+<p>실제 파일 이름을 찾아 첫 명령을 고치세요.</p>
+<details><summary>[답지] 해설 보기</summary>
+이름은 samples.tsv입니다. cat input/samples.tsv로 다시 실행합니다. 오류를 보고 먼저 이름과 경로를 확인합니다.
+</details>
+
+<h2 id="b------">[실습] B · 파일은 있는데 실행이 안 돼요</h2>
+<p>3장의 hello.sh를 만들었다면 실행합니다.</p>
+
+<pre><code class="language-bash">chmod u-x scratch/hello.sh
+./scratch/hello.sh
+ls -l scratch/hello.sh
+
+</code></pre>
+<p>필요한 실행 권한을 다시 주고 hello가 나오는지 확인하세요.</p>
+<details><summary>[답지] 해설 보기</summary>
+chmod u+x scratch/hello.sh 후 ./scratch/hello.sh를 실행합니다.
+</details>
+
+<h2 id="c---">[실습] C · 결과가 비었어요</h2>
+
+<pre><code class="language-bash">cat input/missing.tsv &gt; output/check.txt 2&gt; logs/check.log
+cat logs/check.log
+
+</code></pre>
+<p>원인을 읽고 실제 파일 경로로 명령을 고치세요. 수정 후 결과 내용을 확인합니다.</p>
+
+<h2 id="section-1">서버 문제는 어떤 정보로 도움을 요청할까요?</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>증상</th>
+      <th>먼저 확인할 것</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>파일이 없음</td>
+      <td>현재 위치·파일명·연결한 경로</td>
+    </tr>
+    <tr>
+      <td>Permission denied</td>
+      <td>사용자·대상 권한</td>
+    </tr>
+    <tr>
+      <td>공간 부족</td>
+      <td>저장하는 경로의 df -h</td>
+    </tr>
+    <tr>
+      <td>작업이 오래 걸림</td>
+      <td>내 작업 상태·로그·자원</td>
+    </tr>
+    <tr>
+      <td>Docker 연결 실패</td>
+      <td>Docker Desktop 엔진 실행 여부</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Killed나 종료 137만으로 메모리 부족이라고 단정하지 않습니다. 자세한 원인 확인은 선택 자료와 관리자 도움으로 이어갑니다.</p>
+
+<h2 id="section-2">말로 설명하는 마무리</h2>
+<p>짝에게 “어떤 오류였고 → 무엇을 확인했고 → 무엇을 바꿨고 → 결과가 어땠는지”를 말해 보세요. 명령을 외우는 것보다 이 순서를 설명할 수 있는 것이 중요합니다.</p>
+
+<h2 id="section-3">[실습] 반복 활동 · 짝에게 문제 해결을 인계하기</h2>
+<p><strong>15분 · 새 명령보다 앞의 실습을 연결합니다.</strong></p>
+
+<h3 id="section-4">바꿔 보기</h3>
+<p>실습 A·B·C 중 하나를 선택하세요. 이미 해결한 예제의 파일 이름 또는 결과 파일 이름을 바꿔, 같은 원칙으로 다시 해결합니다. 개인 실습 폴더에서만 변경합니다.</p>
+
+<h3 id="section-5">고쳐 보기</h3>
+<p>짝은 정답 대신 다음 질문만 해 줍니다.
+1. 어느 터미널인가요?
+2. pwd와 ls로 무엇을 확인했나요?
+3. 오류 메시지는 뭐라고 하나요?
+4. 다시 실행한 결과는 무엇인가요?</p>
+<details>
+  <summary>막혔을 때 힌트</summary>
+  <p>파일 없음은 이름·경로, Permission denied는 대상과 실행 권한, 빈 결과는 오류 로그부터 확인합니다. 명령을 무작정 늘리지 않습니다.</p>
+</details>
+
+<h3 id="section-6">설명하기 · 도움 요청 메모</h3>
+<p>아래 양식을 종이나 메모장에 완성하세요.</p>
+
+<pre><code class="language-text">실행한 곳: 호스트 / 컨테이너
+현재 경로:
+실행한 명령:
+원문 오류:
+확인한 것:
+바꾼 것:
+재실행 결과:
+
+</code></pre>
+<p>짝이 이 기록을 보고 문제 상황을 이해할 수 있으면 성공입니다. 자세한 명령을 외우지 못해도 오류와 경로를 정확히 전달할 수 있습니다.</p>
+
+<h2 id="docker-trouble">[실습] Docker에서 자주 만나는 오류</h2>
+<p><strong>호스트 Bash</strong>에서 진행한다. 각 사례는 약 5~10분이다. 필요한 사례부터 실습할 수 있다. Linux 실습에서 이어 왔다면 먼저 exit로 나온다.</p>
+
+<h3 id="docker----">1. 컨테이너 안에서 docker 명령이 없다고 나올 때</h3>
+<p>0장의 course-linux에는 Docker CLI를 설치하지 않았다. Docker 명령은 호스트에서 실행한다. 현재 창이 호스트인지 먼저 확인하고, 호스트에서 다음을 실행한다.</p>
+
+<pre><code class="language-bash">docker version
+
+</code></pre>
+<p>Client와 Server가 모두 나오면 연결된 상태다. Server 연결이 실패하면 Docker Desktop 엔진 실행 상태를 확인한다. 오류를 만들기 위해 엔진을 일부러 종료하지 않는다.</p>
+
+<h3 id="section-7">2. 같은 컨테이너 이름이 이미 사용 중일 때</h3>
+
+<pre><code class="language-bash">docker run --name course-name-demo alpine:3.21 echo hello
+docker run --name course-name-demo alpine:3.21 echo again
+
+</code></pre>
+<p>첫 실행은 hello 뒤 정지한다. 두 번째는 같은 이름 때문에 실패한다. “정지”와 “삭제”는 다르다.</p>
+<details>
+  <summary>힌트 보기</summary>
+  <p>docker ps -a로 정지 컨테이너를 확인한다. 이 실습 이름인지 확인하고 그 대상만 정리한다.</p>
+</details>
+<details>
+  <summary>[답지] 확인과 정리</summary>
+
+  <pre><code class="language-bash">docker ps -a --filter name=course-name-demo
+docker logs course-name-demo
+docker rm course-name-demo
+
+</code></pre>
+  <p>이후 같은 이름으로 새 컨테이너를 만들 수 있다. 실제 서버의 다른 사용자 컨테이너를 삭제하지 않는다.</p>
+</details>
+
+<h3 id="pc----">3. 입력 파일은 PC에 있는데 컨테이너에서는 없을 때</h3>
+
+<pre><code class="language-bash">cd "$HOME/linux-server-lab"
+docker run --rm alpine:3.21 cat /input/samples.tsv
+
+</code></pre>
+<p>호스트 폴더는 자동으로 연결되지 않는다. 7장에서 배운 입력 연결을 추가해 고친다.</p>
+<details>
+  <summary>[답지] 입력 폴더 연결</summary>
+
+  <pre><code class="language-bash">docker run --rm \
+  --mount "type=bind,src=$PWD/input,dst=/input,readonly" \
+  alpine:3.21 cat /input/samples.tsv
+
+</code></pre>
+  <p>예제 4줄이 기대 결과다.</p>
+</details>
+
+<h3 id="section-8">4. 입력에 쓰기가 안 될 때: 보호 설정 확인</h3>
+
+<pre><code class="language-bash">cd "$HOME/linux-server-lab"
+docker run --rm \
+  --mount "type=bind,src=$PWD/input,dst=/input,readonly" \
+  alpine:3.21 sh -c 'echo test &gt; /input/new.txt'
+
+</code></pre>
+<p>읽기 전용 연결 때문에 쓰기가 실패한다. 이 오류는 원본 입력을 보호한 결과다. 입력을 덮어쓰기보다 결과를 /output 같은 쓰기 가능한 연결에 저장한다.</p>
+
+<h3 id="pc-----1">5. 결과는 만들었는데 PC에서 찾을 수 없을 때</h3>
+
+<pre><code class="language-bash">cd "$HOME/linux-server-lab"
+mkdir -p output
+docker run --name course-result-demo alpine:3.21 sh -c 'mkdir -p /output; echo inside &gt; /output/result.txt'
+
+</code></pre>
+<p>이 명령의 /output은 컨테이너 내부다. PC 폴더를 연결한 적이 없으므로 PC output에 자동으로 생기지 않는다.</p>
+<details>
+  <summary>[답지] 삭제 전 결과 확인·회수</summary>
+
+  <pre><code class="language-bash">docker cp course-result-demo:/output/result.txt output/recovered-result.txt
+cat output/recovered-result.txt
+docker rm course-result-demo
+
+</code></pre>
+  <p>inside가 기대 결과다. 같은 recovered-result.txt가 있으면 덮어쓸 수 있다. 이 사례는 정지한 컨테이너를 삭제하기 전 결과를 회수하는 방법이다. 다음 작업부터는 7장처럼 출력을 미리 연결한다. –rm으로 이미 삭제한 컨테이너에는 docker cp를 쓸 수 없다.</p>
+</details>
+
+<h3 id="section-9">6. 실행하자마자 끝나면 실패일까요?</h3>
+
+<pre><code class="language-bash">docker run --name course-exit-demo alpine:3.21 echo done
+docker inspect course-exit-demo --format 'status={{.State.Status}} exit={{.State.ExitCode}}'
+docker logs course-exit-demo
+docker rm course-exit-demo
+
+</code></pre>
+<p>exited와 exit=0, 로그 done이 기대된다. 명령을 마치고 정상 종료한 것이다. 컨테이너를 계속 실행 상태로 유지하는 것이 모든 작업의 목적은 아니다.</p>
+
+<h3 id="cpu----">CPU·메모리 문제는 어디서 다시 볼까요?</h3>
+<ul>
+  <li><a href="practice-resources.html">자원 관찰</a>: 한도와 실제 사용량 구분</li>
+  <li><a href="practice-cpu-sharing.html">CPU 공유</a>: 내 제한 전후 동료 역할의 완료 시간</li>
+  <li><a href="practice-memory.html">메모리 부족</a>: 종료 코드와 OOMKilled 비교</li>
+</ul>
+
+<h2 id="section-10">이 장의 정리</h2>
+
+<ul>
+  <li>오류 → 증거 확인 → 한 가지 수정 → 재실행 순서로 진행한다.</li>
+  <li>모르는 문제는 실행 환경·경로·원문 오류를 기록해 도움을 요청한다.</li>
+</ul>
+</article><footer><a href="07-docker-practice.html">← 7. Docker 파일 연결</a><a href="09-singularity.html">9. Singularity 이해 →</a></footer><p class="context-note">리눅스 응용 보충 과정 · 개인 실습 폴더와 자신의 작업을 확인한다.</p></main><script src="assets/app.js"></script></body></html>

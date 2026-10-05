@@ -1,0 +1,129 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>3. 경로와 파일 권한 | 리눅스 응용 보충 과정</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a aria-current="page" href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="section">3. 경로와 파일 권한</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#section-1">경로는 파일의 주소입니다</a></li><li><a href="#section-2">[실습] 따라 하기 · 위치를 바꿔 같은 파일 읽기</a></li><li><a href="#path----">PATH는 데이터 파일의 주소와 다릅니다</a></li><li><a href="#section-3">권한은 파일을 사용할 수 있는 허가입니다</a></li><li><a href="#section-4">[실습] 따라 하기 · 내 스크립트의 실행 권한</a></li><li><a href="#section-5">[실습] 반복 연습 · 다른 이름과 위치에서도 파일 찾기</a></li><li><a href="#section-9">확인 질문</a></li><li><a href="#section-10">[실습] 공백이 있는 경로 - 5분</a></li><li><a href="#section-11">이 장의 정리</a></li></ul></details>
+
+<blockquote>
+  <p><strong>실습 환경:</strong> course-linux 컨테이너
+<strong>준비:</strong> 0장의 예제 파일</p>
+</blockquote>
+
+<p><strong>학습 목표:</strong> 파일을 찾으려면 현재 위치와 경로를 확인합니다. 실행하려면 필요한 권한도 확인합니다.</p>
+
+<h2 id="section-1">경로는 파일의 주소입니다</h2>
+<p>주소를 처음부터 쓰면 절대 경로, 지금 있는 곳을 기준으로 쓰면 상대 경로입니다. <code>pwd</code>는 “나는 지금 어디에 있지?”, <code>ls</code>는 “여기 무엇이 있지?”를 확인합니다.</p>
+
+<h2 id="section-2">[실습] 따라 하기 · 위치를 바꿔 같은 파일 읽기</h2>
+<p><strong>실습 환경:</strong> course-linux 컨테이너. 호스트에서 <code>docker start -ai course-linux</code>로 들어옵니다.</p>
+
+<pre><code class="language-bash">cd "$HOME/linux-server-lab"
+pwd
+ls
+cat input/samples.tsv
+cd output
+cat input/samples.tsv
+cat ../input/samples.tsv
+cd ..
+
+</code></pre>
+<p>output 안에서 <code>input/samples.tsv</code>를 읽으면 실패합니다. 현재 위치에 input 폴더가 없기 때문입니다. <code>..</code>는 한 단계 위입니다. <code>../input/samples.tsv</code>는 성공합니다.</p>
+
+<h2 id="path----">PATH는 데이터 파일의 주소와 다릅니다</h2>
+<p>PATH는 컴퓨터가 <strong>명령 프로그램을 찾는 폴더 목록</strong>입니다. <code>wc</code> 명령의 위치를 찾는 것과 samples.tsv 위치를 찾는 것은 다른 일입니다.</p>
+
+<pre><code class="language-bash">command -v wc
+
+</code></pre>
+
+<h2 id="section-3">권한은 파일을 사용할 수 있는 허가입니다</h2>
+<p><code>r</code>은 읽기, <code>w</code>는 쓰기, <code>x</code>는 실행입니다. 파일 소유자·그룹·다른 사용자마다 허가가 다를 수 있습니다. 디렉터리의 x는 그 경로에 들어가거나 통과하는 권한입니다.</p>
+
+<h2 id="section-4">[실습] 따라 하기 · 내 스크립트의 실행 권한</h2>
+
+<pre><code class="language-bash">printf '#!/bin/sh\necho hello\n' &gt; scratch/hello.sh
+chmod u-x scratch/hello.sh
+ls -l scratch/hello.sh
+./scratch/hello.sh
+chmod u+x scratch/hello.sh
+./scratch/hello.sh
+
+</code></pre>
+<p>처음 직접 실행은 Permission denied, 권한을 준 뒤에는 hello가 기대됩니다. <code>u+x</code>는 소유자에게 실행 허가를 추가한다는 뜻입니다. 같은 실습 파일은 덮어씁니다.</p>
+
+<p>0장의 컨테이너는 root 사용자입니다. 실제 서버의 일반 사용자는 읽기·쓰기에 제한이 더 있습니다. 읽기 권한 오류의 일반 사용자 실습은 <a href="deep-dive.html">선택 자료</a>에 있습니다.</p>
+
+<h2 id="section-5">[실습] 반복 연습 · 다른 이름과 위치에서도 파일 찾기</h2>
+<p><strong>15~20분 · course-linux 컨테이너.</strong> 같은 터미널에서 진행합니다.</p>
+
+<h3 id="section-6">바꿔 보기</h3>
+<p>먼저 예제 복사본을 만듭니다. 원본은 그대로 두고 복사본 이름만 달라집니다. 같은 복사본이 있으면 다시 덮어씁니다.</p>
+
+<pre><code class="language-bash">cd "$HOME/linux-server-lab"
+cp input/samples.tsv input/practice.tsv
+cd output
+
+</code></pre>
+<p>현재 위치를 바꾸지 않고 <code>practice.tsv</code>를 읽어보세요.</p>
+<details>
+  <summary>힌트 보기</summary>
+  <p>pwd로 위치를 확인하세요. input은 현재 output의 한 단계 위에 있습니다. ..를 사용합니다.</p>
+</details>
+<details>
+  <summary>[답지] 해설 보기</summary>
+
+  <pre><code class="language-bash">cat ../input/practice.tsv
+
+</code></pre>
+  <p>예제 4줄이 보이면 성공입니다.</p>
+</details>
+
+<h3 id="section-7">고쳐 보기</h3>
+<p>작업 폴더로 돌아온 뒤 실행 권한을 없앱니다.</p>
+
+<pre><code class="language-bash">cd "$HOME/linux-server-lab"
+chmod u-x scratch/hello.sh
+./scratch/hello.sh
+
+</code></pre>
+<p>오류를 읽고 필요한 권한만 고쳐 hello를 출력하세요. 3장의 따라 하기에서 hello.sh를 먼저 만들어야 합니다.</p>
+<details>
+  <summary>힌트 보기</summary>
+  <p>ls -l로 확인합니다. 소유자의 실행 권한을 추가하면 됩니다.</p>
+</details>
+<details>
+  <summary>[답지] 해설 보기</summary>
+
+  <pre><code class="language-bash">chmod u+x scratch/hello.sh
+./scratch/hello.sh
+
+</code></pre>
+  <p>hello가 기대됩니다. 모두에게 모든 권한을 주는 chmod 777은 필요하지 않습니다.</p>
+</details>
+
+<h3 id="section-8">설명하기</h3>
+<p>파일이 없다는 오류와 실행 허가가 없다는 오류는 무엇이 다른가요? 각각 먼저 확인할 명령을 하나씩 말하세요.</p>
+
+<h2 id="section-9">확인 질문</h2>
+<p>파일이 없다는 오류를 만나면 무엇부터 볼까요? 권한 오류에 무조건 chmod 777을 실행해도 될까요?</p>
+<details><summary>[답지] 해설 보기</summary>
+pwd로 현재 위치, ls로 파일 이름과 경로를 봅니다. 권한은 필요한 대상에 필요한 만큼만 부여합니다. 다른 사용자 파일이나 공용 폴더의 권한을 함부로 바꾸지 않습니다.
+</details>
+
+<p>복습: <a href="https://seondh.github.io/bio_linux/day3/chapter11/">기존 교재의 권한</a>.</p>
+
+<h2 id="section-10">[실습] 공백이 있는 경로 - 5분</h2>
+<p><strong>실습 환경: course-linux 컨테이너.</strong> 폴더 이름에 공백이 있으면 따옴표로 묶어 한 경로임을 알려 준다.</p>
+
+<pre><code class="language-bash">cd "$HOME/linux-server-lab"
+mkdir -p "scratch/space demo"
+printf 'hello\n' &gt; "scratch/space demo/note.txt"
+cat "scratch/space demo/note.txt"
+
+</code></pre>
+<p>hello가 기대 결과다. 마지막 경로에서 따옴표를 빼면 shell이 여러 인자로 나눌 수 있다. 변수로 경로를 사용할 때도 <code>"$HOME"</code>, <code>"$PWD"</code>처럼 묶는 습관을 익힌다.</p>
+
+<h2 id="section-11">이 장의 정리</h2>
+
+<ul>
+  <li>파일을 못 찾으면 현재 위치와 경로를 먼저 확인한다.</li>
+  <li>권한은 필요한 대상에 필요한 만큼만 부여한다.</li>
+</ul>
+</article><footer><a href="02-docker.html">← 2. Docker 개념</a><a href="04-io.html">4. 파일과 파이프 →</a></footer><p class="context-note">리눅스 응용 보충 과정 · 개인 실습 폴더와 자신의 작업을 확인한다.</p></main><script src="assets/app.js"></script></body></html>
