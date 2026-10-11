@@ -1,5 +1,5 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>7. Docker 활용: 파일 연결과 결과 보존 | 리눅스 응용 보충 과정</title><link rel="stylesheet" href="assets/style.css"></head>
-<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a aria-current="page" href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><a  href="practice-storage-paths.html">[실습] 저장 위치와 공간 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="docker-----">7. Docker 활용: 파일 연결과 결과 보존</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#local-mount">문이 하나 더 생긴 같은 보관함</a></li><li><a href="#pc-">[실습] 따라 하기 · 결과를 PC에 남기기</a></li><li><a href="#section">[실습] 반복 연습 · 결과 보관함 바꾸기</a></li><li><a href="#section-4">확인 질문</a></li><li><a href="#section-5">이 장의 정리</a></li></ul></details>
+<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a aria-current="page" href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><a  href="practice-storage-paths.html">[실습] 저장 위치와 공간 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="docker-----">7. Docker 활용: 파일 연결과 결과 보존</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#local-mount">문이 하나 더 생긴 같은 보관함</a></li><li><a href="#pc-">[실습] 따라 하기 · 결과를 PC에 남기기</a></li><li><a href="#section-1">[실습] 반복 연습 · 결과 보관함 바꾸기</a></li><li><a href="#section-5">확인 질문</a></li><li><a href="#section-6">이 장의 정리</a></li></ul></details>
 
 <blockquote>
   <p><strong>실습 환경:</strong> 호스트 Bash
@@ -64,12 +64,38 @@ cat output/line-count.txt
 
 <p><code>--user</code>는 PC 쪽 사용자 ID로 쓰는 설정입니다. 특히 Linux에서 결과가 root 소유가 되는 문제를 줄입니다. 지금은 모두 외우지 말고 입력·출력의 연결 경로를 읽는 데 집중하세요.</p>
 
+<h3 id="section">결과 파일은 누가, 어디에 만드나요?</h3>
+<p><strong>마운트는 폴더를 연결하고, 명령이 결과 파일을 만듭니다.</strong> 연결했다고 결과가 자동으로 그곳에 저장되는 것은 아닙니다.</p>
+
+<p>이번 명령의 <code>wc -l /input/samples.tsv</code>는 줄 수를 셉니다. <code>&gt;</code>는 화면에 나올 결과를 파일에 저장합니다. <code>&gt; /output/line-count.txt</code>라고 지정했으므로 컨테이너의 <code>/output</code>에 결과를 씁니다. 이 폴더가 내 컴퓨터의 <code>output</code>과 연결되어 있어서 내 컴퓨터에서도 같은 파일을 볼 수 있습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>컨테이너에서 저장한 경로</th>
+      <th>어디에 남나요?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>연결한 <code>/output/line-count.txt</code></td>
+      <td>내 컴퓨터의 <code>output/line-count.txt</code>에도 보입니다.</td>
+    </tr>
+    <tr>
+      <td>연결하지 않은 <code>/tmp/line-count.txt</code></td>
+      <td>컨테이너 내부에만 남고 컨테이너를 삭제하면 사라집니다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>이미지 안에 결과가 자동으로 추가되는 것도 아닙니다. 분석 도구가 별도의 출력 옵션을 사용한다면, 그 옵션에 연결한 출력 경로를 지정합니다. <strong>“폴더 연결”과 “결과 저장 경로 지정”을 함께 확인하세요.</strong></p>
+
 <p>컨테이너는 –rm으로 없어졌지만 line-count.txt는 PC 폴더에 남았습니다. Windows에서는 WSL Ubuntu 홈 폴더, macOS에서는 Mac 홈 폴더입니다.</p>
 
-<h2 id="section">[실습] 반복 연습 · 결과 보관함 바꾸기</h2>
+<h2 id="section-1">[실습] 반복 연습 · 결과 보관함 바꾸기</h2>
 <p><strong>20~25분 · 호스트 Bash.</strong> 앞의 line-count.txt 생성이 성공한 다음 진행합니다.</p>
 
-<h3 id="section-1">바꿔 보기</h3>
+<h3 id="section-2">바꿔 보기</h3>
 <p>결과를 output 대신 <code>output-review</code>에 저장하려고 합니다. PC에 새 폴더를 만듭니다.</p>
 
 <pre><code class="language-bash">cd "$HOME/linux-server-lab"
@@ -95,7 +121,7 @@ cat output-review/line-count.txt
   <p>4줄이라는 결과가 새 PC 폴더에 남습니다. 출력 파일이 이미 있으면 덮어씁니다.</p>
 </details>
 
-<h3 id="section-2">고쳐 보기</h3>
+<h3 id="section-3">고쳐 보기</h3>
 <p>다음 명령은 PC에 예제 파일이 있어도 실패합니다. 빠진 연결을 찾아 고치세요.</p>
 
 <pre><code class="language-bash">docker run --rm alpine:3.21 cat /input/samples.tsv
@@ -116,10 +142,10 @@ cat output-review/line-count.txt
   <p>4줄의 예제 내용이 보이면 성공입니다. 호스트의 작업 폴더에서 실행합니다.</p>
 </details>
 
-<h3 id="section-3">설명하기</h3>
+<h3 id="section-4">설명하기</h3>
 <p>PC의 폴더 이름은 output-review인데 컨테이너에서는 왜 /output에 썼을까요? 컨테이너가 삭제된 뒤에도 결과가 남는 이유를 말하세요. Windows는 WSL Ubuntu의 폴더, macOS는 홈 폴더의 실제 결과도 확인합니다.</p>
 
-<h2 id="section-4">확인 질문</h2>
+<h2 id="section-5">확인 질문</h2>
 <p>결과 파일은 이미지 안에 들어 있나요? 컨테이너를 삭제하면 위 결과도 사라지나요?</p>
 <details><summary>[답지] 해설 보기</summary>
 결과는 연결한 PC 폴더에 있습니다. 컨테이너를 삭제해도 PC 폴더의 결과는 남습니다. 연결한 파일을 컨테이너에서 삭제하면 PC에서도 삭제될 수 있으므로 개인 실습 폴더만 사용합니다.
@@ -129,7 +155,7 @@ cat output-review/line-count.txt
 
 <p>문제가 생겼다면 <a href="08-troubleshooting.html#docker-trouble">8장 Docker 오류 실습</a>에서 같은 증상을 찾아본다.</p>
 
-<h2 id="section-5">이 장의 정리</h2>
+<h2 id="section-6">이 장의 정리</h2>
 
 <ul>
   <li>호스트 경로와 컨테이너 경로는 다를 수 있다.</li>

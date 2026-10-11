@@ -41,6 +41,8 @@
   </tbody>
 </table>
 
+<p>처음에는 Linux의 A·D·F, Docker의 4·6·7·11과 종합 미션 1·2부터 진행하세요. 나머지 사례는 시간이 남거나 같은 오류를 만났을 때 찾아보는 추가 연습입니다. 모든 사례를 한 번에 끝낼 필요는 없습니다.</p>
+
 <h2 id="section-1">실습 전 준비와 실행 위치</h2>
 
 <p>Linux 실습은 <strong>course-linux 안</strong>에서 합니다. 호스트에서 아래 명령으로 들어갑니다. 이미 들어와 있다면 실행할 필요가 없습니다.</p>
@@ -669,7 +671,7 @@ docker system df
 
 <h3 id="section-6">미션 1. 이름·출력 폴더·결과 확인</h3>
 
-<p><strong>실행 위치: course-linux 안.</strong> 처음 진행할 때 아래 출력 폴더가 없다면 두 가지 문제가 섞여 있습니다. 반복 시에는 새로운 출력 폴더 이름을 사용하세요.</p>
+<p><strong>실행 위치: course-linux 안.</strong> 앞의 Docker 실습에서 호스트로 나왔다면 먼저 <code>docker start -ai course-linux</code>로 다시 들어옵니다. 처음 진행할 때 아래 출력 폴더가 없다면 두 가지 문제가 섞여 있습니다. 반복 시에는 새로운 출력 폴더 이름을 사용하세요.</p>
 
 <pre><code class="language-bash">cd "$HOME/linux-server-lab"
 cat input/sample.tsv &gt; scratch/trouble-8/mission-new/result.txt

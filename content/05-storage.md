@@ -53,7 +53,7 @@ docker system df
 **15분 · 작은 파일 관찰과 사례 토론.**
 
 ### 바꿔 보기
-**course-linux 안**에서 실습용 로그 한 줄을 만들고 해당 폴더 크기를 확인하세요. 같은 파일이 있으면 덮어씁니다.
+앞 단계에서 호스트로 나왔다면 `docker start -ai course-linux`로 다시 들어옵니다. **course-linux 안**에서 실습용 로그 한 줄을 만들고 해당 폴더 크기를 확인하세요. 같은 파일이 있으면 덮어씁니다.
 ```bash
 cd "$HOME/linux-server-lab"
 printf 'small practice log\n' > logs/storage-practice.log

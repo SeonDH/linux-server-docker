@@ -95,7 +95,7 @@ du -sh input output logs scratch
 <p><strong>15분 · 작은 파일 관찰과 사례 토론.</strong></p>
 
 <h3 id="section-7">바꿔 보기</h3>
-<p><strong>course-linux 안</strong>에서 실습용 로그 한 줄을 만들고 해당 폴더 크기를 확인하세요. 같은 파일이 있으면 덮어씁니다.</p>
+<p>앞 단계에서 호스트로 나왔다면 <code>docker start -ai course-linux</code>로 다시 들어옵니다. <strong>course-linux 안</strong>에서 실습용 로그 한 줄을 만들고 해당 폴더 크기를 확인하세요. 같은 파일이 있으면 덮어씁니다.</p>
 
 <pre><code class="language-bash">cd "$HOME/linux-server-lab"
 printf 'small practice log\n' &gt; logs/storage-practice.log

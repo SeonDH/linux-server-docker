@@ -85,11 +85,11 @@ Docker Desktop의 Linux 환경
 <p><strong>세 화면의 숫자는 똑같을 필요가 없습니다.</strong> 집 전체 전기 사용량과 방 하나의 전기 사용량처럼 보는 범위가 다릅니다. CPU의 100%를 세는 기준, 메모리 캐시·VM 자체 사용량과 측정 시점도 달라집니다. Docker stats는 CPU 한 개를 바쁘게 쓰면 대략 100%로 표시할 수 있어 여러 CPU를 쓰면 100%를 넘을 수도 있습니다. PC 전체 CPU 비율과 바로 비교하지 않습니다.</p>
 
 <h3 id="cpu-">1. 따라 하기 · 작은 계산 작업의 CPU 보기</h3>
-<p>Alpine 이미지로 CPU 한 개의 약 1/4까지 사용하는 짧은 실습 작업을 시작합니다. <strong>120초 뒤 자동 종료</strong>하며 실제 분석 데이터는 쓰지 않습니다.</p>
+<p>Alpine 이미지로 CPU 한 개의 약 1/4까지 사용하는 짧은 실습 작업을 시작합니다. <strong>300초 뒤 자동 종료</strong>하며 실제 분석 데이터는 쓰지 않습니다.</p>
 
 <pre><code class="language-bash">docker run -d --name course-cpu-watch \
   --cpus=0.25 --memory=128m \
-  alpine:3.21 timeout 120 sh -c 'while :; do :; done'
+  alpine:3.21 timeout 300 sh -c 'while :; do :; done'
 docker stats course-cpu-watch
 
 </code></pre>
@@ -98,7 +98,7 @@ docker stats course-cpu-watch
 <p>같은 작업을 호스트의 작업 관리자·활성 상태 보기에서도 봅니다. 전체 PC CPU에서 변화가 작아 보여도 docker stats에서 컨테이너의 활동을 확인할 수 있습니다.</p>
 
 <h3 id="cpu---">2. 바꿔 보기 · CPU 한도만 늘려 보기</h3>
-<p>120초가 지나기 전에 실행합니다. 이미 종료됐다면 방금 만든 실습 컨테이너를 정리한 뒤 따라 하기부터 다시 시작합니다.</p>
+<p>300초가 지나기 전에 실행합니다. 이미 종료됐다면 방금 만든 실습 컨테이너를 정리한 뒤 따라 하기부터 다시 시작합니다.</p>
 
 <pre><code class="language-bash">docker update --cpus=0.5 course-cpu-watch
 docker stats course-cpu-watch
@@ -115,7 +115,7 @@ docker stats course-cpu-watch
 <p>q로 top을 나옵니다. Alpine의 top은 0장 Ubuntu에서 본 화면과 다를 수 있습니다. top의 CPU 비율은 표시 방식에 따라 docker stats와 다를 수 있으므로 동일한 숫자를 기대하지 않습니다.</p>
 
 <h3 id="section-2">4. 정리하기</h3>
-<p>이 실습에서 만든 컨테이너만 정리합니다. 120초 뒤 이미 종료됐어도 이름이 남아 있을 수 있습니다.</p>
+<p>이 실습에서 만든 컨테이너만 정리합니다. 300초 뒤 이미 종료됐어도 이름이 남아 있을 수 있습니다.</p>
 
 <pre><code class="language-bash">docker stop course-cpu-watch
 docker rm course-cpu-watch
@@ -137,7 +137,7 @@ docker stats --no-stream course-mem-small course-mem-large
 docker rm course-mem-small course-mem-large
 
 </code></pre>
-<p>실제 메모리 사용량이 커지는 실험은 기본 수업에서는 하지 않습니다. 위 관찰은 <strong>한도와 사용량 구분</strong>을 배우는 실습입니다.</p>
+<p>위 관찰은 <strong>한도와 사용량 구분</strong>을 배우는 실습입니다. 실제 메모리 요청이 한도를 넘는 상황은 <a href="practice-memory.html">메모리 부족 실습</a>에서 작은 한도 안에서 별도로 확인합니다.</p>
 
 <h3 id="section-4">한도를 주었을 때와 주지 않았을 때</h3>
 <p>책상에서 일하는 사람에게 “이만큼만 사용하세요”라고 정하는 것과, 별도 한도를 정하지 않는 것은 다릅니다. <strong>한도가 없다는 말은 항상 모든 자원을 쓴다는 뜻이 아닙니다.</strong> 실제 사용량은 실행하는 프로그램에 따라 달라집니다.</p>
@@ -206,7 +206,7 @@ docker rm course-mem-small course-mem-large
 <p>메모리도 마찬가지입니다. 20 MiB가 필요한 작업은 128 MiB 한도에서도, 한도 없이도 비슷한 양을 사용할 수 있습니다. 큰 작업이 RAM 한도를 넘으면 swap 설정에 따라 느려지거나 메모리 부족으로 종료될 수 있습니다. 한도 없이 실행한 큰 작업은 가용 자원을 많이 사용해 다른 작업에 영향을 줄 수 있습니다. 정확한 사용량은 로그와 docker stats로 확인합니다.</p>
 
 <h4 id="sleep--sleep">작은 비교 실습 · 제한 없는 sleep과 제한한 sleep</h4>
-<p><strong>호스트 Bash에서 실행합니다.</strong> 자원을 과도하게 쓰는 분석 대신 작은 대기 작업을 비교합니다. 120초 뒤 각각 끝납니다.</p>
+<p><strong>호스트 Bash에서 실행합니다.</strong> 자원을 과도하게 쓰는 분석 대신 작은 대기 작업을 비교합니다. 300초 뒤 각각 끝납니다.</p>
 
 <pre><code class="language-bash">docker run -d --name course-with-limit \
   --cpus=0.25 --memory=64m alpine:3.21 sleep 120
