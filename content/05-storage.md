@@ -17,6 +17,18 @@ cd "$HOME/linux-server-lab"
 df -h .
 du -sh input output logs scratch
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>df -h .</code> | 지정한 경로가 사용하는 파일시스템의 상태를 봅니다. `-h`는 전체·사용·남은 용량, `-i`는 파일·폴더를 관리하는 inode의 전체·남은 개수를 보여줍니다. |
+| <code>du -sh input output logs scratch</code> | 지정한 폴더나 파일이 차지하는 공간을 봅니다. `-s`는 각 대상의 합계, `-h`는 읽기 쉬운 단위입니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
 | 명령 | 질문 |
 |---|---|
 | df -h . | 지금 저장하는 공간 전체에 얼마나 남았나요? |
@@ -38,6 +50,15 @@ du -sh input output logs scratch
 ```bash
 docker system df
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker system df</code> | 이미지·컨테이너·볼륨·빌드 캐시의 공간 사용을 보여줍니다. `-v`는 자세한 내역입니다. |
+
+</details>
+
 이미지·컨테이너·볼륨 등의 사용량을 봅니다. 이것만으로 로그를 포함한 모든 디스크 사용량을 설명하지는 못합니다. 자세한 위치·로그 설정은 [선택 자료](deep-dive.html)에 있습니다.
 
 ## [실습] 작은 공간에서는 실패하고 큰 공간에서는 성공하기
@@ -59,11 +80,33 @@ cd "$HOME/linux-server-lab"
 printf 'small practice log\n' > logs/storage-practice.log
 du -sh logs
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>printf &#x27;small practice log\n&#x27; &gt; logs/storage-practice.log</code> | 지정한 형식으로 글자를 출력합니다. `\n`은 줄바꿈, `\t`는 탭, `%s`는 뒤에 전달한 값을 넣는 자리입니다. |
+| <code>du -sh logs</code> | 지정한 폴더나 파일이 차지하는 공간을 봅니다. `-s`는 각 대상의 합계, `-h`는 읽기 쉬운 단위입니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
 이번에는 output 폴더의 크기를 확인하세요. 실제 디스크를 가득 채우지 않습니다.
 <details markdown="1"><summary>[답지] 해설 보기</summary>
 ```bash
 du -sh output
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>du -sh output</code> | 지정한 폴더나 파일이 차지하는 공간을 봅니다. `-s`는 각 대상의 합계, `-h`는 읽기 쉬운 단위입니다. |
+
+</details>
+
 파일시스템 특성에 따라 크기는 달라집니다. 지정한 폴더의 사용량을 본다는 점이 핵심입니다.
 </details>
 

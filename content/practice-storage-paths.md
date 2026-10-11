@@ -37,10 +37,29 @@ docker run --rm -it --name course-storage-demo \
   --network=none \
   --tmpfs /small:rw,size=8m \
   --tmpfs /large:rw,size=32m \
-  alpine:3.21 timeout 600 sh
+  alpine:3.21 timeout 1200 sh
 ```
 
-이제 **실습 컨테이너 안의 sh**입니다. `--tmpfs` 두 줄이 이번에 연결한 작은 공간과 큰 공간입니다. `--memory`는 컨테이너 전체 RAM 한도이며 각 저장공간의 크기와 구분합니다. 데이터 최대 합계 40MiB보다 여유 있는 128MiB로 설정했습니다. 10분 뒤 자동 종료되므로 시간이 지나 연결이 끊기면 처음부터 다시 시작합니다.
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run --rm -it --name course-storage-demo  --cpus=0.25 --memory=128m --memory-swap=128m  --network=none  --tmpfs /small:rw,size=8m  --tmpfs /large:rw,size=32m  alpine:3.21 timeout 1200 sh</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `-it` | 키보드 입력과 터미널 화면을 연결합니다. |
+| `--name` | 바로 뒤의 이름을 컨테이너에 붙입니다. 같은 이름은 중복 사용할 수 없습니다. |
+| `--cpus` | CPU 한 개 기준의 시간 한도입니다. 0.25는 25%, 1은 CPU 하나 분량이며 전용 CPU 예약이 아닙니다. |
+| `--memory` | 컨테이너 RAM 사용 한도입니다. m은 MiB 단위이고, 실제 사용량이 항상 한도만큼인 것은 아닙니다. |
+| `--memory-swap` | RAM과 스왑을 합한 한도입니다. --memory와 같은 값이면 컨테이너의 스왑 사용을 막습니다. |
+| `--network=none` | 외부 네트워크 연결을 사용하지 않도록 합니다. |
+| `--tmpfs /경로:rw,size=...` | RAM 기반 임시 공간을 지정한 경로에 연결합니다. rw는 읽기·쓰기, size는 최대 크기입니다. 정지하면 파일이 사라집니다. |
+| `timeout 초 명령` | 지정한 시간이 지나면 명령에 종료를 요청합니다. 무한 계산 예제를 계속 돌리지 않기 위한 장치입니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
+
+이제 **실습 컨테이너 안의 sh**입니다. `--tmpfs` 두 줄이 이번에 연결한 작은 공간과 큰 공간입니다. `--memory`는 컨테이너 전체 RAM 한도이며 각 저장공간의 크기와 구분합니다. 데이터 최대 합계 40MiB보다 여유 있는 128MiB로 설정했습니다. 20분 뒤 자동 종료되므로 시간이 지나 연결이 끊기면 처음부터 다시 시작합니다.
 
 컨테이너 이름이 이미 사용 중이라는 오류가 나오면 [8장 이름 충돌 사례](08-troubleshooting.html#docker-trouble)처럼 기존 대상이 이 실습인지 먼저 확인하세요.
 
@@ -51,6 +70,15 @@ docker run --rm -it --name course-storage-demo \
 ```bash
 df -h /small /large
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>df -h /small /large</code> | 지정한 경로가 사용하는 파일시스템의 상태를 봅니다. `-h`는 전체·사용·남은 용량, `-i`는 파일·폴더를 관리하는 inode의 전체·남은 개수를 보여줍니다. |
+
+</details>
+
 
 `Size`에서 `/small`은 약 8M, `/large`는 약 32M인지 봅니다. `Mounted on`은 이 공간을 어느 주소에서 사용하는지 보여줍니다.
 
@@ -70,6 +98,18 @@ echo "$?"
 df -h /small /large
 wc -c /small/result.bin
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>dd if=/dev/zero of=/small/result.bin bs=1M count=12</code> | 예제 데이터를 파일로 씁니다. `if=/dev/zero`는 0으로 채운 입력, `of=`는 출력 파일, `bs=`는 한 번에 쓸 크기, `count=`는 반복 횟수입니다. `bs=1M count=12`는 12MiB 쓰기 시도입니다. |
+| <code>echo &quot;$?&quot;</code> | 뒤의 글자나 변수 값을 출력합니다. `$?`는 바로 앞 명령의 종료 상태로, 보통 0은 성공·나머지는 실패입니다. |
+| <code>df -h /small /large</code> | 지정한 경로가 사용하는 파일시스템의 상태를 봅니다. `-h`는 전체·사용·남은 용량, `-i`는 파일·폴더를 관리하는 inode의 전체·남은 개수를 보여줍니다. |
+| <code>wc -c /small/result.bin</code> | 파일이나 입력의 크기를 셉니다. `-l`은 줄 수, `-c`는 바이트 수입니다. 파일이 만들어졌는지뿐 아니라 내용·크기도 확인합니다. |
+
+</details>
+
 
 | 명령의 부분 | 뜻 |
 |---|---|
@@ -91,6 +131,18 @@ wc -c /large/result.bin
 df -h /small /large
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>dd if=/dev/zero of=/large/result.bin bs=1M count=12</code> | 예제 데이터를 파일로 씁니다. `if=/dev/zero`는 0으로 채운 입력, `of=`는 출력 파일, `bs=`는 한 번에 쓸 크기, `count=`는 반복 횟수입니다. `bs=1M count=12`는 12MiB 쓰기 시도입니다. |
+| <code>echo &quot;$?&quot;</code> | 뒤의 글자나 변수 값을 출력합니다. `$?`는 바로 앞 명령의 종료 상태로, 보통 0은 성공·나머지는 실패입니다. |
+| <code>wc -c /large/result.bin</code> | 파일이나 입력의 크기를 셉니다. `-l`은 줄 수, `-c`는 바이트 수입니다. 파일이 만들어졌는지뿐 아니라 내용·크기도 확인합니다. |
+| <code>df -h /small /large</code> | 지정한 경로가 사용하는 파일시스템의 상태를 봅니다. `-h`는 전체·사용·남은 용량, `-i`는 파일·폴더를 관리하는 inode의 전체·남은 개수를 보여줍니다. |
+
+</details>
+
+
 **예상 결과:** 종료 상태 0, 파일 크기 **12582912바이트**, 즉 12MiB. `/small`이 계속 가득 차 있어도 `/large`에 쓰는 작업은 성공합니다.
 
 바뀐 것은 입력 크기나 CPU가 아니라 **저장하는 주소**입니다. 실제 분석에서는 실패한 불완전한 결과를 성공 결과처럼 복사해 쓰기보다, 오류 원인을 해결하고 작업을 다시 실행해 완전한 출력을 확인합니다.
@@ -104,6 +156,17 @@ rm /small/result.bin
 df -h /small /large
 wc -c /large/result.bin
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>rm /small/result.bin</code> | 지정한 파일을 삭제합니다. `-i`가 있으면 삭제 전에 확인을 요청합니다. 이번 실습에서 만든 파일만 대상으로 합니다. |
+| <code>df -h /small /large</code> | 지정한 경로가 사용하는 파일시스템의 상태를 봅니다. `-h`는 전체·사용·남은 용량, `-i`는 파일·폴더를 관리하는 inode의 전체·남은 개수를 보여줍니다. |
+| <code>wc -c /large/result.bin</code> | 파일이나 입력의 크기를 셉니다. `-l`은 줄 수, `-c`는 바이트 수입니다. 파일이 만들어졌는지뿐 아니라 내용·크기도 확인합니다. |
+
+</details>
+
 
 **예상 결과:** `/small`의 여유는 돌아오고, `/large`의 완전한 결과는 그대로 남습니다. 실제 서버에서도 어느 경로의 파일을 정리하는지 구분해야 합니다.
 
@@ -138,6 +201,15 @@ docker system df
 ```bash
 exit
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>exit</code> | 현재 셸을 종료합니다. 주 작업이 셸인 course-linux에서는 컨테이너가 정지하고 호스트로 돌아갑니다. |
+
+</details>
+
 
 호스트로 돌아오며 이 컨테이너는 `--rm`으로 삭제됩니다. 두 임시 공간의 파일도 남지 않습니다. 기존 `course-linux`와 PC 실습 폴더는 별개입니다.
 

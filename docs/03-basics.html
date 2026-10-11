@@ -24,6 +24,59 @@ cat ../input/samples.tsv
 cd ..
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>cd &quot;$HOME/linux-server-lab&quot;</code></td>
+        <td>뒤의 경로로 현재 작업 위치를 옮깁니다. <code>$HOME</code>은 현재 환경의 홈, <code>..</code>는 한 단계 위 폴더입니다.</td>
+      </tr>
+      <tr>
+        <td><code>pwd</code></td>
+        <td>현재 작업 중인 폴더의 절대 경로를 출력합니다. 파일을 찾기 전에 내 위치를 확인합니다.</td>
+      </tr>
+      <tr>
+        <td><code>ls</code></td>
+        <td>파일이나 폴더를 확인합니다. <code>-l</code>은 권한·소유자 등 상세 정보, <code>-d</code>는 폴더 내부 대신 폴더 자체, <code>-h</code>는 크기를 읽기 쉬운 단위로 보여줍니다.</td>
+      </tr>
+      <tr>
+        <td><code>cat input/samples.tsv</code></td>
+        <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+      </tr>
+      <tr>
+        <td><code>cd output</code></td>
+        <td>뒤의 경로로 현재 작업 위치를 옮깁니다. <code>$HOME</code>은 현재 환경의 홈, <code>..</code>는 한 단계 위 폴더입니다.</td>
+      </tr>
+      <tr>
+        <td><code>cat input/samples.tsv</code></td>
+        <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+      </tr>
+      <tr>
+        <td><code>cat ../input/samples.tsv</code></td>
+        <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+      </tr>
+      <tr>
+        <td><code>cd ..</code></td>
+        <td>뒤의 경로로 현재 작업 위치를 옮깁니다. <code>$HOME</code>은 현재 환경의 홈, <code>..</code>는 한 단계 위 폴더입니다.</td>
+      </tr>
+      <tr>
+        <td><code>$HOME</code></td>
+        <td>현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>output 안에서 <code>input/samples.tsv</code>를 읽으면 실패합니다. 현재 위치에 input 폴더가 없기 때문입니다. <code>..</code>는 한 단계 위입니다. <code>../input/samples.tsv</code>는 성공합니다.</p>
 
 <h2 id="path----">PATH는 데이터 파일의 주소와 다릅니다</h2>
@@ -32,6 +85,26 @@ cd ..
 <pre><code class="language-bash">command -v wc
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>command -v wc</code></td>
+        <td>해당 명령을 어디에서 찾았는지 보여줍니다. PATH의 프로그램 검색과 데이터 파일의 경로 찾기는 별개입니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
 
 <h2 id="section-3">권한은 파일을 사용할 수 있는 허가입니다</h2>
 <p><code>r</code>은 읽기, <code>w</code>는 쓰기, <code>x</code>는 실행입니다. 파일 소유자·그룹·다른 사용자마다 허가가 다를 수 있습니다. 디렉터리의 x는 그 경로에 들어가거나 통과하는 권한입니다.</p>
@@ -46,6 +119,55 @@ chmod u+x scratch/hello.sh
 ./scratch/hello.sh
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>printf &#x27;#!/bin/sh\necho hello\n&#x27; &gt; scratch/hello.sh</code></td>
+        <td>지정한 형식으로 글자를 출력합니다. <code>\n</code>은 줄바꿈, <code>\t</code>는 탭, <code>%s</code>는 뒤에 전달한 값을 넣는 자리입니다.</td>
+      </tr>
+      <tr>
+        <td><code>chmod u-x scratch/hello.sh</code></td>
+        <td>파일의 권한을 바꿉니다. <code>u-x</code>는 소유자의 실행 권한 제거, <code>u+x</code>는 추가입니다. <code>755</code>는 소유자 읽기·쓰기·실행과 나머지 읽기·실행, <code>600</code>은 소유자만 읽기·쓰기입니다.</td>
+      </tr>
+      <tr>
+        <td><code>ls -l scratch/hello.sh</code></td>
+        <td>파일이나 폴더를 확인합니다. <code>-l</code>은 권한·소유자 등 상세 정보, <code>-d</code>는 폴더 내부 대신 폴더 자체, <code>-h</code>는 크기를 읽기 쉬운 단위로 보여줍니다.</td>
+      </tr>
+      <tr>
+        <td><code>./scratch/hello.sh</code></td>
+        <td>현재 폴더를 기준으로 스크립트를 직접 실행합니다. <code>./</code>가 경로를 지정하고, 파일에는 실행 권한이 필요합니다.</td>
+      </tr>
+      <tr>
+        <td><code>chmod u+x scratch/hello.sh</code></td>
+        <td>파일의 권한을 바꿉니다. <code>u-x</code>는 소유자의 실행 권한 제거, <code>u+x</code>는 추가입니다. <code>755</code>는 소유자 읽기·쓰기·실행과 나머지 읽기·실행, <code>600</code>은 소유자만 읽기·쓰기입니다.</td>
+      </tr>
+      <tr>
+        <td><code>./scratch/hello.sh</code></td>
+        <td>현재 폴더를 기준으로 스크립트를 직접 실행합니다. <code>./</code>가 경로를 지정하고, 파일에는 실행 권한이 필요합니다.</td>
+      </tr>
+      <tr>
+        <td><code>&gt; 경로</code></td>
+        <td>표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다.</td>
+      </tr>
+      <tr>
+        <td><code>echo 글자</code></td>
+        <td>컨테이너 안에서 지정한 글자를 출력합니다. &gt;가 있으면 그 출력을 파일에 저장합니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>처음 직접 실행은 Permission denied, 권한을 준 뒤에는 hello가 기대됩니다. <code>u+x</code>는 소유자에게 실행 허가를 추가한다는 뜻입니다. 같은 실습 파일은 덮어씁니다.</p>
 
 <p>0장의 컨테이너는 root 사용자입니다. 실제 서버의 일반 사용자는 읽기·쓰기에 제한이 더 있습니다. 읽기 권한 오류의 일반 사용자 실습은 <a href="deep-dive.html">선택 자료</a>에 있습니다.</p>
@@ -61,6 +183,39 @@ cp input/samples.tsv input/practice.tsv
 cd output
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>cd &quot;$HOME/linux-server-lab&quot;</code></td>
+        <td>뒤의 경로로 현재 작업 위치를 옮깁니다. <code>$HOME</code>은 현재 환경의 홈, <code>..</code>는 한 단계 위 폴더입니다.</td>
+      </tr>
+      <tr>
+        <td><code>cp input/samples.tsv input/practice.tsv</code></td>
+        <td>첫 번째 경로의 파일을 두 번째 경로로 복사합니다. 같은 이름의 대상 파일이 있으면 덮어쓸 수 있습니다.</td>
+      </tr>
+      <tr>
+        <td><code>cd output</code></td>
+        <td>뒤의 경로로 현재 작업 위치를 옮깁니다. <code>$HOME</code>은 현재 환경의 홈, <code>..</code>는 한 단계 위 폴더입니다.</td>
+      </tr>
+      <tr>
+        <td><code>$HOME</code></td>
+        <td>현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>현재 위치를 바꾸지 않고 <code>practice.tsv</code>를 읽어보세요.</p>
 <details>
   <summary>힌트 보기</summary>
@@ -72,6 +227,27 @@ cd output
   <pre><code class="language-bash">cat ../input/practice.tsv
 
 </code></pre>
+
+  <details>
+    <summary>명령 한 줄씩 해석하기</summary>
+
+    <table>
+      <thead>
+        <tr>
+          <th>명령 또는 부분</th>
+          <th>하는 일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>cat ../input/practice.tsv</code></td>
+          <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </details>
+
   <p>예제 4줄이 보이면 성공입니다.</p>
 </details>
 
@@ -83,6 +259,39 @@ chmod u-x scratch/hello.sh
 ./scratch/hello.sh
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>cd &quot;$HOME/linux-server-lab&quot;</code></td>
+        <td>뒤의 경로로 현재 작업 위치를 옮깁니다. <code>$HOME</code>은 현재 환경의 홈, <code>..</code>는 한 단계 위 폴더입니다.</td>
+      </tr>
+      <tr>
+        <td><code>chmod u-x scratch/hello.sh</code></td>
+        <td>파일의 권한을 바꿉니다. <code>u-x</code>는 소유자의 실행 권한 제거, <code>u+x</code>는 추가입니다. <code>755</code>는 소유자 읽기·쓰기·실행과 나머지 읽기·실행, <code>600</code>은 소유자만 읽기·쓰기입니다.</td>
+      </tr>
+      <tr>
+        <td><code>./scratch/hello.sh</code></td>
+        <td>현재 폴더를 기준으로 스크립트를 직접 실행합니다. <code>./</code>가 경로를 지정하고, 파일에는 실행 권한이 필요합니다.</td>
+      </tr>
+      <tr>
+        <td><code>$HOME</code></td>
+        <td>현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>오류를 읽고 필요한 권한만 고쳐 hello를 출력하세요. 3장의 따라 하기에서 hello.sh를 먼저 만들어야 합니다.</p>
 <details>
   <summary>힌트 보기</summary>
@@ -95,6 +304,31 @@ chmod u-x scratch/hello.sh
 ./scratch/hello.sh
 
 </code></pre>
+
+  <details>
+    <summary>명령 한 줄씩 해석하기</summary>
+
+    <table>
+      <thead>
+        <tr>
+          <th>명령 또는 부분</th>
+          <th>하는 일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>chmod u+x scratch/hello.sh</code></td>
+          <td>파일의 권한을 바꿉니다. <code>u-x</code>는 소유자의 실행 권한 제거, <code>u+x</code>는 추가입니다. <code>755</code>는 소유자 읽기·쓰기·실행과 나머지 읽기·실행, <code>600</code>은 소유자만 읽기·쓰기입니다.</td>
+        </tr>
+        <tr>
+          <td><code>./scratch/hello.sh</code></td>
+          <td>현재 폴더를 기준으로 스크립트를 직접 실행합니다. <code>./</code>가 경로를 지정하고, 파일에는 실행 권한이 필요합니다.</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </details>
+
   <p>hello가 기대됩니다. 모두에게 모든 권한을 주는 chmod 777은 필요하지 않습니다.</p>
 </details>
 
@@ -118,6 +352,47 @@ printf 'hello\n' &gt; "scratch/space demo/note.txt"
 cat "scratch/space demo/note.txt"
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>cd &quot;$HOME/linux-server-lab&quot;</code></td>
+        <td>뒤의 경로로 현재 작업 위치를 옮깁니다. <code>$HOME</code>은 현재 환경의 홈, <code>..</code>는 한 단계 위 폴더입니다.</td>
+      </tr>
+      <tr>
+        <td><code>mkdir -p &quot;scratch/space demo&quot;</code></td>
+        <td>뒤에 적힌 폴더들을 만듭니다. <code>-p</code>는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다.</td>
+      </tr>
+      <tr>
+        <td><code>printf &#x27;hello\n&#x27; &gt; &quot;scratch/space demo/note.txt&quot;</code></td>
+        <td>지정한 형식으로 글자를 출력합니다. <code>\n</code>은 줄바꿈, <code>\t</code>는 탭, <code>%s</code>는 뒤에 전달한 값을 넣는 자리입니다.</td>
+      </tr>
+      <tr>
+        <td><code>cat &quot;scratch/space demo/note.txt&quot;</code></td>
+        <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+      </tr>
+      <tr>
+        <td><code>&gt; 경로</code></td>
+        <td>표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다.</td>
+      </tr>
+      <tr>
+        <td><code>$HOME</code></td>
+        <td>현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>hello가 기대 결과다. 마지막 경로에서 따옴표를 빼면 shell이 여러 인자로 나눌 수 있다. 변수로 경로를 사용할 때도 <code>"$HOME"</code>, <code>"$PWD"</code>처럼 묶는 습관을 익힌다.</p>
 
 <h2 id="section-11">이 장의 정리</h2>

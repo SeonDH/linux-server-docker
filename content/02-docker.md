@@ -93,6 +93,18 @@ Linux 서버는 Engine을 직접 사용할 수 있어 Desktop이 필수는 아�
 ```bash
 docker run --rm alpine:3.21 echo hello
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run --rm alpine:3.21 echo hello</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `echo 글자` | 컨테이너 안에서 지정한 글자를 출력합니다. >가 있으면 그 출력을 파일에 저장합니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
 **기대 결과:** `hello`
 
 비유로 읽으면 **“Alpine에 준비된 도구로 작업 자리를 하나 차리고, hello를 출력한 뒤, 그 자리를 치우세요”**라는 명령입니다. `--rm`이 있어서 작업이 끝나면 이 컨테이너까지 자동 삭제됩니다.
@@ -123,6 +135,16 @@ docker run --rm alpine:3.21 echo hello
 docker image ls
 docker ps -a
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker image ls</code> | 로컬 Docker 저장소에 있는 이미지 목록을 보여줍니다. |
+| <code>docker ps -a</code> | 컨테이너 목록을 봅니다. 기본은 실행 중인 대상, `-a`는 정지한 대상도 포함하며 `--filter name=...`는 이름으로 목록을 좁힙니다. |
+
+</details>
+
 첫 명령은 준비된 이미지, 두 번째는 남아 있는 컨테이너를 보여줍니다. 위 hello 컨테이너는 --rm으로 삭제돼 목록에 없습니다. 0장의 course-linux는 별도로 남아 있을 수 있습니다.
 
 **정지**는 작업이 멈춘 상태, **삭제**는 그 작업 공간을 없애는 것입니다. 정지한 컨테이너의 내부 파일은 남을 수 있지만 삭제하면 사라집니다.
@@ -139,6 +161,18 @@ docker ps -a
 ```bash
 docker run --rm alpine:3.21 echo hello-again
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run --rm alpine:3.21 echo hello-again</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `echo 글자` | 컨테이너 안에서 지정한 글자를 출력합니다. >가 있으면 그 출력을 파일에 저장합니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
 출력은 hello-again입니다. 같은 이미지로 새로운 작업을 실행했습니다.
 </details>
 
@@ -148,6 +182,16 @@ docker run --rm alpine:3.21 echo hello-again
 docker image ls
 docker ps -a
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker image ls</code> | 로컬 Docker 저장소에 있는 이미지 목록을 보여줍니다. |
+| <code>docker ps -a</code> | 컨테이너 목록을 봅니다. 기본은 실행 중인 대상, `-a`는 정지한 대상도 포함하며 `--filter name=...`는 이름으로 목록을 좁힙니다. |
+
+</details>
+
 <details markdown="1"><summary>힌트 보기</summary>
 이미지와 컨테이너는 서로 다른 대상입니다. --rm은 어느 것을 지우나요?
 </details>

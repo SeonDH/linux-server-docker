@@ -46,19 +46,58 @@ Docker Desktop은 PC에서 컨테이너를 실행할 엔진과 Linux 환경, 관
 wsl --version
 wsl --list --verbose
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>wsl --version</code> | WSL 프로그램의 버전을 확인합니다. |
+| <code>wsl --list --verbose</code> | 설치된 Linux 배포판과 WSL 1·2 여부를 자세히 확인합니다. |
+
+</details>
+
 WSL이나 Ubuntu가 없다면 설치합니다.
 ```powershell
 wsl --install -d Ubuntu
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>wsl --install -d Ubuntu</code> | Ubuntu 배포판과 WSL을 설치합니다. |
+| `-d` | 백그라운드로 실행합니다. 처음에는 작업 결과 대신 컨테이너 ID가 보입니다. |
+
+</details>
+
 재부팅 안내가 나오면 재부팅한 뒤 시작 메뉴의 Ubuntu를 열고 Linux 사용자 이름과 비밀번호를 만듭니다. 비밀번호 입력 중 글자가 표시되지 않는 것은 정상입니다. WSL 업데이트가 필요한 경우 다음을 실행합니다.
 ```powershell
 wsl --update
 wsl --list --verbose
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>wsl --update</code> | WSL을 업데이트합니다. |
+| <code>wsl --list --verbose</code> | 설치된 Linux 배포판과 WSL 1·2 여부를 자세히 확인합니다. |
+
+</details>
+
 Ubuntu의 VERSION 열이 `2`인지 확인합니다. `1`이면 다음처럼 변환합니다. 배포판 이름이 다르면 목록에 표시된 이름을 사용합니다.
 ```powershell
 wsl --set-version Ubuntu 2
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>wsl --set-version Ubuntu 2</code> | 지정한 Ubuntu 배포판을 WSL 2로 전환합니다. |
+
+</details>
+
 WSL 설치에는 가상화 기능과 시스템 설정 권한이 필요할 수 있습니다. 기관 PC에서 설치가 제한되면 교육 담당자에게 미리 문의하세요.
 
 ### 2-2. Docker Desktop 설치와 연결
@@ -86,6 +125,15 @@ Apple 메뉴 → 이 Mac에 관하여에서 칩을 확인합니다.
 ```bash
 bash
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>bash</code> | Bash 셸을 엽니다. Mac의 기본 zsh에서 교재와 같은 Bash 환경으로 전환합니다. |
+
+</details>
+
 Mac 터미널은 아직 Linux가 아닙니다. 공통 Linux 환경에는 뒤의 `docker run` 명령으로 들어갑니다.
 
 ## 4. 공통: Docker 실행 확인
@@ -94,6 +142,18 @@ Mac 터미널은 아직 Linux가 아닙니다. 공통 Linux 환경에는 뒤의 
 docker version
 docker run --rm hello-world
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker version</code> | Docker 명령 프로그램(Client)과 실행 엔진(Server)의 버전을 확인합니다. |
+| <code>docker run --rm hello-world</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `hello-world` | Docker가 정상 실행되는지 인사 메시지로 확인하는 이미지입니다. |
+
+</details>
+
 `docker version`에 Client와 Server 정보가 모두 나오고, 두 번째 명령에 `Hello from Docker!`가 나오면 연결 성공입니다. 첫 실행은 이미지를 다운로드합니다. 이 확인이 끝나면 교육생은 Docker 설치를 완료한 상태입니다.
 
 ## 5. 개인 PC에 실습 폴더 만들기
@@ -104,10 +164,32 @@ cd "$HOME/linux-server-lab"
 mkdir -p input output logs scratch
 pwd
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>mkdir -p &quot;$HOME/linux-server-lab&quot;</code> | 뒤에 적힌 폴더들을 만듭니다. `-p`는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다. |
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>mkdir -p input output logs scratch</code> | 뒤에 적힌 폴더들을 만듭니다. `-p`는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다. |
+| <code>pwd</code> | 현재 작업 중인 폴더의 절대 경로를 출력합니다. 파일을 찾기 전에 내 위치를 확인합니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
 Windows에서는 이 폴더가 WSL Ubuntu의 홈에 있습니다. 필요하면 아래 명령으로 Windows 파일 탐색기를 열어 볼 수 있습니다.
 ```bash
 explorer.exe .
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>explorer.exe .</code> | Windows 파일 탐색기로 현재 WSL 폴더를 엽니다. `.`은 현재 폴더입니다. Windows에서만 실행합니다. |
+
+</details>
+
 위 명령은 Windows에서만 사용합니다. macOS는 Finder의 이동 → 홈에서 `linux-server-lab` 폴더를 확인하세요.
 
 ## 6. 공통 Linux 실습 컨테이너 만들기
@@ -121,6 +203,26 @@ docker run -it --name course-linux \
   --workdir /root/linux-server-lab \
   ubuntu:24.04 bash
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker pull ubuntu:24.04</code> | 뒤의 이미지 이름과 태그를 찾아 내려받습니다. 저장소 주소를 생략하면 기본적으로 Docker Hub를 사용합니다. |
+| <code>docker pull alpine:3.21</code> | 뒤의 이미지 이름과 태그를 찾아 내려받습니다. 저장소 주소를 생략하면 기본적으로 Docker Hub를 사용합니다. |
+| <code>docker run -it --name course-linux  --cpus=1 --memory=512m  --mount &quot;type=bind,src=$HOME/linux-server-lab,dst=/root/linux-server-lab&quot;  --workdir /root/linux-server-lab  ubuntu:24.04 bash</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `-it` | 키보드 입력과 터미널 화면을 연결합니다. |
+| `--name` | 바로 뒤의 이름을 컨테이너에 붙입니다. 같은 이름은 중복 사용할 수 없습니다. |
+| `--cpus` | CPU 한 개 기준의 시간 한도입니다. 0.25는 25%, 1은 CPU 하나 분량이며 전용 CPU 예약이 아닙니다. |
+| `--memory` | 컨테이너 RAM 사용 한도입니다. m은 MiB 단위이고, 실제 사용량이 항상 한도만큼인 것은 아닙니다. |
+| `--workdir` | 컨테이너 안에서 명령을 시작할 작업 폴더입니다. |
+| `--mount` | type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+| `ubuntu:24.04` | 이번 Linux 기초 실습에 사용할 Ubuntu 이미지입니다. |
+
+</details>
+
 ### 위 명령을 쉽게 읽어 보기
 
 | 명령 또는 옵션 | 하는 일 |
@@ -173,6 +275,16 @@ docker run -it --name course-linux \
 apt-get update
 apt-get install -y procps util-linux
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>apt-get update</code> | Ubuntu의 프로그램 설치 도구입니다. `update`는 설치 가능한 프로그램 목록을 갱신하고, `install -y procps util-linux`는 확인에 자동 동의하여 진단 도구 묶음을 설치합니다. |
+| <code>apt-get install -y procps util-linux</code> | Ubuntu의 프로그램 설치 도구입니다. `update`는 설치 가능한 프로그램 목록을 갱신하고, `install -y procps util-linux`는 확인에 자동 동의하여 진단 도구 묶음을 설치합니다. |
+
+</details>
+
 `ps`, `top`, `free`, `vmstat`, `findmnt`, `lsblk` 등 관찰 도구를 준비합니다. 컨테이너에서 관찰한 메모리·디스크 값은 PC 전체 또는 실제 교육용 서버의 값과 일치하지 않을 수 있습니다. 컨테이너에서는 실제 서버의 모든 블록 장치가 보이지 않을 수 있습니다.
 
 ### 6-2. 예제 데이터 만들기
@@ -185,6 +297,23 @@ cat input/samples.tsv
 cat /etc/os-release
 pwd
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>mkdir -p input output logs scratch</code> | 뒤에 적힌 폴더들을 만듭니다. `-p`는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다. |
+| <code>printf &#x27;sample\tgroup\tcount\nS01\tA\t10\nS02\tB\t20\nS03\tA\t30\n&#x27; &gt; input/samples.tsv</code> | 지정한 형식으로 글자를 출력합니다. `\n`은 줄바꿈, `\t`는 탭, `%s`는 뒤에 전달한 값을 넣는 자리입니다. |
+| <code>cat input/samples.tsv</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>cat /etc/os-release</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>pwd</code> | 현재 작업 중인 폴더의 절대 경로를 출력합니다. 파일을 찾기 전에 내 위치를 확인합니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+| `/etc/os-release` | 컨테이너의 Linux 배포판과 버전 정보가 적힌 파일입니다. |
+
+</details>
+
 Ubuntu 정보와 `/root/linux-server-lab` 경로가 보이면 준비 완료입니다. PC의 `linux-server-lab/input` 폴더에서도 `samples.tsv`를 확인할 수 있습니다. 컨테이너 경로와 PC 경로는 다르지만 같은 파일이 연결되어 있습니다.
 
 ## 7. 나가기와 다시 들어가기
@@ -192,11 +321,30 @@ Ubuntu 정보와 `/root/linux-server-lab` 경로가 보이면 준비 완료입�
 ```bash
 exit
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>exit</code> | 현재 셸을 종료합니다. 주 작업이 셸인 course-linux에서는 컨테이너가 정지하고 호스트로 돌아갑니다. |
+
+</details>
+
 **호스트 터미널**에서 상태를 보고 다시 들어갑니다.
 ```bash
 docker ps -a --filter name=course-linux
 docker start -ai course-linux
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker ps -a --filter name=course-linux</code> | 컨테이너 목록을 봅니다. 기본은 실행 중인 대상, `-a`는 정지한 대상도 포함하며 `--filter name=...`는 이름으로 목록을 좁힙니다. |
+| <code>docker start -ai course-linux</code> | 기존 컨테이너를 다시 시작합니다. `-a`는 출력 연결, `-i`는 입력 연결이며, `-ai`는 둘을 함께 사용합니다. 처음 지정한 작업·폴더 연결 설정을 다시 사용합니다. |
+
+</details>
+
 정지·재시작해도 이 컨테이너에 설치한 도구는 남습니다. `docker run`을 다시 실행하면 같은 이름 충돌이 나므로 기존 환경에는 `docker start -ai`로 들어갑니다. 삭제 후 새로 만들면 컨테이너에 설치한 도구를 다시 준비해야 합니다. PC에 연결한 실습 파일은 컨테이너 삭제와 별개로 남습니다.
 
 ## 8. 장별로 어느 터미널을 쓰나요?
@@ -226,6 +374,15 @@ Docker를 조작하는 명령은 호스트에서 실행합니다. 실습 컨테�
 ```bash
 docker pull python:3.12-alpine
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker pull python:3.12-alpine</code> | 뒤의 이미지 이름과 태그를 찾아 내려받습니다. 저장소 주소를 생략하면 기본적으로 Docker Hub를 사용합니다. |
+
+</details>
+
 
 ## 수업 전 완료 체크
 - Docker Desktop을 설치하고 실행했다.

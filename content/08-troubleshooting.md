@@ -28,6 +28,15 @@ Linux 실습은 **course-linux 안**에서 합니다. 호스트에서 아래 명
 docker start -ai course-linux
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker start -ai course-linux</code> | 기존 컨테이너를 다시 시작합니다. `-a`는 출력 연결, `-i`는 입력 연결이며, `-ai`는 둘을 함께 사용합니다. 처음 지정한 작업·폴더 연결 설정을 다시 사용합니다. |
+
+</details>
+
+
 **컨테이너 안**에서 아래 준비 명령을 실행합니다. 이 장에서 만드는 작은 파일은 `scratch/trouble-8` 안에 보관합니다. 반복 실습은 같은 이름의 실습 파일을 덮어쓸 수 있습니다.
 
 ```bash
@@ -35,6 +44,18 @@ cd "$HOME/linux-server-lab"
 mkdir -p scratch/trouble-8 output logs
 cat input/samples.tsv
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>mkdir -p scratch/trouble-8 output logs</code> | 뒤에 적힌 폴더들을 만듭니다. `-p`는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다. |
+| <code>cat input/samples.tsv</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
 
 헤더를 포함해 4줄이 보이면 준비됐습니다. 파일이 없다면 0장의 예제 데이터 만들기를 먼저 완료하세요. 오류를 재현하려고 실제 분석 파일의 이름이나 권한을 변경하지 않습니다.
 
@@ -51,6 +72,17 @@ cd "$HOME/linux-server-lab"
 cat input/sample.tsv
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>cat input/sample.tsv</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
+
 **예상 증상:** `No such file or directory`. 실제 예제는 `samples.tsv`인데 `sample.tsv`라고 입력했습니다.
 
 **먼저 확인:** 오류 메시지에 적힌 파일 이름과 실제 목록을 비교합니다.
@@ -60,11 +92,30 @@ pwd
 ls input
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>pwd</code> | 현재 작업 중인 폴더의 절대 경로를 출력합니다. 파일을 찾기 전에 내 위치를 확인합니다. |
+| <code>ls input</code> | 파일이나 폴더를 확인합니다. `-l`은 권한·소유자 등 상세 정보, `-d`는 폴더 내부 대신 폴더 자체, `-h`는 크기를 읽기 쉬운 단위로 보여줍니다. |
+
+</details>
+
+
 <details markdown="1"><summary>[해결] 실제 이름으로 다시 실행</summary>
 
 ```bash
 cat input/samples.tsv
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cat input/samples.tsv</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+
+</details>
+
 
 **해결 확인:** 예제 4줄이 보입니다. 파일이 없다는 오류가 나오면 프로그램 재설치보다 이름·현재 위치를 먼저 확인합니다.
 
@@ -81,6 +132,19 @@ pwd
 ls ..
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab/output&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>cat input/samples.tsv</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>pwd</code> | 현재 작업 중인 폴더의 절대 경로를 출력합니다. 파일을 찾기 전에 내 위치를 확인합니다. |
+| <code>ls ..</code> | 파일이나 폴더를 확인합니다. `-l`은 권한·소유자 등 상세 정보, `-d`는 폴더 내부 대신 폴더 자체, `-h`는 크기를 읽기 쉬운 단위로 보여줍니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
+
 **예상 증상:** 파일 없음. 현재 위치가 `output`이므로 `input/samples.tsv`는 `output/input/samples.tsv`를 뜻합니다.
 
 <details markdown="1"><summary>[해결] 현재 위치에 맞는 경로 사용</summary>
@@ -90,6 +154,18 @@ cat ../input/samples.tsv
 cd "$HOME/linux-server-lab"
 cat input/samples.tsv
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cat ../input/samples.tsv</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>cat input/samples.tsv</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
 
 **해결 확인:** 두 명령 모두 같은 4줄을 보여줍니다. `..`는 한 단계 위 폴더입니다. 같은 글자의 상대 경로라도 현재 위치에 따라 다른 파일을 가리킵니다.
 
@@ -106,6 +182,20 @@ printf 'hello\n' > "scratch/trouble-8/space demo/note.txt"
 cat scratch/trouble-8/space demo/note.txt
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>mkdir -p &quot;scratch/trouble-8/space demo&quot;</code> | 뒤에 적힌 폴더들을 만듭니다. `-p`는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다. |
+| <code>printf &#x27;hello\n&#x27; &gt; &quot;scratch/trouble-8/space demo/note.txt&quot;</code> | 지정한 형식으로 글자를 출력합니다. `\n`은 줄바꿈, `\t`는 탭, `%s`는 뒤에 전달한 값을 넣는 자리입니다. |
+| <code>cat scratch/trouble-8/space demo/note.txt</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
+
 **예상 증상:** 두 경로에 대한 파일 없음 오류. 셸이 공백을 기준으로 경로를 둘로 나누어 읽었습니다.
 
 <details markdown="1"><summary>[해결] 따옴표로 한 경로임을 표시</summary>
@@ -113,6 +203,15 @@ cat scratch/trouble-8/space demo/note.txt
 ```bash
 cat "scratch/trouble-8/space demo/note.txt"
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cat &quot;scratch/trouble-8/space demo/note.txt&quot;</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+
+</details>
+
 
 **해결 확인:** `hello`. 파일 이름을 바꾸기 전에 공백과 따옴표를 확인합니다. `$HOME`, `$PWD`가 들어간 경로도 큰따옴표로 감싸는 습관을 들입니다.
 
@@ -130,6 +229,22 @@ chmod u-x scratch/trouble-8/hello.sh
 ls -l scratch/trouble-8/hello.sh
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>printf &#x27;#!/bin/sh\necho hello\n&#x27; &gt; scratch/trouble-8/hello.sh</code> | 지정한 형식으로 글자를 출력합니다. `\n`은 줄바꿈, `\t`는 탭, `%s`는 뒤에 전달한 값을 넣는 자리입니다. |
+| <code>chmod u-x scratch/trouble-8/hello.sh</code> | 파일의 권한을 바꿉니다. `u-x`는 소유자의 실행 권한 제거, `u+x`는 추가입니다. `755`는 소유자 읽기·쓰기·실행과 나머지 읽기·실행, `600`은 소유자만 읽기·쓰기입니다. |
+| <code>./scratch/trouble-8/hello.sh</code> | 현재 폴더를 기준으로 스크립트를 직접 실행합니다. `./`가 경로를 지정하고, 파일에는 실행 권한이 필요합니다. |
+| <code>ls -l scratch/trouble-8/hello.sh</code> | 파일이나 폴더를 확인합니다. `-l`은 권한·소유자 등 상세 정보, `-d`는 폴더 내부 대신 폴더 자체, `-h`는 크기를 읽기 쉬운 단위로 보여줍니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+| `echo 글자` | 컨테이너 안에서 지정한 글자를 출력합니다. >가 있으면 그 출력을 파일에 저장합니다. |
+
+</details>
+
+
 **예상 증상:** `Permission denied`. 앞부분의 권한 표시에서 소유자의 `x`가 없는지 확인합니다. 이 실습은 root 컨테이너에서도 실행 권한 오류를 관찰합니다. 일반 사용자의 읽기·쓰기 권한 오류는 상황이 다를 수 있습니다.
 
 <details markdown="1"><summary>[해결] 자신의 파일에 실행 권한 추가</summary>
@@ -138,6 +253,16 @@ ls -l scratch/trouble-8/hello.sh
 chmod u+x scratch/trouble-8/hello.sh
 ./scratch/trouble-8/hello.sh
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>chmod u+x scratch/trouble-8/hello.sh</code> | 파일의 권한을 바꿉니다. `u-x`는 소유자의 실행 권한 제거, `u+x`는 추가입니다. `755`는 소유자 읽기·쓰기·실행과 나머지 읽기·실행, `600`은 소유자만 읽기·쓰기입니다. |
+| <code>./scratch/trouble-8/hello.sh</code> | 현재 폴더를 기준으로 스크립트를 직접 실행합니다. `./`가 경로를 지정하고, 파일에는 실행 권한이 필요합니다. |
+
+</details>
+
 
 **해결 확인:** `hello`. `chmod 777`로 모든 사람에게 모든 권한을 주지 않습니다. 실제 공유 서버에서는 파일 소유자와 필요한 권한도 확인합니다.
 
@@ -155,6 +280,21 @@ ls -l hello.sh
 printf '%s\n' "$PATH"
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab/scratch/trouble-8&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>hello.sh</code> | PATH에서 hello.sh라는 명령을 찾습니다. 현재 폴더가 PATH에 없으면 실패합니다. 현재 파일은 `./hello.sh`로 지정합니다. |
+| <code>pwd</code> | 현재 작업 중인 폴더의 절대 경로를 출력합니다. 파일을 찾기 전에 내 위치를 확인합니다. |
+| <code>ls -l hello.sh</code> | 파일이나 폴더를 확인합니다. `-l`은 권한·소유자 등 상세 정보, `-d`는 폴더 내부 대신 폴더 자체, `-h`는 크기를 읽기 쉬운 단위로 보여줍니다. |
+| <code>printf &#x27;%s\n&#x27; &quot;$PATH&quot;</code> | 지정한 형식으로 글자를 출력합니다. `\n`은 줄바꿈, `\t`는 탭, `%s`는 뒤에 전달한 값을 넣는 자리입니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+| `$PATH` | 프로그램 이름을 찾을 폴더 목록입니다. |
+
+</details>
+
+
 **예상 증상:** `command not found`. 셸은 명령 이름을 `PATH`에 있는 폴더에서 찾습니다. 현재 폴더가 자동으로 검색 대상에 포함되는 것은 아닙니다.
 
 <details markdown="1"><summary>[해결] 실행할 파일의 경로 표시</summary>
@@ -163,6 +303,17 @@ printf '%s\n' "$PATH"
 ./hello.sh
 cd "$HOME/linux-server-lab"
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>./hello.sh</code> | 현재 폴더를 기준으로 스크립트를 직접 실행합니다. `./`가 경로를 지정하고, 파일에는 실행 권한이 필요합니다. |
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
 
 **해결 확인:** `hello`. `./`는 현재 폴더를 뜻합니다. 개인 파일을 실행하려고 공용 서버의 PATH 설정을 무작정 바꾸지 않습니다.
 
@@ -180,6 +331,23 @@ wc -c output/trouble-8-result.txt
 cat logs/trouble-8-error.log
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>cat input/missing.tsv &gt; output/trouble-8-result.txt 2&gt; logs/trouble-8-error.log</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>echo &quot;$?&quot;</code> | 뒤의 글자나 변수 값을 출력합니다. `$?`는 바로 앞 명령의 종료 상태로, 보통 0은 성공·나머지는 실패입니다. |
+| <code>wc -c output/trouble-8-result.txt</code> | 파일이나 입력의 크기를 셉니다. `-l`은 줄 수, `-c`는 바이트 수입니다. 파일이 만들어졌는지뿐 아니라 내용·크기도 확인합니다. |
+| <code>cat logs/trouble-8-error.log</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| `2> 경로` | 오류 메시지를 해당 파일에 저장합니다. 같은 이름의 로그는 덮어씁니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+| 예상된 실패 예제 | 일부러 없는 파일·잘못된 경로·빠진 따옴표 등을 사용했습니다. 해당 사례의 오류와 해결 단계까지 확인합니다. |
+
+</details>
+
+
 **예상 증상:** 종료 상태가 0이 아니고, 결과는 0바이트이며, 로그에는 파일 없음 오류가 있습니다. 셸이 출력 파일을 먼저 만들 수 있으므로 파일 생성만으로 성공을 판단하지 않습니다.
 
 <details markdown="1"><summary>[해결] 입력 경로 수정 후 내용까지 확인</summary>
@@ -191,6 +359,22 @@ wc -l output/trouble-8-result.txt
 cat output/trouble-8-result.txt
 cat logs/trouble-8-error.log
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cat input/samples.tsv &gt; output/trouble-8-result.txt 2&gt; logs/trouble-8-error.log</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>echo &quot;$?&quot;</code> | 뒤의 글자나 변수 값을 출력합니다. `$?`는 바로 앞 명령의 종료 상태로, 보통 0은 성공·나머지는 실패입니다. |
+| <code>wc -l output/trouble-8-result.txt</code> | 파일이나 입력의 크기를 셉니다. `-l`은 줄 수, `-c`는 바이트 수입니다. 파일이 만들어졌는지뿐 아니라 내용·크기도 확인합니다. |
+| <code>cat output/trouble-8-result.txt</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>cat logs/trouble-8-error.log</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| `2> 경로` | 오류 메시지를 해당 파일에 저장합니다. 같은 이름의 로그는 덮어씁니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `wc -l` | 입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다. |
+
+</details>
+
 
 **해결 확인:** 종료 상태 0, 결과 4줄, 오류 로그는 비어 있습니다. `$?`는 바로 앞 명령의 상태이므로 확인하려는 명령 직후에 읽습니다.
 
@@ -208,6 +392,24 @@ echo "$?"
 cat logs/trouble-8-pipe.log
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>set +o pipefail</code> | `-o pipefail`은 파이프 앞 단계의 실패도 종료 상태에 반영하고, `+o pipefail`은 그 설정을 해제합니다. `-e`는 처리되지 않은 실패 시 종료, `-u`는 정의되지 않은 변수 사용 시 오류를 내는 설정입니다. |
+| <code>cat input/missing.tsv 2&gt; logs/trouble-8-pipe.log &#124; wc -l</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>echo &quot;$?&quot;</code> | 뒤의 글자나 변수 값을 출력합니다. `$?`는 바로 앞 명령의 종료 상태로, 보통 0은 성공·나머지는 실패입니다. |
+| <code>cat logs/trouble-8-pipe.log</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| `2> 경로` | 오류 메시지를 해당 파일에 저장합니다. 같은 이름의 로그는 덮어씁니다. |
+| `|` | 앞 명령의 표준 출력을 뒤 명령의 입력으로 전달합니다. 오류 메시지는 자동으로 전달되지 않습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+| `wc -l` | 입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다. |
+| 예상된 실패 예제 | 일부러 없는 파일·잘못된 경로·빠진 따옴표 등을 사용했습니다. 해당 사례의 오류와 해결 단계까지 확인합니다. |
+
+</details>
+
+
 **예상 증상:** 줄 수는 0이고 종료 상태도 0일 수 있지만, 로그에는 입력 오류가 있습니다. 마지막 `wc`는 입력을 받지 못해도 0줄을 세고 정상 종료할 수 있습니다.
 
 <details markdown="1"><summary>[해결] 실패 확인 방법과 실제 입력을 함께 수정</summary>
@@ -220,6 +422,24 @@ cat input/samples.tsv 2> logs/trouble-8-pipe.log | wc -l
 echo "$?"
 set +o pipefail
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>set -o pipefail</code> | `-o pipefail`은 파이프 앞 단계의 실패도 종료 상태에 반영하고, `+o pipefail`은 그 설정을 해제합니다. `-e`는 처리되지 않은 실패 시 종료, `-u`는 정의되지 않은 변수 사용 시 오류를 내는 설정입니다. |
+| <code>cat input/missing.tsv 2&gt; logs/trouble-8-pipe.log &#124; wc -l</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>echo &quot;$?&quot;</code> | 뒤의 글자나 변수 값을 출력합니다. `$?`는 바로 앞 명령의 종료 상태로, 보통 0은 성공·나머지는 실패입니다. |
+| <code>cat input/samples.tsv 2&gt; logs/trouble-8-pipe.log &#124; wc -l</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>echo &quot;$?&quot;</code> | 뒤의 글자나 변수 값을 출력합니다. `$?`는 바로 앞 명령의 종료 상태로, 보통 0은 성공·나머지는 실패입니다. |
+| <code>set +o pipefail</code> | `-o pipefail`은 파이프 앞 단계의 실패도 종료 상태에 반영하고, `+o pipefail`은 그 설정을 해제합니다. `-e`는 처리되지 않은 실패 시 종료, `-u`는 정의되지 않은 변수 사용 시 오류를 내는 설정입니다. |
+| `2> 경로` | 오류 메시지를 해당 파일에 저장합니다. 같은 이름의 로그는 덮어씁니다. |
+| `|` | 앞 명령의 표준 출력을 뒤 명령의 입력으로 전달합니다. 오류 메시지는 자동으로 전달되지 않습니다. |
+| `wc -l` | 입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다. |
+| 예상된 실패 예제 | 일부러 없는 파일·잘못된 경로·빠진 따옴표 등을 사용했습니다. 해당 사례의 오류와 해결 단계까지 확인합니다. |
+
+</details>
+
 
 **해결 확인:** 없는 파일에서는 종료 상태가 0이 아니고, 실제 파일에서는 4줄과 종료 상태 0입니다. 마지막 명령은 이 비교에서 바꾼 설정을 되돌립니다. 업무 스크립트는 오류 처리 목적에 맞게 `pipefail`을 사용합니다.
 
@@ -235,6 +455,19 @@ cat input/samples.tsv > scratch/trouble-8/not-created-8/result.txt
 ls -ld scratch/trouble-8/not-created-8
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>cat input/samples.tsv &gt; scratch/trouble-8/not-created-8/result.txt</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>ls -ld scratch/trouble-8/not-created-8</code> | 파일이나 폴더를 확인합니다. `-l`은 권한·소유자 등 상세 정보, `-d`는 폴더 내부 대신 폴더 자체, `-h`는 크기를 읽기 쉬운 단위로 보여줍니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
+
 **예상 증상:** 출력 경로에 대한 파일 없음 오류. 입력은 정상이어도 출력의 부모 폴더가 없으면 파일을 만들 수 없습니다.
 
 <details markdown="1"><summary>[해결] 출력 폴더를 먼저 준비</summary>
@@ -244,6 +477,19 @@ mkdir -p scratch/trouble-8/not-created-8
 cat input/samples.tsv > scratch/trouble-8/not-created-8/result.txt
 wc -l scratch/trouble-8/not-created-8/result.txt
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>mkdir -p scratch/trouble-8/not-created-8</code> | 뒤에 적힌 폴더들을 만듭니다. `-p`는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다. |
+| <code>cat input/samples.tsv &gt; scratch/trouble-8/not-created-8/result.txt</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>wc -l scratch/trouble-8/not-created-8/result.txt</code> | 파일이나 입력의 크기를 셉니다. `-l`은 줄 수, `-c`는 바이트 수입니다. 파일이 만들어졌는지뿐 아니라 내용·크기도 확인합니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `wc -l` | 입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다. |
+
+</details>
+
 
 **해결 확인:** 4줄. 오류 메시지의 대상이 입력인지 출력인지 구분합니다.
 
@@ -260,6 +506,19 @@ ls input/samples.tsv
 docker version
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>mkdir -p output logs scratch/trouble-8</code> | 뒤에 적힌 폴더들을 만듭니다. `-p`는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다. |
+| <code>ls input/samples.tsv</code> | 파일이나 폴더를 확인합니다. `-l`은 권한·소유자 등 상세 정보, `-d`는 폴더 내부 대신 폴더 자체, `-h`는 크기를 읽기 쉬운 단위로 보여줍니다. |
+| <code>docker version</code> | Docker 명령 프로그램(Client)과 실행 엔진(Server)의 버전을 확인합니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
+
 이 장의 `course-…-demo` 컨테이너는 직접 만든 실습 대상만 정리합니다. 다른 사용자의 컨테이너나 `course-linux`를 삭제하지 않습니다.
 
 ### 1. 컨테이너 안에서 docker 명령을 찾지 못해요
@@ -272,6 +531,15 @@ docker version
 docker version
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker version</code> | Docker 명령 프로그램(Client)과 실행 엔진(Server)의 버전을 확인합니다. |
+
+</details>
+
+
 **해결 확인:** Client와 Server 정보가 모두 나옵니다. 현재 실습에서는 Docker를 조작하는 명령은 호스트, Linux 명령은 `course-linux` 안에서 실행합니다.
 
 ### 2. Docker 명령은 있는데 엔진 연결이 실패해요
@@ -282,6 +550,16 @@ docker version
 docker version
 docker context ls
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker version</code> | Docker 명령 프로그램(Client)과 실행 엔진(Server)의 버전을 확인합니다. |
+| <code>docker context ls</code> | Docker가 연결할 환경 목록과 현재 선택된 연결을 보여줍니다. |
+
+</details>
+
 
 **확인:** Client만 정상인지, Docker Desktop이 실행 중인지, 별표가 붙은 현재 context가 의도한 연결인지 봅니다.
 
@@ -294,6 +572,19 @@ docker run --name course-name-demo alpine:3.21 echo hello
 docker run --name course-name-demo alpine:3.21 echo again
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run --name course-name-demo alpine:3.21 echo hello</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| <code>docker run --name course-name-demo alpine:3.21 echo again</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--name` | 바로 뒤의 이름을 컨테이너에 붙입니다. 같은 이름은 중복 사용할 수 없습니다. |
+| `echo 글자` | 컨테이너 안에서 지정한 글자를 출력합니다. >가 있으면 그 출력을 파일에 저장합니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
+
 **예상 증상:** 첫 실행은 `hello` 뒤 종료하고, 두 번째는 이름 충돌로 실패합니다. 정지한 컨테이너도 이름을 가지고 있습니다.
 
 ```bash
@@ -301,11 +592,30 @@ docker ps -a --filter name=course-name-demo
 docker logs course-name-demo
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker ps -a --filter name=course-name-demo</code> | 컨테이너 목록을 봅니다. 기본은 실행 중인 대상, `-a`는 정지한 대상도 포함하며 `--filter name=...`는 이름으로 목록을 좁힙니다. |
+| <code>docker logs course-name-demo</code> | 지정한 컨테이너의 표준 출력·오류 로그를 봅니다. `--tail 50`은 마지막 50줄입니다. |
+
+</details>
+
+
 <details markdown="1"><summary>[해결] 기존 실습 대상 확인 후 정리</summary>
 
 ```bash
 docker rm course-name-demo
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker rm course-name-demo</code> | 지정한 컨테이너를 삭제합니다. 내부에만 저장한 파일도 없어지지만 이미지와 연결한 외부 폴더는 삭제하지 않습니다. |
+
+</details>
+
 
 **해결 확인:** 이름 충돌의 원인이었던 실습 컨테이너가 목록에서 사라집니다. `course-linux`를 다시 사용하려는 상황이라면 삭제 대신 `docker start -ai course-linux`로 들어갑니다.
 
@@ -319,6 +629,21 @@ ls input/samples.tsv
 docker run --rm alpine:3.21 cat /input/samples.tsv
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>ls input/samples.tsv</code> | 파일이나 폴더를 확인합니다. `-l`은 권한·소유자 등 상세 정보, `-d`는 폴더 내부 대신 폴더 자체, `-h`는 크기를 읽기 쉬운 단위로 보여줍니다. |
+| <code>docker run --rm alpine:3.21 cat /input/samples.tsv</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+| `cat /경로/파일` | 컨테이너에서 보이는 주소의 파일을 읽습니다. 호스트의 파일이 자동으로 보이지는 않습니다. |
+
+</details>
+
+
 **예상 증상:** 호스트의 파일은 있지만 컨테이너에서는 파일 없음. 호스트 폴더는 자동으로 연결되지 않습니다.
 
 <details markdown="1"><summary>[해결] 입력 폴더 연결</summary>
@@ -328,6 +653,20 @@ docker run --rm \
   --mount "type=bind,src=$PWD/input,dst=/input,readonly" \
   alpine:3.21 cat /input/samples.tsv
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run --rm  --mount &quot;type=bind,src=$PWD/input,dst=/input,readonly&quot;  alpine:3.21 cat /input/samples.tsv</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `--mount` | type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다. |
+| `$PWD` | 현재 작업 폴더의 절대 경로입니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+| `cat /경로/파일` | 컨테이너에서 보이는 주소의 파일을 읽습니다. 호스트의 파일이 자동으로 보이지는 않습니다. |
+
+</details>
+
 
 **해결 확인:** 예제 4줄. `src`는 호스트 경로, `dst`는 컨테이너 경로입니다.
 
@@ -343,6 +682,23 @@ docker run --rm \
 ls -ld input inputs
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>docker run --rm  --mount &quot;type=bind,src=$PWD/inputs,dst=/input,readonly&quot;  alpine:3.21 ls /input</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| <code>ls -ld input inputs</code> | 파일이나 폴더를 확인합니다. `-l`은 권한·소유자 등 상세 정보, `-d`는 폴더 내부 대신 폴더 자체, `-h`는 크기를 읽기 쉬운 단위로 보여줍니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `--mount` | type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+| `$PWD` | 현재 작업 폴더의 절대 경로입니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+| 예상된 실패 예제 | 일부러 없는 파일·잘못된 경로·빠진 따옴표 등을 사용했습니다. 해당 사례의 오류와 해결 단계까지 확인합니다. |
+
+</details>
+
+
 **예상 증상:** `inputs` 폴더가 없다면 연결 단계에서 실패합니다. 실제 준비한 이름은 `input`입니다. `--mount`는 기본적으로 존재하지 않는 연결 원본을 자동 생성하지 않습니다.
 
 <details markdown="1"><summary>[해결] 연결 원본의 이름 수정</summary>
@@ -352,6 +708,19 @@ docker run --rm \
   --mount "type=bind,src=$PWD/input,dst=/input,readonly" \
   alpine:3.21 ls /input
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run --rm  --mount &quot;type=bind,src=$PWD/input,dst=/input,readonly&quot;  alpine:3.21 ls /input</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `--mount` | type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다. |
+| `$PWD` | 현재 작업 폴더의 절대 경로입니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
 
 **해결 확인:** `samples.tsv`. 실제 입력 경로를 틀렸는데 빈 폴더를 새로 만들면 파일을 못 찾는 다른 오류로 이어질 수 있습니다. 먼저 원본이 있는 위치를 확인합니다.
 
@@ -366,6 +735,24 @@ docker run --rm \
   alpine:3.21 sh -c 'echo test > /input/new.txt'
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>docker run --rm  --mount &quot;type=bind,src=$PWD/input,dst=/input,readonly&quot;  alpine:3.21 sh -c &#x27;echo test &gt; /input/new.txt&#x27;</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `--mount` | type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다. |
+| `sh -c / bash -c` | 해당 셸이 따옴표 안의 명령을 해석합니다. 컨테이너 명령 뒤의 >가 컨테이너 내부에서 처리되도록 할 수 있습니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+| `$PWD` | 현재 작업 폴더의 절대 경로입니다. |
+| `echo 글자` | 컨테이너 안에서 지정한 글자를 출력합니다. >가 있으면 그 출력을 파일에 저장합니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
+
 **예상 증상:** `Read-only file system`. `readonly`로 원본 입력을 보호한 결과입니다. `chmod`로 읽기 전용 연결을 쓰기 가능하게 바꿀 수는 없습니다.
 
 <details markdown="1"><summary>[해결] 결과를 쓰기 가능한 출력 연결에 저장</summary>
@@ -378,6 +765,24 @@ docker run --rm \
   alpine:3.21 sh -c 'wc -l /input/samples.tsv > /output/trouble-8-count.txt'
 cat output/trouble-8-count.txt
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>mkdir -p output</code> | 뒤에 적힌 폴더들을 만듭니다. `-p`는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다. |
+| <code>docker run --rm  --mount &quot;type=bind,src=$PWD/input,dst=/input,readonly&quot;  --mount &quot;type=bind,src=$PWD/output,dst=/output&quot;  alpine:3.21 sh -c &#x27;wc -l /input/samples.tsv &gt; /output/trouble-8-count.txt&#x27;</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| <code>cat output/trouble-8-count.txt</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `--mount` | type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다. |
+| `sh -c / bash -c` | 해당 셸이 따옴표 안의 명령을 해석합니다. 컨테이너 명령 뒤의 >가 컨테이너 내부에서 처리되도록 할 수 있습니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `$PWD` | 현재 작업 폴더의 절대 경로입니다. |
+| `wc -l` | 입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
 
 **해결 확인:** 4줄이라는 결과가 PC 출력 폴더에 남습니다. 입력의 보호 설정은 유지합니다.
 
@@ -392,11 +797,37 @@ docker run --name course-result-demo alpine:3.21 \
   sh -c 'mkdir -p /output; echo inside > /output/result.txt'
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>mkdir -p output</code> | 뒤에 적힌 폴더들을 만듭니다. `-p`는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다. |
+| <code>docker run --name course-result-demo alpine:3.21  sh -c &#x27;mkdir -p /output; echo inside &gt; /output/result.txt&#x27;</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--name` | 바로 뒤의 이름을 컨테이너에 붙입니다. 같은 이름은 중복 사용할 수 없습니다. |
+| `sh -c / bash -c` | 해당 셸이 따옴표 안의 명령을 해석합니다. 컨테이너 명령 뒤의 >가 컨테이너 내부에서 처리되도록 할 수 있습니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+| `echo 글자` | 컨테이너 안에서 지정한 글자를 출력합니다. >가 있으면 그 출력을 파일에 저장합니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
+
 **증상:** 작업은 성공했지만 PC 출력 폴더에는 결과가 없습니다. 이 명령의 `/output`은 컨테이너 내부이고 호스트에 연결하지 않았습니다.
 
 ```bash
 docker inspect course-result-demo --format '{{json .Mounts}}'
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker inspect course-result-demo --format &#x27;{{json .Mounts}}&#x27;</code> | 컨테이너 설정·상태를 조회합니다. `--format`은 필요한 항목만 출력합니다. Mounts는 폴더 연결, ExitCode는 종료 상태, OOMKilled는 메모리 부족 종료 여부, HostConfig.Memory는 RAM 한도(바이트), NanoCpus는 CPU 시간 한도(1 CPU = 1000000000)입니다. |
+
+</details>
+
 
 이 사례는 연결이 없어 `[]`가 기대됩니다.
 
@@ -407,6 +838,17 @@ docker cp course-result-demo:/output/result.txt output/trouble-8-recovered.txt
 cat output/trouble-8-recovered.txt
 docker rm course-result-demo
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker cp course-result-demo:/output/result.txt output/trouble-8-recovered.txt</code> | 컨테이너이름:내부경로의 파일을 호스트의 뒤쪽 경로로 복사합니다. 정지한 컨테이너도 삭제 전에는 회수할 수 있습니다. |
+| <code>cat output/trouble-8-recovered.txt</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>docker rm course-result-demo</code> | 지정한 컨테이너를 삭제합니다. 내부에만 저장한 파일도 없어지지만 이미지와 연결한 외부 폴더는 삭제하지 않습니다. |
+
+</details>
+
 
 **해결 확인:** `inside`. 같은 회수 파일이 있으면 덮어쓸 수 있습니다. 다음 실행부터는 7장처럼 출력을 미리 연결합니다. `--rm`으로 이미 삭제된 컨테이너에서 결과를 회수할 수는 없습니다.
 
@@ -421,6 +863,21 @@ docker logs course-exit-demo
 docker rm course-exit-demo
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run --name course-exit-demo alpine:3.21 echo done</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| <code>docker inspect course-exit-demo --format &#x27;status={{.State.Status}} exit={{.State.ExitCode}}&#x27;</code> | 컨테이너 설정·상태를 조회합니다. `--format`은 필요한 항목만 출력합니다. Mounts는 폴더 연결, ExitCode는 종료 상태, OOMKilled는 메모리 부족 종료 여부, HostConfig.Memory는 RAM 한도(바이트), NanoCpus는 CPU 시간 한도(1 CPU = 1000000000)입니다. |
+| <code>docker logs course-exit-demo</code> | 지정한 컨테이너의 표준 출력·오류 로그를 봅니다. `--tail 50`은 마지막 50줄입니다. |
+| <code>docker rm course-exit-demo</code> | 지정한 컨테이너를 삭제합니다. 내부에만 저장한 파일도 없어지지만 이미지와 연결한 외부 폴더는 삭제하지 않습니다. |
+| `--name` | 바로 뒤의 이름을 컨테이너에 붙입니다. 같은 이름은 중복 사용할 수 없습니다. |
+| `echo 글자` | 컨테이너 안에서 지정한 글자를 출력합니다. >가 있으면 그 출력을 파일에 저장합니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
+
 **관찰:** `exited`, 종료 코드 0, 로그 `done`. 할 일을 마치고 정상 종료했습니다. 컨테이너가 종료됐다는 사실만으로 실패라고 판단하지 않습니다.
 
 ### 9. 정지한 컨테이너에 docker exec로 들어갈 수 없어요
@@ -434,6 +891,23 @@ docker exec course-state-demo echo hello
 docker ps -a --filter name=course-state-demo
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run -d --name course-state-demo alpine:3.21 sleep 3</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| <code>docker wait course-state-demo</code> | 컨테이너가 정지할 때까지 기다린 뒤 종료 코드를 출력합니다. |
+| <code>docker exec course-state-demo echo hello</code> | 현재 실행 중인 컨테이너 안에서 추가 명령을 실행합니다. 정지한 컨테이너에서는 실패합니다. |
+| <code>docker ps -a --filter name=course-state-demo</code> | 컨테이너 목록을 봅니다. 기본은 실행 중인 대상, `-a`는 정지한 대상도 포함하며 `--filter name=...`는 이름으로 목록을 좁힙니다. |
+| `-d` | 백그라운드로 실행합니다. 처음에는 작업 결과 대신 컨테이너 ID가 보입니다. |
+| `--name` | 바로 뒤의 이름을 컨테이너에 붙입니다. 같은 이름은 중복 사용할 수 없습니다. |
+| `echo 글자` | 컨테이너 안에서 지정한 글자를 출력합니다. >가 있으면 그 출력을 파일에 저장합니다. |
+| `sleep 초` | 지정한 시간 동안 기다리는 작업입니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
+
 **예상 증상:** `not running`. `docker wait`는 정지가 될 때까지 기다렸다가 종료 코드를 보여줍니다.
 
 <details markdown="1"><summary>[해결] 상태 확인 후 다시 시작</summary>
@@ -443,6 +917,17 @@ docker start course-state-demo
 docker wait course-state-demo
 docker rm course-state-demo
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker start course-state-demo</code> | 기존 컨테이너를 다시 시작합니다. `-a`는 출력 연결, `-i`는 입력 연결이며, `-ai`는 둘을 함께 사용합니다. 처음 지정한 작업·폴더 연결 설정을 다시 사용합니다. |
+| <code>docker wait course-state-demo</code> | 컨테이너가 정지할 때까지 기다린 뒤 종료 코드를 출력합니다. |
+| <code>docker rm course-state-demo</code> | 지정한 컨테이너를 삭제합니다. 내부에만 저장한 파일도 없어지지만 이미지와 연결한 외부 폴더는 삭제하지 않습니다. |
+
+</details>
+
 
 같은 `sleep 3` 작업이 다시 실행되고 종료 코드 0이 기대됩니다. 실습 Ubuntu 환경을 다시 여는 명령은 `docker start -ai course-linux`입니다. 시작 명령, 실행 중 추가 명령, 정지 상태를 구분합니다.
 
@@ -454,6 +939,19 @@ docker rm course-state-demo
 docker run --rm alpine:3.21 bash -c 'echo hello'
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run --rm alpine:3.21 bash -c &#x27;echo hello&#x27;</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `sh -c / bash -c` | 해당 셸이 따옴표 안의 명령을 해석합니다. 컨테이너 명령 뒤의 >가 컨테이너 내부에서 처리되도록 할 수 있습니다. |
+| `echo 글자` | 컨테이너 안에서 지정한 글자를 출력합니다. >가 있으면 그 출력을 파일에 저장합니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
+
 **예상 증상:** `bash` 실행 파일을 찾지 못합니다. 기본 Alpine 이미지에는 `sh`가 있지만 Bash는 기본 설치되어 있지 않습니다. Mac에 설치한 프로그램이 이미지에 자동으로 들어가지는 않습니다.
 
 <details markdown="1"><summary>[해결] 이미지에 있는 셸로 작은 명령 실행</summary>
@@ -461,6 +959,19 @@ docker run --rm alpine:3.21 bash -c 'echo hello'
 ```bash
 docker run --rm alpine:3.21 sh -c 'echo hello'
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run --rm alpine:3.21 sh -c &#x27;echo hello&#x27;</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `sh -c / bash -c` | 해당 셸이 따옴표 안의 명령을 해석합니다. 컨테이너 명령 뒤의 >가 컨테이너 내부에서 처리되도록 할 수 있습니다. |
+| `echo 글자` | 컨테이너 안에서 지정한 글자를 출력합니다. >가 있으면 그 출력을 파일에 저장합니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
 
 **해결 확인:** `hello`. 이 작은 명령은 `sh`로도 실행할 수 있습니다. 실제 분석 스크립트가 Bash나 특정 Python 라이브러리를 요구한다면 그 도구를 포함한 이미지를 선택하거나 이미지 준비 방법을 확인합니다. 셸 이름만 바꾸면 모든 스크립트가 호환되는 것은 아닙니다.
 
@@ -476,6 +987,24 @@ docker inspect course-error-demo --format 'exit={{.State.ExitCode}}'
 docker logs course-error-demo
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run -d --name course-error-demo alpine:3.21  sh -c &#x27;cat /missing.tsv&#x27;</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| <code>docker wait course-error-demo</code> | 컨테이너가 정지할 때까지 기다린 뒤 종료 코드를 출력합니다. |
+| <code>docker inspect course-error-demo --format &#x27;exit={{.State.ExitCode}}&#x27;</code> | 컨테이너 설정·상태를 조회합니다. `--format`은 필요한 항목만 출력합니다. Mounts는 폴더 연결, ExitCode는 종료 상태, OOMKilled는 메모리 부족 종료 여부, HostConfig.Memory는 RAM 한도(바이트), NanoCpus는 CPU 시간 한도(1 CPU = 1000000000)입니다. |
+| <code>docker logs course-error-demo</code> | 지정한 컨테이너의 표준 출력·오류 로그를 봅니다. `--tail 50`은 마지막 50줄입니다. |
+| `-d` | 백그라운드로 실행합니다. 처음에는 작업 결과 대신 컨테이너 ID가 보입니다. |
+| `--name` | 바로 뒤의 이름을 컨테이너에 붙입니다. 같은 이름은 중복 사용할 수 없습니다. |
+| `sh -c / bash -c` | 해당 셸이 따옴표 안의 명령을 해석합니다. 컨테이너 명령 뒤의 >가 컨테이너 내부에서 처리되도록 할 수 있습니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+| `cat /경로/파일` | 컨테이너에서 보이는 주소의 파일을 읽습니다. 호스트의 파일이 자동으로 보이지는 않습니다. |
+| 예상된 실패 예제 | 일부러 없는 파일·잘못된 경로·빠진 따옴표 등을 사용했습니다. 해당 사례의 오류와 해결 단계까지 확인합니다. |
+
+</details>
+
+
 **관찰:** `-d`는 백그라운드 실행이라 처음에는 컨테이너 ID만 보입니다. 종료 코드는 0이 아니고 로그에는 파일 없음 오류가 있습니다.
 
 <details markdown="1"><summary>[해결] 실패 원인 확인 후 올바른 입력으로 재실행</summary>
@@ -487,6 +1016,23 @@ docker run --rm \
   --mount "type=bind,src=$PWD/input,dst=/input,readonly" \
   alpine:3.21 cat /input/samples.tsv
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>docker rm course-error-demo</code> | 지정한 컨테이너를 삭제합니다. 내부에만 저장한 파일도 없어지지만 이미지와 연결한 외부 폴더는 삭제하지 않습니다. |
+| <code>docker run --rm  --mount &quot;type=bind,src=$PWD/input,dst=/input,readonly&quot;  alpine:3.21 cat /input/samples.tsv</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `--mount` | type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+| `$PWD` | 현재 작업 폴더의 절대 경로입니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+| `cat /경로/파일` | 컨테이너에서 보이는 주소의 파일을 읽습니다. 호스트의 파일이 자동으로 보이지는 않습니다. |
+
+</details>
+
 
 **해결 확인:** 4줄. 종료 상태와 로그를 함께 확인한 뒤 원인인 입력 경로를 고칩니다. 실패한 컨테이너를 이유 확인 없이 반복 실행하지 않습니다.
 
@@ -504,12 +1050,31 @@ docker run --rm \
 free -h
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>free -h</code> | 메모리 상태를 봅니다. `-h`는 읽기 쉬운 단위이며, 컨테이너별 메모리 한도와는 다를 수 있습니다. |
+
+</details>
+
+
 **호스트 Bash의 다른 창**에서 확인합니다.
 
 ```bash
 docker stats --no-stream course-linux
 docker inspect course-linux --format 'memory={{.HostConfig.Memory}}'
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker stats --no-stream course-linux</code> | 컨테이너별 CPU·메모리 사용량과 한도를 관찰합니다. `--no-stream`은 한 번만 출력합니다. 연속 관찰은 Ctrl+C로 마칩니다. |
+| <code>docker inspect course-linux --format &#x27;memory={{.HostConfig.Memory}}&#x27;</code> | 컨테이너 설정·상태를 조회합니다. `--format`은 필요한 항목만 출력합니다. Mounts는 폴더 연결, ExitCode는 종료 상태, OOMKilled는 메모리 부족 종료 여부, HostConfig.Memory는 RAM 한도(바이트), NanoCpus는 CPU 시간 한도(1 CPU = 1000000000)입니다. |
+
+</details>
+
 
 **원인:** `free`는 컨테이너가 보는 Linux 실행 환경의 메모리를 표시할 수 있어 컨테이너별 한도와 다릅니다. 0장처럼 만들었다면 `docker stats`의 LIMIT은 512MiB, 설정값은 536870912바이트가 기대됩니다. `free`의 전체 값은 PC마다 다릅니다.
 
@@ -541,6 +1106,16 @@ docker stats --no-stream 대상컨테이너
 docker stats --no-stream course-linux
 docker top course-linux
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker stats --no-stream course-linux</code> | 컨테이너별 CPU·메모리 사용량과 한도를 관찰합니다. `--no-stream`은 한 번만 출력합니다. 연속 관찰은 Ctrl+C로 마칩니다. |
+| <code>docker top course-linux</code> | 지정한 컨테이너의 실행 중인 프로세스를 호스트에서 확인합니다. |
+
+</details>
+
 
 `docker top`은 실행 중인 컨테이너에서만 사용할 수 있습니다. 현재 내 작업이 실행 중인지 먼저 확인합니다. 별도 작업의 로그와 자원은 그 컨테이너 이름으로 확인합니다.
 
@@ -594,6 +1169,18 @@ cd "$HOME/linux-server-lab"
 cat input/sample.tsv > scratch/trouble-8/mission-new/result.txt
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>cat input/sample.tsv &gt; scratch/trouble-8/mission-new/result.txt</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
+
 **완료 기준:** 출력 폴더에 예제 4줄을 저장하고 직접 확인합니다. 오류 메시지가 출력 경로를 먼저 가리킬 수 있습니다. 하나를 고친 뒤 다시 실행해 남은 오류를 확인하세요.
 
 <details markdown="1"><summary>[답지] 출력 폴더와 입력 이름 수정</summary>
@@ -604,6 +1191,20 @@ cat input/samples.tsv > scratch/trouble-8/mission-new/result.txt
 wc -l scratch/trouble-8/mission-new/result.txt
 cat scratch/trouble-8/mission-new/result.txt
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>mkdir -p scratch/trouble-8/mission-new</code> | 뒤에 적힌 폴더들을 만듭니다. `-p`는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다. |
+| <code>cat input/samples.tsv &gt; scratch/trouble-8/mission-new/result.txt</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>wc -l scratch/trouble-8/mission-new/result.txt</code> | 파일이나 입력의 크기를 셉니다. `-l`은 줄 수, `-c`는 바이트 수입니다. 파일이 만들어졌는지뿐 아니라 내용·크기도 확인합니다. |
+| <code>cat scratch/trouble-8/mission-new/result.txt</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `wc -l` | 입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다. |
+
+</details>
+
 
 </details>
 
@@ -618,6 +1219,23 @@ docker run --rm \
   alpine:3.21 cat /input/samples.tsv
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>docker run --rm  --mount &quot;type=bind,src=$PWD/input,dst=/data,readonly&quot;  alpine:3.21 cat /input/samples.tsv</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `--mount` | type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+| `$PWD` | 현재 작업 폴더의 절대 경로입니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+| `cat /경로/파일` | 컨테이너에서 보이는 주소의 파일을 읽습니다. 호스트의 파일이 자동으로 보이지는 않습니다. |
+| 예상된 실패 예제 | 일부러 없는 파일·잘못된 경로·빠진 따옴표 등을 사용했습니다. 해당 사례의 오류와 해결 단계까지 확인합니다. |
+
+</details>
+
+
 **완료 기준:** 컨테이너에서 예제 4줄을 출력합니다. PC의 원본 파일은 변경하지 않습니다.
 
 <details markdown="1"><summary>[답지] 연결된 컨테이너 경로로 수정</summary>
@@ -627,6 +1245,20 @@ docker run --rm \
   --mount "type=bind,src=$PWD/input,dst=/data,readonly" \
   alpine:3.21 cat /data/samples.tsv
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run --rm  --mount &quot;type=bind,src=$PWD/input,dst=/data,readonly&quot;  alpine:3.21 cat /data/samples.tsv</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `--mount` | type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다. |
+| `$PWD` | 현재 작업 폴더의 절대 경로입니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+| `cat /경로/파일` | 컨테이너에서 보이는 주소의 파일을 읽습니다. 호스트의 파일이 자동으로 보이지는 않습니다. |
+
+</details>
+
 
 `dst=/data`에 연결했으므로 명령도 `/data/samples.tsv`를 읽습니다. `dst`를 `/input`으로 바꾸어 명령에 맞춰도 해결할 수 있습니다.
 
@@ -645,6 +1277,25 @@ docker run --rm \
   alpine:3.21 sh -c 'wc -l /input/samples.tsv > /output/mission-count.txt'
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>mkdir -p output scratch/trouble-8/result-box</code> | 뒤에 적힌 폴더들을 만듭니다. `-p`는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다. |
+| <code>docker run --rm  --mount &quot;type=bind,src=$PWD/input,dst=/input,readonly&quot;  --mount &quot;type=bind,src=$PWD/scratch/trouble-8/result-box,dst=/output&quot;  alpine:3.21 sh -c &#x27;wc -l /input/samples.tsv &gt; /output/mission-count.txt&#x27;</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `--mount` | type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다. |
+| `sh -c / bash -c` | 해당 셸이 따옴표 안의 명령을 해석합니다. 컨테이너 명령 뒤의 >가 컨테이너 내부에서 처리되도록 할 수 있습니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+| `$PWD` | 현재 작업 폴더의 절대 경로입니다. |
+| `wc -l` | 입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
+
 **완료 기준:** 기존 결과의 실제 위치를 찾고, 연결 원본을 고쳐 `output/mission-count.txt`에 다시 저장합니다. 컨테이너의 출력 주소는 `/output`으로 유지합니다.
 
 <details markdown="1"><summary>[답지] 호스트 출력 연결을 수정</summary>
@@ -657,6 +1308,24 @@ docker run --rm \
   alpine:3.21 sh -c 'wc -l /input/samples.tsv > /output/mission-count.txt'
 cat output/mission-count.txt
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cat scratch/trouble-8/result-box/mission-count.txt</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>docker run --rm  --mount &quot;type=bind,src=$PWD/input,dst=/input,readonly&quot;  --mount &quot;type=bind,src=$PWD/output,dst=/output&quot;  alpine:3.21 sh -c &#x27;wc -l /input/samples.tsv &gt; /output/mission-count.txt&#x27;</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| <code>cat output/mission-count.txt</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| `--rm` | 작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다. |
+| `--mount` | type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다. |
+| `sh -c / bash -c` | 해당 셸이 따옴표 안의 명령을 해석합니다. 컨테이너 명령 뒤의 >가 컨테이너 내부에서 처리되도록 할 수 있습니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `$PWD` | 현재 작업 폴더의 절대 경로입니다. |
+| `wc -l` | 입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
 
 **해결 확인:** 두 위치에서 각각 4줄이라는 결과를 확인합니다. `src`는 PC의 주소, `dst`는 컨테이너 안의 주소입니다.
 

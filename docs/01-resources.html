@@ -50,6 +50,34 @@ df -h .
 
 </code></pre>
 
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>nproc</code></td>
+        <td>현재 환경에서 사용 가능하다고 보고되는 CPU 수를 출력합니다. 내 CPU 시간 한도와 같다고 가정하지 않습니다.</td>
+      </tr>
+      <tr>
+        <td><code>free -h</code></td>
+        <td>메모리 상태를 봅니다. <code>-h</code>는 읽기 쉬운 단위이며, 컨테이너별 메모리 한도와는 다를 수 있습니다.</td>
+      </tr>
+      <tr>
+        <td><code>df -h .</code></td>
+        <td>지정한 경로가 사용하는 파일시스템의 상태를 봅니다. <code>-h</code>는 전체·사용·남은 용량, <code>-i</code>는 파일·폴더를 관리하는 inode의 전체·남은 개수를 보여줍니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <table>
   <thead>
     <tr>

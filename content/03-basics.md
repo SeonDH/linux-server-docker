@@ -20,6 +20,23 @@ cat input/samples.tsv
 cat ../input/samples.tsv
 cd ..
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>pwd</code> | 현재 작업 중인 폴더의 절대 경로를 출력합니다. 파일을 찾기 전에 내 위치를 확인합니다. |
+| <code>ls</code> | 파일이나 폴더를 확인합니다. `-l`은 권한·소유자 등 상세 정보, `-d`는 폴더 내부 대신 폴더 자체, `-h`는 크기를 읽기 쉬운 단위로 보여줍니다. |
+| <code>cat input/samples.tsv</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>cd output</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>cat input/samples.tsv</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>cat ../input/samples.tsv</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| <code>cd ..</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
 output 안에서 `input/samples.tsv`를 읽으면 실패합니다. 현재 위치에 input 폴더가 없기 때문입니다. `..`는 한 단계 위입니다. `../input/samples.tsv`는 성공합니다.
 
 ## PATH는 데이터 파일의 주소와 다릅니다
@@ -27,6 +44,15 @@ PATH는 컴퓨터가 **명령 프로그램을 찾는 폴더 목록**입니다. `
 ```bash
 command -v wc
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>command -v wc</code> | 해당 명령을 어디에서 찾았는지 보여줍니다. PATH의 프로그램 검색과 데이터 파일의 경로 찾기는 별개입니다. |
+
+</details>
+
 
 ## 권한은 파일을 사용할 수 있는 허가입니다
 `r`은 읽기, `w`는 쓰기, `x`는 실행입니다. 파일 소유자·그룹·다른 사용자마다 허가가 다를 수 있습니다. 디렉터리의 x는 그 경로에 들어가거나 통과하는 권한입니다.
@@ -40,6 +66,22 @@ ls -l scratch/hello.sh
 chmod u+x scratch/hello.sh
 ./scratch/hello.sh
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>printf &#x27;#!/bin/sh\necho hello\n&#x27; &gt; scratch/hello.sh</code> | 지정한 형식으로 글자를 출력합니다. `\n`은 줄바꿈, `\t`는 탭, `%s`는 뒤에 전달한 값을 넣는 자리입니다. |
+| <code>chmod u-x scratch/hello.sh</code> | 파일의 권한을 바꿉니다. `u-x`는 소유자의 실행 권한 제거, `u+x`는 추가입니다. `755`는 소유자 읽기·쓰기·실행과 나머지 읽기·실행, `600`은 소유자만 읽기·쓰기입니다. |
+| <code>ls -l scratch/hello.sh</code> | 파일이나 폴더를 확인합니다. `-l`은 권한·소유자 등 상세 정보, `-d`는 폴더 내부 대신 폴더 자체, `-h`는 크기를 읽기 쉬운 단위로 보여줍니다. |
+| <code>./scratch/hello.sh</code> | 현재 폴더를 기준으로 스크립트를 직접 실행합니다. `./`가 경로를 지정하고, 파일에는 실행 권한이 필요합니다. |
+| <code>chmod u+x scratch/hello.sh</code> | 파일의 권한을 바꿉니다. `u-x`는 소유자의 실행 권한 제거, `u+x`는 추가입니다. `755`는 소유자 읽기·쓰기·실행과 나머지 읽기·실행, `600`은 소유자만 읽기·쓰기입니다. |
+| <code>./scratch/hello.sh</code> | 현재 폴더를 기준으로 스크립트를 직접 실행합니다. `./`가 경로를 지정하고, 파일에는 실행 권한이 필요합니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `echo 글자` | 컨테이너 안에서 지정한 글자를 출력합니다. >가 있으면 그 출력을 파일에 저장합니다. |
+
+</details>
+
 처음 직접 실행은 Permission denied, 권한을 준 뒤에는 hello가 기대됩니다. `u+x`는 소유자에게 실행 허가를 추가한다는 뜻입니다. 같은 실습 파일은 덮어씁니다.
 
 0장의 컨테이너는 root 사용자입니다. 실제 서버의 일반 사용자는 읽기·쓰기에 제한이 더 있습니다. 읽기 권한 오류의 일반 사용자 실습은 [선택 자료](deep-dive.html)에 있습니다.
@@ -54,6 +96,18 @@ cd "$HOME/linux-server-lab"
 cp input/samples.tsv input/practice.tsv
 cd output
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>cp input/samples.tsv input/practice.tsv</code> | 첫 번째 경로의 파일을 두 번째 경로로 복사합니다. 같은 이름의 대상 파일이 있으면 덮어쓸 수 있습니다. |
+| <code>cd output</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
 현재 위치를 바꾸지 않고 `practice.tsv`를 읽어보세요.
 <details markdown="1"><summary>힌트 보기</summary>
 pwd로 위치를 확인하세요. input은 현재 output의 한 단계 위에 있습니다. ..를 사용합니다.
@@ -62,6 +116,15 @@ pwd로 위치를 확인하세요. input은 현재 output의 한 단계 위에 �
 ```bash
 cat ../input/practice.tsv
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cat ../input/practice.tsv</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+
+</details>
+
 예제 4줄이 보이면 성공입니다.
 </details>
 
@@ -72,6 +135,18 @@ cd "$HOME/linux-server-lab"
 chmod u-x scratch/hello.sh
 ./scratch/hello.sh
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>chmod u-x scratch/hello.sh</code> | 파일의 권한을 바꿉니다. `u-x`는 소유자의 실행 권한 제거, `u+x`는 추가입니다. `755`는 소유자 읽기·쓰기·실행과 나머지 읽기·실행, `600`은 소유자만 읽기·쓰기입니다. |
+| <code>./scratch/hello.sh</code> | 현재 폴더를 기준으로 스크립트를 직접 실행합니다. `./`가 경로를 지정하고, 파일에는 실행 권한이 필요합니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
 오류를 읽고 필요한 권한만 고쳐 hello를 출력하세요. 3장의 따라 하기에서 hello.sh를 먼저 만들어야 합니다.
 <details markdown="1"><summary>힌트 보기</summary>
 ls -l로 확인합니다. 소유자의 실행 권한을 추가하면 됩니다.
@@ -81,6 +156,16 @@ ls -l로 확인합니다. 소유자의 실행 권한을 추가하면 됩니다.
 chmod u+x scratch/hello.sh
 ./scratch/hello.sh
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>chmod u+x scratch/hello.sh</code> | 파일의 권한을 바꿉니다. `u-x`는 소유자의 실행 권한 제거, `u+x`는 추가입니다. `755`는 소유자 읽기·쓰기·실행과 나머지 읽기·실행, `600`은 소유자만 읽기·쓰기입니다. |
+| <code>./scratch/hello.sh</code> | 현재 폴더를 기준으로 스크립트를 직접 실행합니다. `./`가 경로를 지정하고, 파일에는 실행 권한이 필요합니다. |
+
+</details>
+
 hello가 기대됩니다. 모두에게 모든 권한을 주는 chmod 777은 필요하지 않습니다.
 </details>
 
@@ -103,6 +188,20 @@ mkdir -p "scratch/space demo"
 printf 'hello\n' > "scratch/space demo/note.txt"
 cat "scratch/space demo/note.txt"
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>cd &quot;$HOME/linux-server-lab&quot;</code> | 뒤의 경로로 현재 작업 위치를 옮깁니다. `$HOME`은 현재 환경의 홈, `..`는 한 단계 위 폴더입니다. |
+| <code>mkdir -p &quot;scratch/space demo&quot;</code> | 뒤에 적힌 폴더들을 만듭니다. `-p`는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다. |
+| <code>printf &#x27;hello\n&#x27; &gt; &quot;scratch/space demo/note.txt&quot;</code> | 지정한 형식으로 글자를 출력합니다. `\n`은 줄바꿈, `\t`는 탭, `%s`는 뒤에 전달한 값을 넣는 자리입니다. |
+| <code>cat &quot;scratch/space demo/note.txt&quot;</code> | 지정한 파일 내용을 읽어 출력합니다. `/`로 시작하면 절대 경로, `../`는 상위 폴더를 기준으로 찾습니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `$HOME` | 현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다. |
+
+</details>
+
 hello가 기대 결과다. 마지막 경로에서 따옴표를 빼면 shell이 여러 인자로 나눌 수 있다. 변수로 경로를 사용할 때도 `"$HOME"`, `"$PWD"`처럼 묶는 습관을 익힌다.
 
 ## 이 장의 정리

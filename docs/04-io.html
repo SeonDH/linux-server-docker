@@ -21,6 +21,59 @@ cat logs/error.log
 wc -c output/result.txt
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>cd &quot;$HOME/linux-server-lab&quot;</code></td>
+        <td>뒤의 경로로 현재 작업 위치를 옮깁니다. <code>$HOME</code>은 현재 환경의 홈, <code>..</code>는 한 단계 위 폴더입니다.</td>
+      </tr>
+      <tr>
+        <td><code>cat input/missing.tsv &gt; output/result.txt 2&gt; logs/error.log</code></td>
+        <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+      </tr>
+      <tr>
+        <td><code>echo &quot;$?&quot;</code></td>
+        <td>뒤의 글자나 변수 값을 출력합니다. <code>$?</code>는 바로 앞 명령의 종료 상태로, 보통 0은 성공·나머지는 실패입니다.</td>
+      </tr>
+      <tr>
+        <td><code>cat logs/error.log</code></td>
+        <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+      </tr>
+      <tr>
+        <td><code>wc -c output/result.txt</code></td>
+        <td>파일이나 입력의 크기를 셉니다. <code>-l</code>은 줄 수, <code>-c</code>는 바이트 수입니다. 파일이 만들어졌는지뿐 아니라 내용·크기도 확인합니다.</td>
+      </tr>
+      <tr>
+        <td><code>2&gt; 경로</code></td>
+        <td>오류 메시지를 해당 파일에 저장합니다. 같은 이름의 로그는 덮어씁니다.</td>
+      </tr>
+      <tr>
+        <td><code>&gt; 경로</code></td>
+        <td>표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다.</td>
+      </tr>
+      <tr>
+        <td><code>$HOME</code></td>
+        <td>현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다.</td>
+      </tr>
+      <tr>
+        <td>예상된 실패 예제</td>
+        <td>일부러 없는 파일·잘못된 경로·빠진 따옴표 등을 사용했습니다. 해당 사례의 오류와 해결 단계까지 확인합니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>missing.tsv는 없는 파일입니다. 오류 로그에 이유가 남고 result.txt는 0바이트일 수 있습니다. 결과 파일이 생겼다는 사실만으로 성공한 것은 아닙니다.</p>
 
 <p><code>$?</code>는 바로 앞 명령의 종료 상태입니다. 보통 0은 성공, 0이 아닌 값은 실패를 뜻합니다. 다른 명령을 실행하기 전에 확인하세요.</p>
@@ -32,6 +85,43 @@ echo "$?"
 cat output/result.txt
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>cat input/samples.tsv &gt; output/result.txt 2&gt; logs/error.log</code></td>
+        <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+      </tr>
+      <tr>
+        <td><code>echo &quot;$?&quot;</code></td>
+        <td>뒤의 글자나 변수 값을 출력합니다. <code>$?</code>는 바로 앞 명령의 종료 상태로, 보통 0은 성공·나머지는 실패입니다.</td>
+      </tr>
+      <tr>
+        <td><code>cat output/result.txt</code></td>
+        <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+      </tr>
+      <tr>
+        <td><code>2&gt; 경로</code></td>
+        <td>오류 메시지를 해당 파일에 저장합니다. 같은 이름의 로그는 덮어씁니다.</td>
+      </tr>
+      <tr>
+        <td><code>&gt; 경로</code></td>
+        <td>표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>종료 상태 0과 예제 내용이 기대됩니다.</p>
 
 <h2 id="section-4">파이프는 앞 결과를 다음 명령에 전달합니다</h2>
@@ -40,6 +130,35 @@ cat output/result.txt
 <pre><code class="language-bash">cat input/samples.tsv | wc -l
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>cat input/samples.tsv &#124; wc -l</code></td>
+        <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+      </tr>
+      <tr>
+        <td><code>|</code></td>
+        <td>앞 명령의 표준 출력을 뒤 명령의 입력으로 전달합니다. 오류 메시지는 자동으로 전달되지 않습니다.</td>
+      </tr>
+      <tr>
+        <td><code>wc -l</code></td>
+        <td>입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>헤더까지 4줄입니다. 앞 명령은 파일을 읽고, 뒤 명령은 줄 수를 셉니다. 간단한 작업은 <code>wc -l input/samples.tsv</code>처럼 직접 할 수도 있습니다.</p>
 
 <p>파이프 앞 단계가 실패해도 마지막 명령은 성공할 수 있습니다. Bash에서 <code>set -o pipefail</code>을 설정하면 앞 단계의 실패도 종료 상태에 반영할 수 있습니다. 자세한 비교는 <a href="deep-dive.html">선택 자료</a>에 있습니다.</p>
@@ -62,6 +181,51 @@ echo "$?"
 cat output/repeat-result.txt
 
 </code></pre>
+
+  <details>
+    <summary>명령 한 줄씩 해석하기</summary>
+
+    <table>
+      <thead>
+        <tr>
+          <th>명령 또는 부분</th>
+          <th>하는 일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>cd &quot;$HOME/linux-server-lab&quot;</code></td>
+          <td>뒤의 경로로 현재 작업 위치를 옮깁니다. <code>$HOME</code>은 현재 환경의 홈, <code>..</code>는 한 단계 위 폴더입니다.</td>
+        </tr>
+        <tr>
+          <td><code>cat input/samples.tsv &gt; output/repeat-result.txt 2&gt; logs/repeat-error.log</code></td>
+          <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+        </tr>
+        <tr>
+          <td><code>echo &quot;$?&quot;</code></td>
+          <td>뒤의 글자나 변수 값을 출력합니다. <code>$?</code>는 바로 앞 명령의 종료 상태로, 보통 0은 성공·나머지는 실패입니다.</td>
+        </tr>
+        <tr>
+          <td><code>cat output/repeat-result.txt</code></td>
+          <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+        </tr>
+        <tr>
+          <td><code>2&gt; 경로</code></td>
+          <td>오류 메시지를 해당 파일에 저장합니다. 같은 이름의 로그는 덮어씁니다.</td>
+        </tr>
+        <tr>
+          <td><code>&gt; 경로</code></td>
+          <td>표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다.</td>
+        </tr>
+        <tr>
+          <td><code>$HOME</code></td>
+          <td>현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다.</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </details>
+
   <p>종료 상태 0, 예제 내용 4줄이 기대됩니다. 정상 실행에서는 오류 로그가 비어 있을 수 있습니다.</p>
 </details>
 
@@ -74,6 +238,55 @@ echo "$?"
 cat logs/repeat-pipe.log
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>set +o pipefail</code></td>
+        <td><code>-o pipefail</code>은 파이프 앞 단계의 실패도 종료 상태에 반영하고, <code>+o pipefail</code>은 그 설정을 해제합니다. <code>-e</code>는 처리되지 않은 실패 시 종료, <code>-u</code>는 정의되지 않은 변수 사용 시 오류를 내는 설정입니다.</td>
+      </tr>
+      <tr>
+        <td><code>cat input/missing.tsv 2&gt; logs/repeat-pipe.log &#124; wc -l</code></td>
+        <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+      </tr>
+      <tr>
+        <td><code>echo &quot;$?&quot;</code></td>
+        <td>뒤의 글자나 변수 값을 출력합니다. <code>$?</code>는 바로 앞 명령의 종료 상태로, 보통 0은 성공·나머지는 실패입니다.</td>
+      </tr>
+      <tr>
+        <td><code>cat logs/repeat-pipe.log</code></td>
+        <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+      </tr>
+      <tr>
+        <td><code>2&gt; 경로</code></td>
+        <td>오류 메시지를 해당 파일에 저장합니다. 같은 이름의 로그는 덮어씁니다.</td>
+      </tr>
+      <tr>
+        <td><code>|</code></td>
+        <td>앞 명령의 표준 출력을 뒤 명령의 입력으로 전달합니다. 오류 메시지는 자동으로 전달되지 않습니다.</td>
+      </tr>
+      <tr>
+        <td><code>wc -l</code></td>
+        <td>입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다.</td>
+      </tr>
+      <tr>
+        <td>예상된 실패 예제</td>
+        <td>일부러 없는 파일·잘못된 경로·빠진 따옴표 등을 사용했습니다. 해당 사례의 오류와 해결 단계까지 확인합니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>실제로 존재하는 입력으로 고치고 4줄이 나오는지 확인하세요.</p>
 <details>
   <summary>힌트 보기</summary>
@@ -85,6 +298,35 @@ cat logs/repeat-pipe.log
   <pre><code class="language-bash">cat input/samples.tsv | wc -l
 
 </code></pre>
+
+  <details>
+    <summary>명령 한 줄씩 해석하기</summary>
+
+    <table>
+      <thead>
+        <tr>
+          <th>명령 또는 부분</th>
+          <th>하는 일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>cat input/samples.tsv &#124; wc -l</code></td>
+          <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+        </tr>
+        <tr>
+          <td><code>|</code></td>
+          <td>앞 명령의 표준 출력을 뒤 명령의 입력으로 전달합니다. 오류 메시지는 자동으로 전달되지 않습니다.</td>
+        </tr>
+        <tr>
+          <td><code>wc -l</code></td>
+          <td>입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다.</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </details>
+
   <p>4줄이 기대됩니다. 앞의 실패 사례는 기본 설정에서 마지막 명령의 성공만 반영할 수 있습니다. 다음도 비교하세요.</p>
 
   <pre><code class="language-bash">set -o pipefail
@@ -92,11 +334,77 @@ cat input/missing.tsv 2&gt; logs/repeat-pipe.log | wc -l
 echo "$?"
 
 </code></pre>
+
+  <details>
+    <summary>명령 한 줄씩 해석하기</summary>
+
+    <table>
+      <thead>
+        <tr>
+          <th>명령 또는 부분</th>
+          <th>하는 일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>set -o pipefail</code></td>
+          <td><code>-o pipefail</code>은 파이프 앞 단계의 실패도 종료 상태에 반영하고, <code>+o pipefail</code>은 그 설정을 해제합니다. <code>-e</code>는 처리되지 않은 실패 시 종료, <code>-u</code>는 정의되지 않은 변수 사용 시 오류를 내는 설정입니다.</td>
+        </tr>
+        <tr>
+          <td><code>cat input/missing.tsv 2&gt; logs/repeat-pipe.log &#124; wc -l</code></td>
+          <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+        </tr>
+        <tr>
+          <td><code>echo &quot;$?&quot;</code></td>
+          <td>뒤의 글자나 변수 값을 출력합니다. <code>$?</code>는 바로 앞 명령의 종료 상태로, 보통 0은 성공·나머지는 실패입니다.</td>
+        </tr>
+        <tr>
+          <td><code>2&gt; 경로</code></td>
+          <td>오류 메시지를 해당 파일에 저장합니다. 같은 이름의 로그는 덮어씁니다.</td>
+        </tr>
+        <tr>
+          <td><code>|</code></td>
+          <td>앞 명령의 표준 출력을 뒤 명령의 입력으로 전달합니다. 오류 메시지는 자동으로 전달되지 않습니다.</td>
+        </tr>
+        <tr>
+          <td><code>wc -l</code></td>
+          <td>입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다.</td>
+        </tr>
+        <tr>
+          <td>예상된 실패 예제</td>
+          <td>일부러 없는 파일·잘못된 경로·빠진 따옴표 등을 사용했습니다. 해당 사례의 오류와 해결 단계까지 확인합니다.</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </details>
+
   <p>이제 종료 상태는 0이 아닙니다. 숫자를 외우지 말고 로그와 함께 실패를 확인합니다. 비교를 마치면 아래 명령으로 이 실습 전의 기본 설정으로 돌아갑니다.</p>
 
   <pre><code class="language-bash">set +o pipefail
 
 </code></pre>
+
+  <details>
+    <summary>명령 한 줄씩 해석하기</summary>
+
+    <table>
+      <thead>
+        <tr>
+          <th>명령 또는 부분</th>
+          <th>하는 일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>set +o pipefail</code></td>
+          <td><code>-o pipefail</code>은 파이프 앞 단계의 실패도 종료 상태에 반영하고, <code>+o pipefail</code>은 그 설정을 해제합니다. <code>-e</code>는 처리되지 않은 실패 시 종료, <code>-u</code>는 정의되지 않은 변수 사용 시 오류를 내는 설정입니다.</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </details>
+
 </details>
 
 <h3 id="section-8">설명하기</h3>
@@ -118,6 +426,43 @@ printf 'start\nreading input\nfinished\n' &gt; logs/read-demo.log
 tail -n 2 logs/read-demo.log
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>cd &quot;$HOME/linux-server-lab&quot;</code></td>
+        <td>뒤의 경로로 현재 작업 위치를 옮깁니다. <code>$HOME</code>은 현재 환경의 홈, <code>..</code>는 한 단계 위 폴더입니다.</td>
+      </tr>
+      <tr>
+        <td><code>printf &#x27;start\nreading input\nfinished\n&#x27; &gt; logs/read-demo.log</code></td>
+        <td>지정한 형식으로 글자를 출력합니다. <code>\n</code>은 줄바꿈, <code>\t</code>는 탭, <code>%s</code>는 뒤에 전달한 값을 넣는 자리입니다.</td>
+      </tr>
+      <tr>
+        <td><code>tail -n 2 logs/read-demo.log</code></td>
+        <td>파일의 마지막 부분을 봅니다. <code>-n 2</code>는 마지막 두 줄, <code>-f</code>는 새로 추가되는 내용을 계속 보여줍니다. <code>-f</code> 관찰은 Ctrl+C로 끝냅니다.</td>
+      </tr>
+      <tr>
+        <td><code>&gt; 경로</code></td>
+        <td>표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다.</td>
+      </tr>
+      <tr>
+        <td><code>$HOME</code></td>
+        <td>현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>reading input과 finished가 기대 결과다. 실제 업무에서는 원문 오류가 있는지 확인하며, finished라는 문구만으로 결과 내용까지 검증됐다고 판단하지 않는다.</p>
 
 <h2 id="section-11">이 장의 정리</h2>

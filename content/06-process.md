@@ -5,8 +5,8 @@
 
 **학습 목표:** 프로그램 파일과 실행 중인 작업을 구분하고, 내 작업의 CPU·메모리 사용량과 한도를 확인합니다. 필요한 작업만 종료합니다.
 
-## 주문서와 진행 중인 작업
-셸 스크립트는 할 일을 적은 주문서처럼 생각하세요. 실행 중인 작업이 프로세스입니다. 같은 주문서로 두 번 시작하면 별도 작업 두 개가 생길 수 있습니다.
+## 작업 설명서와 실제 하는 일
+2장에서 셸 스크립트는 작업 설명서, 컨테이너는 차린 작업 자리라고 했습니다. 프로세스는 그 자리에서 실제로 하는 일입니다. 같은 설명서대로 두 번 작업을 시작하면 별도 프로세스 두 개가 생길 수 있습니다.
 
 PID는 프로세스의 번호입니다. 작업을 종료하기 전에 내 작업의 번호와 명령을 확인합니다.
 
@@ -19,12 +19,36 @@ echo "$lab_pid"
 ps -p "$lab_pid" -o pid,command
 kill -TERM "$lab_pid"
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>sleep 300 &amp;</code> | 지정한 초만큼 기다립니다. 계산 부하를 만드는 프로그램이 아니라, 실행·정지 상태를 연습하는 작은 대기 작업입니다. |
+| <code>lab_pid=$!</code> | 등호 왼쪽의 변수 이름에 오른쪽 값을 저장합니다. `$!`는 방금 시작한 백그라운드 작업의 PID, `$?`는 바로 앞 명령의 종료 상태입니다. |
+| <code>echo &quot;$lab_pid&quot;</code> | 뒤의 글자나 변수 값을 출력합니다. `$?`는 바로 앞 명령의 종료 상태로, 보통 0은 성공·나머지는 실패입니다. |
+| <code>ps -p &quot;$lab_pid&quot; -o pid,command</code> | 프로세스를 확인합니다. `-p` 뒤는 확인할 PID, `-o` 뒤는 표시할 항목입니다. pid는 번호, ppid는 부모 번호, stat는 상태, etime은 경과 시간, command는 실행 명령입니다. `$$`는 현재 셸의 PID입니다. |
+| <code>kill -TERM &quot;$lab_pid&quot;</code> | `-TERM`으로 지정한 PID에 종료를 요청합니다. 저장해 둔 자신의 실습 PID와 명령을 확인한 뒤 실행합니다. |
+| `&` | 작업을 백그라운드로 시작하고 다음 명령을 입력할 수 있게 합니다. |
+| `sleep 초` | 지정한 시간 동안 기다리는 작업입니다. |
+
+</details>
+
 `sleep 300`은 300초 기다리는 작은 프로그램입니다. `&`는 뒤에서 실행하게 합니다. `$!`는 방금 시작한 백그라운드 작업의 PID입니다. 여기서는 그 번호를 lab_pid에 저장합니다. TERM은 종료 요청입니다.
 
 다시 상태를 확인합니다.
 ```bash
 ps -p "$lab_pid" -o pid,command
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>ps -p &quot;$lab_pid&quot; -o pid,command</code> | 프로세스를 확인합니다. `-p` 뒤는 확인할 PID, `-o` 뒤는 표시할 항목입니다. pid는 번호, ppid는 부모 번호, stat는 상태, etime은 경과 시간, command는 실행 명령입니다. `$$`는 현재 셸의 PID입니다. |
+
+</details>
+
 정상적으로 종료됐으면 해당 작업 행이 없습니다. 다른 사용자 작업을 종료하지 않습니다.
 
 ## 실행과 관찰을 구분하기
@@ -32,6 +56,15 @@ ps -p "$lab_pid" -o pid,command
 ```bash
 top
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>top</code> | 실행 중인 프로그램과 자원 상태를 계속 보여줍니다. q로 관찰을 종료합니다. 프로그램 자체를 종료하는 것은 아닙니다. |
+
+</details>
+
 관찰 화면을 닫는 것과 분석 작업을 종료하는 것은 다른 일입니다. Ctrl+C는 보통 현재 전경 작업을 중단하며, Ctrl+Z는 정지시킬 수 있습니다. 상세한 작업 제어는 [선택 자료](deep-dive.html)에서 다룹니다.
 
 ## [실습] docker stats로 컨테이너 사용량 보기 {#docker-stats}
@@ -46,6 +79,16 @@ top
 docker ps --filter name=course-linux
 docker stats --no-stream course-linux
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker ps --filter name=course-linux</code> | 컨테이너 목록을 봅니다. 기본은 실행 중인 대상, `-a`는 정지한 대상도 포함하며 `--filter name=...`는 이름으로 목록을 좁힙니다. |
+| <code>docker stats --no-stream course-linux</code> | 컨테이너별 CPU·메모리 사용량과 한도를 관찰합니다. `--no-stream`은 한 번만 출력합니다. 연속 관찰은 Ctrl+C로 마칩니다. |
+
+</details>
+
 
 `--no-stream`은 현재 값을 한 번 출력하고 끝낸다는 뜻입니다. 컨테이너를 멈추는 옵션은 아닙니다. 먼저 `docker ps`에 실행 중인 대상이 있는지 확인합니다.
 
@@ -73,6 +116,15 @@ course-linux   0.12%     35MiB / 512MiB         6.84%
 ```bash
 docker stats course-linux
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker stats course-linux</code> | 컨테이너별 CPU·메모리 사용량과 한도를 관찰합니다. `--no-stream`은 한 번만 출력합니다. 연속 관찰은 Ctrl+C로 마칩니다. |
+
+</details>
+
 
 화면이 반복해서 갱신됩니다. **Ctrl+C는 stats 관찰만 끝내며 컨테이너를 종료하지 않습니다.** 한 번의 값보다 작업 중 변화를 봅니다.
 
@@ -131,6 +183,22 @@ second_pid=$!
 echo "first=$first_pid second=$second_pid"
 ps -p "$first_pid","$second_pid" -o pid,command
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>sleep 600 &amp;</code> | 지정한 초만큼 기다립니다. 계산 부하를 만드는 프로그램이 아니라, 실행·정지 상태를 연습하는 작은 대기 작업입니다. |
+| <code>first_pid=$!</code> | 등호 왼쪽의 변수 이름에 오른쪽 값을 저장합니다. `$!`는 방금 시작한 백그라운드 작업의 PID, `$?`는 바로 앞 명령의 종료 상태입니다. |
+| <code>sleep 600 &amp;</code> | 지정한 초만큼 기다립니다. 계산 부하를 만드는 프로그램이 아니라, 실행·정지 상태를 연습하는 작은 대기 작업입니다. |
+| <code>second_pid=$!</code> | 등호 왼쪽의 변수 이름에 오른쪽 값을 저장합니다. `$!`는 방금 시작한 백그라운드 작업의 PID, `$?`는 바로 앞 명령의 종료 상태입니다. |
+| <code>echo &quot;first=$first_pid second=$second_pid&quot;</code> | 뒤의 글자나 변수 값을 출력합니다. `$?`는 바로 앞 명령의 종료 상태로, 보통 0은 성공·나머지는 실패입니다. |
+| <code>ps -p &quot;$first_pid&quot;,&quot;$second_pid&quot; -o pid,command</code> | 프로세스를 확인합니다. `-p` 뒤는 확인할 PID, `-o` 뒤는 표시할 항목입니다. pid는 번호, ppid는 부모 번호, stat는 상태, etime은 경과 시간, command는 실행 명령입니다. `$$`는 현재 셸의 PID입니다. |
+| `&` | 작업을 백그라운드로 시작하고 다음 명령을 입력할 수 있게 합니다. |
+| `sleep 초` | 지정한 시간 동안 기다리는 작업입니다. |
+
+</details>
+
 첫 번째 작업만 종료하고 두 번째가 남아 있는지 확인하세요.
 <details markdown="1"><summary>힌트 보기</summary>
 TERM을 보낼 PID를 first_pid로 지정합니다. 다시 ps로 두 번호를 관찰하세요.
@@ -140,6 +208,16 @@ TERM을 보낼 PID를 first_pid로 지정합니다. 다시 ps로 두 번호를 �
 kill -TERM "$first_pid"
 ps -p "$first_pid","$second_pid" -o pid,command
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>kill -TERM &quot;$first_pid&quot;</code> | `-TERM`으로 지정한 PID에 종료를 요청합니다. 저장해 둔 자신의 실습 PID와 명령을 확인한 뒤 실행합니다. |
+| <code>ps -p &quot;$first_pid&quot;,&quot;$second_pid&quot; -o pid,command</code> | 프로세스를 확인합니다. `-p` 뒤는 확인할 PID, `-o` 뒤는 표시할 항목입니다. pid는 번호, ppid는 부모 번호, stat는 상태, etime은 경과 시간, command는 실행 명령입니다. `$$`는 현재 셸의 PID입니다. |
+
+</details>
+
 정상 종료되면 첫 작업은 사라지고 두 번째 sleep이 남습니다. 변화가 바로 보이지 않으면 잠시 뒤 한 번 확인합니다.
 </details>
 
@@ -148,6 +226,15 @@ ps -p "$first_pid","$second_pid" -o pid,command
 ```bash
 ps -p "$$" -o pid,command
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>ps -p &quot;$$&quot; -o pid,command</code> | 프로세스를 확인합니다. `-p` 뒤는 확인할 PID, `-o` 뒤는 표시할 항목입니다. pid는 번호, ppid는 부모 번호, stat는 상태, etime은 경과 시간, command는 실행 명령입니다. `$$`는 현재 셸의 PID입니다. |
+
+</details>
+
 남은 sleep을 보는 명령으로 고치세요.
 <details markdown="1"><summary>힌트 보기</summary>
 $$는 현재 셸의 PID, second_pid는 앞에서 저장한 두 번째 작업의 PID입니다.
@@ -156,6 +243,15 @@ $$는 현재 셸의 PID, second_pid는 앞에서 저장한 두 번째 작업의 
 ```bash
 ps -p "$second_pid" -o pid,command
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>ps -p &quot;$second_pid&quot; -o pid,command</code> | 프로세스를 확인합니다. `-p` 뒤는 확인할 PID, `-o` 뒤는 표시할 항목입니다. pid는 번호, ppid는 부모 번호, stat는 상태, etime은 경과 시간, command는 실행 명령입니다. `$$`는 현재 셸의 PID입니다. |
+
+</details>
+
 숫자만 보고 종료하지 말고 명령도 확인해야 합니다.
 </details>
 
@@ -164,6 +260,15 @@ ps -p "$second_pid" -o pid,command
 ```bash
 kill -TERM "$second_pid"
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>kill -TERM &quot;$second_pid&quot;</code> | `-TERM`으로 지정한 PID에 종료를 요청합니다. 저장해 둔 자신의 실습 PID와 명령을 확인한 뒤 실행합니다. |
+
+</details>
+
 같은 터미널에서 기록한 PID에만 실행합니다. 시간이 지나 이미 끝났다면 다시 종료할 필요가 없습니다.
 
 ## [실습] Docker 자원 사용 비교

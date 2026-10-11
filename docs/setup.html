@@ -1,5 +1,5 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>0. 사전 준비: Docker Desktop 설치 | 리눅스 응용 보충 과정</title><link rel="stylesheet" href="assets/style.css"></head>
-<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a aria-current="page" href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><a  href="practice-storage-paths.html">[실습] 저장 위치와 공간 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="docker-desktop-">0. 사전 준비: Docker Desktop 설치</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#section">사전 과제는 설치를 위한 안내입니다</a></li><li><a href="#docker-desktop-docker-">먼저: Docker Desktop과 docker 명령</a></li><li><a href="#section-1">1. 이번 실습의 구조</a></li><li><a href="#docker-desktop--1">설치 전: Docker Desktop은 무료인가요?</a></li><li><a href="#windows-">2. Windows 준비</a></li><li><a href="#mac-">3. Mac 준비</a></li><li><a href="#docker--">4. 공통: Docker 실행 확인</a></li><li><a href="#pc---">5. 개인 PC에 실습 폴더 만들기</a></li><li><a href="#linux---">6. 공통 Linux 실습 컨테이너 만들기</a></li><li><a href="#section-5">7. 나가기와 다시 들어가기</a></li><li><a href="#section-6">8. 장별로 어느 터미널을 쓰나요?</a></li><li><a href="#section-7">9. 자주 막히는 부분</a></li><li><a href="#section-8">자원 실습을 선택한다면: 이미지 사전 다운로드</a></li><li><a href="#section-9">수업 전 완료 체크</a></li></ul></details>
+<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a aria-current="page" href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><a  href="practice-storage-paths.html">[실습] 저장 위치와 공간 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="docker-desktop-">0. 사전 준비: Docker Desktop 설치</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#section">사전 과제는 설치를 위한 안내입니다</a></li><li><a href="#docker-desktop-docker-">먼저: Docker Desktop과 docker 명령</a></li><li><a href="#section-1">1. 이번 실습의 구조</a></li><li><a href="#docker-desktop--1">설치 전: Docker Desktop은 무료인가요?</a></li><li><a href="#windows-">2. Windows 준비</a></li><li><a href="#mac-">3. Mac 준비</a></li><li><a href="#docker--">4. 공통: Docker 실행 확인</a></li><li><a href="#pc---">5. 개인 PC에 실습 폴더 만들기</a></li><li><a href="#linux---">6. 공통 Linux 실습 컨테이너 만들기</a></li><li><a href="#section-6">7. 나가기와 다시 들어가기</a></li><li><a href="#section-7">8. 장별로 어느 터미널을 쓰나요?</a></li><li><a href="#section-8">9. 자주 막히는 부분</a></li><li><a href="#section-9">자원 실습을 선택한다면: 이미지 사전 다운로드</a></li><li><a href="#section-10">수업 전 완료 체크</a></li></ul></details>
 
 <blockquote>
   <p><strong>실습 환경:</strong> 운영체제에 맞는 설치 안내
@@ -95,22 +95,118 @@
 wsl --list --verbose
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>wsl --version</code></td>
+        <td>WSL 프로그램의 버전을 확인합니다.</td>
+      </tr>
+      <tr>
+        <td><code>wsl --list --verbose</code></td>
+        <td>설치된 Linux 배포판과 WSL 1·2 여부를 자세히 확인합니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>WSL이나 Ubuntu가 없다면 설치합니다.</p>
 
 <pre><code class="language-powershell">wsl --install -d Ubuntu
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>wsl --install -d Ubuntu</code></td>
+        <td>Ubuntu 배포판과 WSL을 설치합니다.</td>
+      </tr>
+      <tr>
+        <td><code>-d</code></td>
+        <td>백그라운드로 실행합니다. 처음에는 작업 결과 대신 컨테이너 ID가 보입니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>재부팅 안내가 나오면 재부팅한 뒤 시작 메뉴의 Ubuntu를 열고 Linux 사용자 이름과 비밀번호를 만듭니다. 비밀번호 입력 중 글자가 표시되지 않는 것은 정상입니다. WSL 업데이트가 필요한 경우 다음을 실행합니다.</p>
 
 <pre><code class="language-powershell">wsl --update
 wsl --list --verbose
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>wsl --update</code></td>
+        <td>WSL을 업데이트합니다.</td>
+      </tr>
+      <tr>
+        <td><code>wsl --list --verbose</code></td>
+        <td>설치된 Linux 배포판과 WSL 1·2 여부를 자세히 확인합니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>Ubuntu의 VERSION 열이 <code>2</code>인지 확인합니다. <code>1</code>이면 다음처럼 변환합니다. 배포판 이름이 다르면 목록에 표시된 이름을 사용합니다.</p>
 
 <pre><code class="language-powershell">wsl --set-version Ubuntu 2
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>wsl --set-version Ubuntu 2</code></td>
+        <td>지정한 Ubuntu 배포판을 WSL 2로 전환합니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>WSL 설치에는 가상화 기능과 시스템 설정 권한이 필요할 수 있습니다. 기관 PC에서 설치가 제한되면 교육 담당자에게 미리 문의하세요.</p>
 
 <h3 id="docker-desktop--">2-2. Docker Desktop 설치와 연결</h3>
@@ -143,6 +239,27 @@ Apple 메뉴 → 이 Mac에 관하여에서 칩을 확인합니다.</p>
 <pre><code class="language-bash">bash
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>bash</code></td>
+        <td>Bash 셸을 엽니다. Mac의 기본 zsh에서 교재와 같은 Bash 환경으로 전환합니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>Mac 터미널은 아직 Linux가 아닙니다. 공통 Linux 환경에는 뒤의 <code>docker run</code> 명령으로 들어갑니다.</p>
 
 <h2 id="docker--">4. 공통: Docker 실행 확인</h2>
@@ -152,6 +269,39 @@ Apple 메뉴 → 이 Mac에 관하여에서 칩을 확인합니다.</p>
 docker run --rm hello-world
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>docker version</code></td>
+        <td>Docker 명령 프로그램(Client)과 실행 엔진(Server)의 버전을 확인합니다.</td>
+      </tr>
+      <tr>
+        <td><code>docker run --rm hello-world</code></td>
+        <td>이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다.</td>
+      </tr>
+      <tr>
+        <td><code>--rm</code></td>
+        <td>작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다.</td>
+      </tr>
+      <tr>
+        <td><code>hello-world</code></td>
+        <td>Docker가 정상 실행되는지 인사 메시지로 확인하는 이미지입니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p><code>docker version</code>에 Client와 Server 정보가 모두 나오고, 두 번째 명령에 <code>Hello from Docker!</code>가 나오면 연결 성공입니다. 첫 실행은 이미지를 다운로드합니다. 이 확인이 끝나면 교육생은 Docker 설치를 완료한 상태입니다.</p>
 
 <h2 id="pc---">5. 개인 PC에 실습 폴더 만들기</h2>
@@ -163,11 +313,69 @@ mkdir -p input output logs scratch
 pwd
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>mkdir -p &quot;$HOME/linux-server-lab&quot;</code></td>
+        <td>뒤에 적힌 폴더들을 만듭니다. <code>-p</code>는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다.</td>
+      </tr>
+      <tr>
+        <td><code>cd &quot;$HOME/linux-server-lab&quot;</code></td>
+        <td>뒤의 경로로 현재 작업 위치를 옮깁니다. <code>$HOME</code>은 현재 환경의 홈, <code>..</code>는 한 단계 위 폴더입니다.</td>
+      </tr>
+      <tr>
+        <td><code>mkdir -p input output logs scratch</code></td>
+        <td>뒤에 적힌 폴더들을 만듭니다. <code>-p</code>는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다.</td>
+      </tr>
+      <tr>
+        <td><code>pwd</code></td>
+        <td>현재 작업 중인 폴더의 절대 경로를 출력합니다. 파일을 찾기 전에 내 위치를 확인합니다.</td>
+      </tr>
+      <tr>
+        <td><code>$HOME</code></td>
+        <td>현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>Windows에서는 이 폴더가 WSL Ubuntu의 홈에 있습니다. 필요하면 아래 명령으로 Windows 파일 탐색기를 열어 볼 수 있습니다.</p>
 
 <pre><code class="language-bash">explorer.exe .
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>explorer.exe .</code></td>
+        <td>Windows 파일 탐색기로 현재 WSL 폴더를 엽니다. <code>.</code>은 현재 폴더입니다. Windows에서만 실행합니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>위 명령은 Windows에서만 사용합니다. macOS는 Finder의 이동 → 홈에서 <code>linux-server-lab</code> 폴더를 확인하세요.</p>
 
 <h2 id="linux---">6. 공통 Linux 실습 컨테이너 만들기</h2>
@@ -182,7 +390,72 @@ docker run -it --name course-linux \
   ubuntu:24.04 bash
 
 </code></pre>
-<p>### 위 명령을 쉽게 읽어 보기</p>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>docker pull ubuntu:24.04</code></td>
+        <td>뒤의 이미지 이름과 태그를 찾아 내려받습니다. 저장소 주소를 생략하면 기본적으로 Docker Hub를 사용합니다.</td>
+      </tr>
+      <tr>
+        <td><code>docker pull alpine:3.21</code></td>
+        <td>뒤의 이미지 이름과 태그를 찾아 내려받습니다. 저장소 주소를 생략하면 기본적으로 Docker Hub를 사용합니다.</td>
+      </tr>
+      <tr>
+        <td><code>docker run -it --name course-linux  --cpus=1 --memory=512m  --mount &quot;type=bind,src=$HOME/linux-server-lab,dst=/root/linux-server-lab&quot;  --workdir /root/linux-server-lab  ubuntu:24.04 bash</code></td>
+        <td>이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다.</td>
+      </tr>
+      <tr>
+        <td><code>-it</code></td>
+        <td>키보드 입력과 터미널 화면을 연결합니다.</td>
+      </tr>
+      <tr>
+        <td><code>--name</code></td>
+        <td>바로 뒤의 이름을 컨테이너에 붙입니다. 같은 이름은 중복 사용할 수 없습니다.</td>
+      </tr>
+      <tr>
+        <td><code>--cpus</code></td>
+        <td>CPU 한 개 기준의 시간 한도입니다. 0.25는 25%, 1은 CPU 하나 분량이며 전용 CPU 예약이 아닙니다.</td>
+      </tr>
+      <tr>
+        <td><code>--memory</code></td>
+        <td>컨테이너 RAM 사용 한도입니다. m은 MiB 단위이고, 실제 사용량이 항상 한도만큼인 것은 아닙니다.</td>
+      </tr>
+      <tr>
+        <td><code>--workdir</code></td>
+        <td>컨테이너 안에서 명령을 시작할 작업 폴더입니다.</td>
+      </tr>
+      <tr>
+        <td><code>--mount</code></td>
+        <td>type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다.</td>
+      </tr>
+      <tr>
+        <td><code>$HOME</code></td>
+        <td>현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다.</td>
+      </tr>
+      <tr>
+        <td><code>alpine:3.21</code></td>
+        <td>기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다.</td>
+      </tr>
+      <tr>
+        <td><code>ubuntu:24.04</code></td>
+        <td>이번 Linux 기초 실습에 사용할 Ubuntu 이미지입니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
+<h3 id="section-3">위 명령을 쉽게 읽어 보기</h3>
 
 <table>
   <thead>
@@ -266,16 +539,41 @@ docker run -it --name course-linux \
 
 <p>이 컨테이너는 개인 실습 환경입니다. 컨테이너 안의 root와 PC의 관리자 권한은 동일한 개념이 아니지만, 연결한 폴더의 파일은 실제로 변경되므로 개인 실습 폴더만 연결합니다. Linux 서버에서는 일반 사용자로 작업하는 방식과 권한을 따로 학습합니다.</p>
 
-<h3 id="section-3">6-1. 최초 한 번: 진단 도구 준비</h3>
+<h3 id="section-4">6-1. 최초 한 번: 진단 도구 준비</h3>
 <p>아래는 <strong>컨테이너 터미널</strong>에서 실행합니다. 설치 중에는 네트워크가 필요합니다.</p>
 
 <pre><code class="language-bash">apt-get update
 apt-get install -y procps util-linux
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>apt-get update</code></td>
+        <td>Ubuntu의 프로그램 설치 도구입니다. <code>update</code>는 설치 가능한 프로그램 목록을 갱신하고, <code>install -y procps util-linux</code>는 확인에 자동 동의하여 진단 도구 묶음을 설치합니다.</td>
+      </tr>
+      <tr>
+        <td><code>apt-get install -y procps util-linux</code></td>
+        <td>Ubuntu의 프로그램 설치 도구입니다. <code>update</code>는 설치 가능한 프로그램 목록을 갱신하고, <code>install -y procps util-linux</code>는 확인에 자동 동의하여 진단 도구 묶음을 설치합니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p><code>ps</code>, <code>top</code>, <code>free</code>, <code>vmstat</code>, <code>findmnt</code>, <code>lsblk</code> 등 관찰 도구를 준비합니다. 컨테이너에서 관찰한 메모리·디스크 값은 PC 전체 또는 실제 교육용 서버의 값과 일치하지 않을 수 있습니다. 컨테이너에서는 실제 서버의 모든 블록 장치가 보이지 않을 수 있습니다.</p>
 
-<h3 id="section-4">6-2. 예제 데이터 만들기</h3>
+<h3 id="section-5">6-2. 예제 데이터 만들기</h3>
 <p>계속 <strong>컨테이너 터미널</strong>에서 실행합니다. 이미 같은 예제 파일이 있다면 내용을 확인한 뒤 재작성 여부를 결정하세요. <code>&gt;</code>는 기존 파일을 덮어씁니다.</p>
 
 <pre><code class="language-bash">cd "$HOME/linux-server-lab"
@@ -286,23 +584,122 @@ cat /etc/os-release
 pwd
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>cd &quot;$HOME/linux-server-lab&quot;</code></td>
+        <td>뒤의 경로로 현재 작업 위치를 옮깁니다. <code>$HOME</code>은 현재 환경의 홈, <code>..</code>는 한 단계 위 폴더입니다.</td>
+      </tr>
+      <tr>
+        <td><code>mkdir -p input output logs scratch</code></td>
+        <td>뒤에 적힌 폴더들을 만듭니다. <code>-p</code>는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다.</td>
+      </tr>
+      <tr>
+        <td><code>printf &#x27;sample\tgroup\tcount\nS01\tA\t10\nS02\tB\t20\nS03\tA\t30\n&#x27; &gt; input/samples.tsv</code></td>
+        <td>지정한 형식으로 글자를 출력합니다. <code>\n</code>은 줄바꿈, <code>\t</code>는 탭, <code>%s</code>는 뒤에 전달한 값을 넣는 자리입니다.</td>
+      </tr>
+      <tr>
+        <td><code>cat input/samples.tsv</code></td>
+        <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+      </tr>
+      <tr>
+        <td><code>cat /etc/os-release</code></td>
+        <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+      </tr>
+      <tr>
+        <td><code>pwd</code></td>
+        <td>현재 작업 중인 폴더의 절대 경로를 출력합니다. 파일을 찾기 전에 내 위치를 확인합니다.</td>
+      </tr>
+      <tr>
+        <td><code>&gt; 경로</code></td>
+        <td>표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다.</td>
+      </tr>
+      <tr>
+        <td><code>$HOME</code></td>
+        <td>현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다.</td>
+      </tr>
+      <tr>
+        <td><code>/etc/os-release</code></td>
+        <td>컨테이너의 Linux 배포판과 버전 정보가 적힌 파일입니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>Ubuntu 정보와 <code>/root/linux-server-lab</code> 경로가 보이면 준비 완료입니다. PC의 <code>linux-server-lab/input</code> 폴더에서도 <code>samples.tsv</code>를 확인할 수 있습니다. 컨테이너 경로와 PC 경로는 다르지만 같은 파일이 연결되어 있습니다.</p>
 
-<h2 id="section-5">7. 나가기와 다시 들어가기</h2>
+<h2 id="section-6">7. 나가기와 다시 들어가기</h2>
 <p><strong>컨테이너 터미널</strong>에서 다음을 실행하면 컨테이너가 정지하고 호스트 터미널로 돌아갑니다.</p>
 
 <pre><code class="language-bash">exit
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>exit</code></td>
+        <td>현재 셸을 종료합니다. 주 작업이 셸인 course-linux에서는 컨테이너가 정지하고 호스트로 돌아갑니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p><strong>호스트 터미널</strong>에서 상태를 보고 다시 들어갑니다.</p>
 
 <pre><code class="language-bash">docker ps -a --filter name=course-linux
 docker start -ai course-linux
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>docker ps -a --filter name=course-linux</code></td>
+        <td>컨테이너 목록을 봅니다. 기본은 실행 중인 대상, <code>-a</code>는 정지한 대상도 포함하며 <code>--filter name=...</code>는 이름으로 목록을 좁힙니다.</td>
+      </tr>
+      <tr>
+        <td><code>docker start -ai course-linux</code></td>
+        <td>기존 컨테이너를 다시 시작합니다. <code>-a</code>는 출력 연결, <code>-i</code>는 입력 연결이며, <code>-ai</code>는 둘을 함께 사용합니다. 처음 지정한 작업·폴더 연결 설정을 다시 사용합니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>정지·재시작해도 이 컨테이너에 설치한 도구는 남습니다. <code>docker run</code>을 다시 실행하면 같은 이름 충돌이 나므로 기존 환경에는 <code>docker start -ai</code>로 들어갑니다. 삭제 후 새로 만들면 컨테이너에 설치한 도구를 다시 준비해야 합니다. PC에 연결한 실습 파일은 컨테이너 삭제와 별개로 남습니다.</p>
 
-<h2 id="section-6">8. 장별로 어느 터미널을 쓰나요?</h2>
+<h2 id="section-7">8. 장별로 어느 터미널을 쓰나요?</h2>
 
 <table>
   <thead>
@@ -333,7 +730,7 @@ docker start -ai course-linux
 
 <p>Docker를 조작하는 명령은 호스트에서 실행합니다. 실습 컨테이너에는 Docker를 설치하거나 Docker 소켓을 연결하지 않습니다. 컨테이너 안에서 <code>docker: command not found</code>가 나면 <code>exit</code>로 돌아가 실행 위치를 확인하세요.</p>
 
-<h2 id="section-7">9. 자주 막히는 부분</h2>
+<h2 id="section-8">9. 자주 막히는 부분</h2>
 
 <table>
   <thead>
@@ -378,14 +775,34 @@ docker start -ai course-linux
   </tbody>
 </table>
 
-<h2 id="section-8">자원 실습을 선택한다면: 이미지 사전 다운로드</h2>
+<h2 id="section-9">자원 실습을 선택한다면: 이미지 사전 다운로드</h2>
 <p><strong>호스트 Bash</strong>에서 실행한다. CPU 공유·메모리 부족 실습에 필요한 작은 Python 환경을 준비한다. 기본 Linux·파일 연결 실습만 한다면 이 단계는 생략할 수 있다.</p>
 
 <pre><code class="language-bash">docker pull python:3.12-alpine
 
 </code></pre>
 
-<h2 id="section-9">수업 전 완료 체크</h2>
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>docker pull python:3.12-alpine</code></td>
+        <td>뒤의 이미지 이름과 태그를 찾아 내려받습니다. 저장소 주소를 생략하면 기본적으로 Docker Hub를 사용합니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
+<h2 id="section-10">수업 전 완료 체크</h2>
 <ul>
   <li>Docker Desktop을 설치하고 실행했다.</li>
   <li>호스트 터미널에서 Client와 Server를 확인했다.</li>

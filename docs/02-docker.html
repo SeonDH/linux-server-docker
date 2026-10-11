@@ -158,6 +158,39 @@
 <pre><code class="language-bash">docker run --rm alpine:3.21 echo hello
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>docker run --rm alpine:3.21 echo hello</code></td>
+        <td>이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다.</td>
+      </tr>
+      <tr>
+        <td><code>--rm</code></td>
+        <td>작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다.</td>
+      </tr>
+      <tr>
+        <td><code>echo 글자</code></td>
+        <td>컨테이너 안에서 지정한 글자를 출력합니다. &gt;가 있으면 그 출력을 파일에 저장합니다.</td>
+      </tr>
+      <tr>
+        <td><code>alpine:3.21</code></td>
+        <td>기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p><strong>기대 결과:</strong> <code>hello</code></p>
 
 <p>비유로 읽으면 <strong>“Alpine에 준비된 도구로 작업 자리를 하나 차리고, hello를 출력한 뒤, 그 자리를 치우세요”</strong>라는 명령입니다. <code>--rm</code>이 있어서 작업이 끝나면 이 컨테이너까지 자동 삭제됩니다.</p>
@@ -211,6 +244,31 @@
 docker ps -a
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>docker image ls</code></td>
+        <td>로컬 Docker 저장소에 있는 이미지 목록을 보여줍니다.</td>
+      </tr>
+      <tr>
+        <td><code>docker ps -a</code></td>
+        <td>컨테이너 목록을 봅니다. 기본은 실행 중인 대상, <code>-a</code>는 정지한 대상도 포함하며 <code>--filter name=...</code>는 이름으로 목록을 좁힙니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>첫 명령은 준비된 이미지, 두 번째는 남아 있는 컨테이너를 보여줍니다. 위 hello 컨테이너는 –rm으로 삭제돼 목록에 없습니다. 0장의 course-linux는 별도로 남아 있을 수 있습니다.</p>
 
 <p><strong>정지</strong>는 작업이 멈춘 상태, <strong>삭제</strong>는 그 작업 공간을 없애는 것입니다. 정지한 컨테이너의 내부 파일은 남을 수 있지만 삭제하면 사라집니다.</p>
@@ -230,6 +288,39 @@ docker ps -a
   <pre><code class="language-bash">docker run --rm alpine:3.21 echo hello-again
 
 </code></pre>
+
+  <details>
+    <summary>명령 한 줄씩 해석하기</summary>
+
+    <table>
+      <thead>
+        <tr>
+          <th>명령 또는 부분</th>
+          <th>하는 일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>docker run --rm alpine:3.21 echo hello-again</code></td>
+          <td>이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다.</td>
+        </tr>
+        <tr>
+          <td><code>--rm</code></td>
+          <td>작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다.</td>
+        </tr>
+        <tr>
+          <td><code>echo 글자</code></td>
+          <td>컨테이너 안에서 지정한 글자를 출력합니다. &gt;가 있으면 그 출력을 파일에 저장합니다.</td>
+        </tr>
+        <tr>
+          <td><code>alpine:3.21</code></td>
+          <td>기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다.</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </details>
+
   <p>출력은 hello-again입니다. 같은 이미지로 새로운 작업을 실행했습니다.</p>
 </details>
 
@@ -240,6 +331,31 @@ docker ps -a
 docker ps -a
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>docker image ls</code></td>
+        <td>로컬 Docker 저장소에 있는 이미지 목록을 보여줍니다.</td>
+      </tr>
+      <tr>
+        <td><code>docker ps -a</code></td>
+        <td>컨테이너 목록을 봅니다. 기본은 실행 중인 대상, <code>-a</code>는 정지한 대상도 포함하며 <code>--filter name=...</code>는 이름으로 목록을 좁힙니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <details>
   <summary>힌트 보기</summary>
   <p>이미지와 컨테이너는 서로 다른 대상입니다. –rm은 어느 것을 지우나요?</p>

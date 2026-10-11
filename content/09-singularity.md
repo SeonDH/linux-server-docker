@@ -89,6 +89,16 @@ Docker에서는 보통 **로컬 Docker 저장소에 있는 이미지 이름**을
 apptainer pull alpine.sif docker://alpine:3.21
 ```
 
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>apptainer pull alpine.sif docker://alpine:3.21</code> | Docker Hub의 이미지를 가져와 alpine.sif라는 로컬 이미지 파일로 준비합니다. 도구를 내려받는 단계이며 아직 분석을 실행하지 않습니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
+
 | 부분 | 뜻 |
 |---|---|
 | `apptainer pull` | 사용할 이미지를 내려받아 준비합니다. |
@@ -102,6 +112,16 @@ apptainer pull alpine.sif docker://alpine:3.21
 ```bash
 apptainer exec alpine.sif echo hello
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>apptainer exec alpine.sif echo hello</code> | 지정한 SIF 이미지의 환경에서 뒤의 명령을 실행합니다. `--bind`는 서버 폴더:컨테이너 경로 순서이며 `:ro`는 읽기 전용입니다. 이 장에서는 실행하지 않고 읽습니다. |
+| `echo 글자` | 컨테이너 안에서 지정한 글자를 출력합니다. >가 있으면 그 출력을 파일에 저장합니다. |
+
+</details>
+
 
 왼쪽부터 **“Apptainer로 → 이 이미지의 환경에서 → echo hello를 실행한다”**라고 읽으세요.
 
@@ -122,6 +142,19 @@ apptainer exec \
   --bind "$PWD/output:/output" \
   alpine.sif sh -c 'wc -l /input/samples.tsv > /output/line-count.txt'
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>apptainer exec  --bind &quot;$PWD/input:/input:ro&quot;  --bind &quot;$PWD/output:/output&quot;  alpine.sif sh -c &#x27;wc -l /input/samples.tsv &gt; /output/line-count.txt&#x27;</code> | 지정한 SIF 이미지의 환경에서 뒤의 명령을 실행합니다. `--bind`는 서버 폴더:컨테이너 경로 순서이며 `:ro`는 읽기 전용입니다. 이 장에서는 실행하지 않고 읽습니다. |
+| `sh -c / bash -c` | 해당 셸이 따옴표 안의 명령을 해석합니다. 컨테이너 명령 뒤의 >가 컨테이너 내부에서 처리되도록 할 수 있습니다. |
+| `> 경로` | 표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다. |
+| `$PWD` | 현재 작업 폴더의 절대 경로입니다. |
+| `wc -l` | 입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다. |
+
+</details>
+
 
 | 부분 | 뜻 |
 |---|---|

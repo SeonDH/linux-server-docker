@@ -29,6 +29,75 @@ docker run --rm \
 cat output/line-count.txt
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>cd &quot;$HOME/linux-server-lab&quot;</code></td>
+        <td>뒤의 경로로 현재 작업 위치를 옮깁니다. <code>$HOME</code>은 현재 환경의 홈, <code>..</code>는 한 단계 위 폴더입니다.</td>
+      </tr>
+      <tr>
+        <td><code>mkdir -p output</code></td>
+        <td>뒤에 적힌 폴더들을 만듭니다. <code>-p</code>는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다.</td>
+      </tr>
+      <tr>
+        <td><code>docker run --rm  --user &quot;$(id -u):$(id -g)&quot;  --mount &quot;type=bind,src=$PWD/input,dst=/input,readonly&quot;  --mount &quot;type=bind,src=$PWD/output,dst=/output&quot;  alpine:3.21 sh -c &#x27;wc -l /input/samples.tsv &gt; /output/line-count.txt&#x27;</code></td>
+        <td>이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다.</td>
+      </tr>
+      <tr>
+        <td><code>cat output/line-count.txt</code></td>
+        <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+      </tr>
+      <tr>
+        <td><code>--rm</code></td>
+        <td>작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다.</td>
+      </tr>
+      <tr>
+        <td><code>--user "$(id -u):$(id -g)"</code></td>
+        <td>호스트의 사용자 번호와 그룹 번호로 실행합니다. id -u는 사용자 ID, id -g는 그룹 ID이며 $(…)는 명령 결과를 넣습니다.</td>
+      </tr>
+      <tr>
+        <td><code>--mount</code></td>
+        <td>type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다.</td>
+      </tr>
+      <tr>
+        <td><code>sh -c / bash -c</code></td>
+        <td>해당 셸이 따옴표 안의 명령을 해석합니다. 컨테이너 명령 뒤의 &gt;가 컨테이너 내부에서 처리되도록 할 수 있습니다.</td>
+      </tr>
+      <tr>
+        <td><code>&gt; 경로</code></td>
+        <td>표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다.</td>
+      </tr>
+      <tr>
+        <td><code>$HOME</code></td>
+        <td>현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다.</td>
+      </tr>
+      <tr>
+        <td><code>$PWD</code></td>
+        <td>현재 작업 폴더의 절대 경로입니다.</td>
+      </tr>
+      <tr>
+        <td><code>wc -l</code></td>
+        <td>입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다.</td>
+      </tr>
+      <tr>
+        <td><code>alpine:3.21</code></td>
+        <td>기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p><strong>기대 결과:</strong> 헤더를 포함한 4줄입니다. 표시 예시는 <code>4 /input/samples.tsv</code>입니다.</p>
 
 <table>
@@ -102,6 +171,35 @@ cat output/line-count.txt
 mkdir -p output-review
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>cd &quot;$HOME/linux-server-lab&quot;</code></td>
+        <td>뒤의 경로로 현재 작업 위치를 옮깁니다. <code>$HOME</code>은 현재 환경의 홈, <code>..</code>는 한 단계 위 폴더입니다.</td>
+      </tr>
+      <tr>
+        <td><code>mkdir -p output-review</code></td>
+        <td>뒤에 적힌 폴더들을 만듭니다. <code>-p</code>는 상위 폴더도 만들고, 이미 있는 폴더는 그대로 사용합니다.</td>
+      </tr>
+      <tr>
+        <td><code>$HOME</code></td>
+        <td>현재 셸 환경의 홈 폴더입니다. 호스트와 컨테이너에서 다른 경로일 수 있습니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <p>따라 하기 명령에서 <strong>PC 쪽 출력 경로만</strong> 바꿔 실행하세요. 컨테이너의 출력 경로 /output은 그대로 둡니다.</p>
 <details>
   <summary>힌트 보기</summary>
@@ -118,6 +216,63 @@ mkdir -p output-review
 cat output-review/line-count.txt
 
 </code></pre>
+
+  <details>
+    <summary>명령 한 줄씩 해석하기</summary>
+
+    <table>
+      <thead>
+        <tr>
+          <th>명령 또는 부분</th>
+          <th>하는 일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>docker run --rm  --user &quot;$(id -u):$(id -g)&quot;  --mount &quot;type=bind,src=$PWD/input,dst=/input,readonly&quot;  --mount &quot;type=bind,src=$PWD/output-review,dst=/output&quot;  alpine:3.21 sh -c &#x27;wc -l /input/samples.tsv &gt; /output/line-count.txt&#x27;</code></td>
+          <td>이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다.</td>
+        </tr>
+        <tr>
+          <td><code>cat output-review/line-count.txt</code></td>
+          <td>지정한 파일 내용을 읽어 출력합니다. <code>/</code>로 시작하면 절대 경로, <code>../</code>는 상위 폴더를 기준으로 찾습니다.</td>
+        </tr>
+        <tr>
+          <td><code>--rm</code></td>
+          <td>작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다.</td>
+        </tr>
+        <tr>
+          <td><code>--user "$(id -u):$(id -g)"</code></td>
+          <td>호스트의 사용자 번호와 그룹 번호로 실행합니다. id -u는 사용자 ID, id -g는 그룹 ID이며 $(…)는 명령 결과를 넣습니다.</td>
+        </tr>
+        <tr>
+          <td><code>--mount</code></td>
+          <td>type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다.</td>
+        </tr>
+        <tr>
+          <td><code>sh -c / bash -c</code></td>
+          <td>해당 셸이 따옴표 안의 명령을 해석합니다. 컨테이너 명령 뒤의 &gt;가 컨테이너 내부에서 처리되도록 할 수 있습니다.</td>
+        </tr>
+        <tr>
+          <td><code>&gt; 경로</code></td>
+          <td>표준 출력을 파일에 저장합니다. 파일을 만들거나 덮어쓰지만 상위 폴더까지 만들지는 않습니다.</td>
+        </tr>
+        <tr>
+          <td><code>$PWD</code></td>
+          <td>현재 작업 폴더의 절대 경로입니다.</td>
+        </tr>
+        <tr>
+          <td><code>wc -l</code></td>
+          <td>입력 파일이나 전달받은 입력의 줄 수를 셉니다. 예제는 헤더를 포함해 4줄입니다.</td>
+        </tr>
+        <tr>
+          <td><code>alpine:3.21</code></td>
+          <td>기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다.</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </details>
+
   <p>4줄이라는 결과가 새 PC 폴더에 남습니다. 출력 파일이 이미 있으면 덮어씁니다.</p>
 </details>
 
@@ -127,6 +282,39 @@ cat output-review/line-count.txt
 <pre><code class="language-bash">docker run --rm alpine:3.21 cat /input/samples.tsv
 
 </code></pre>
+
+<details>
+  <summary>명령 한 줄씩 해석하기</summary>
+
+  <table>
+    <thead>
+      <tr>
+        <th>명령 또는 부분</th>
+        <th>하는 일</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><code>docker run --rm alpine:3.21 cat /input/samples.tsv</code></td>
+        <td>이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다.</td>
+      </tr>
+      <tr>
+        <td><code>--rm</code></td>
+        <td>작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다.</td>
+      </tr>
+      <tr>
+        <td><code>alpine:3.21</code></td>
+        <td>기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다.</td>
+      </tr>
+      <tr>
+        <td><code>cat /경로/파일</code></td>
+        <td>컨테이너에서 보이는 주소의 파일을 읽습니다. 호스트의 파일이 자동으로 보이지는 않습니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+</details>
+
 <details>
   <summary>힌트 보기</summary>
   <p>PC의 input 폴더가 컨테이너의 /input에 자동으로 연결되지는 않습니다.</p>
@@ -139,6 +327,47 @@ cat output-review/line-count.txt
   alpine:3.21 cat /input/samples.tsv
 
 </code></pre>
+
+  <details>
+    <summary>명령 한 줄씩 해석하기</summary>
+
+    <table>
+      <thead>
+        <tr>
+          <th>명령 또는 부분</th>
+          <th>하는 일</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>docker run --rm  --mount &quot;type=bind,src=$PWD/input,dst=/input,readonly&quot;  alpine:3.21 cat /input/samples.tsv</code></td>
+          <td>이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다.</td>
+        </tr>
+        <tr>
+          <td><code>--rm</code></td>
+          <td>작업이 끝나면 해당 컨테이너를 자동 삭제합니다. 이미지는 남습니다.</td>
+        </tr>
+        <tr>
+          <td><code>--mount</code></td>
+          <td>type=bind는 호스트 폴더 연결, src는 호스트 원본 경로, dst는 컨테이너 경로, readonly는 쓰기 금지입니다. type=volume은 Docker 관리 저장공간을 연결합니다.</td>
+        </tr>
+        <tr>
+          <td><code>$PWD</code></td>
+          <td>현재 작업 폴더의 절대 경로입니다.</td>
+        </tr>
+        <tr>
+          <td><code>alpine:3.21</code></td>
+          <td>기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다.</td>
+        </tr>
+        <tr>
+          <td><code>cat /경로/파일</code></td>
+          <td>컨테이너에서 보이는 주소의 파일을 읽습니다. 호스트의 파일이 자동으로 보이지는 않습니다.</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </details>
+
   <p>4줄의 예제 내용이 보이면 성공입니다. 호스트의 작업 폴더에서 실행합니다.</p>
 </details>
 

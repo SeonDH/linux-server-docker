@@ -21,6 +21,15 @@ Python 자체도 메모리를 사용하므로 자료 크기만큼의 한도만 �
 ```bash
 bash memory-limit.sh
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>bash memory-limit.sh</code> | 뒤에 지정한 셸 스크립트 파일을 Bash로 실행합니다. 파일을 저장한 위치에서 실행해야 합니다. |
+
+</details>
+
 저장소 루트에서는 `bash labs/memory-limit.sh`로 실행합니다. 첫 실행은 Python 이미지 다운로드가 필요합니다. 컨테이너별 메모리만 작게 제한하며 PC 메모리를 채우는 작업은 하지 않습니다. 각 실행에는 CPU 0.25 한도와 30초 종료 장치를 두었습니다. 스크립트는 자신의 실습 컨테이너만 자동 정리합니다.
 
 ### 결과 읽기

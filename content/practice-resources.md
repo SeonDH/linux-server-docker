@@ -47,6 +47,24 @@ docker run -d --name course-cpu-watch \
   alpine:3.21 timeout 300 sh -c 'while :; do :; done'
 docker stats course-cpu-watch
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run -d --name course-cpu-watch  --cpus=0.25 --memory=128m  alpine:3.21 timeout 300 sh -c &#x27;while :; do :; done&#x27;</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| <code>docker stats course-cpu-watch</code> | 컨테이너별 CPU·메모리 사용량과 한도를 관찰합니다. `--no-stream`은 한 번만 출력합니다. 연속 관찰은 Ctrl+C로 마칩니다. |
+| `-d` | 백그라운드로 실행합니다. 처음에는 작업 결과 대신 컨테이너 ID가 보입니다. |
+| `--name` | 바로 뒤의 이름을 컨테이너에 붙입니다. 같은 이름은 중복 사용할 수 없습니다. |
+| `--cpus` | CPU 한 개 기준의 시간 한도입니다. 0.25는 25%, 1은 CPU 하나 분량이며 전용 CPU 예약이 아닙니다. |
+| `--memory` | 컨테이너 RAM 사용 한도입니다. m은 MiB 단위이고, 실제 사용량이 항상 한도만큼인 것은 아닙니다. |
+| `sh -c / bash -c` | 해당 셸이 따옴표 안의 명령을 해석합니다. 컨테이너 명령 뒤의 >가 컨테이너 내부에서 처리되도록 할 수 있습니다. |
+| `timeout 초 명령` | 지정한 시간이 지나면 명령에 종료를 요청합니다. 무한 계산 예제를 계속 돌리지 않기 위한 장치입니다. |
+| `while :; do :; done` | 아무 일도 하지 않는 : 명령을 쉬지 않고 반복하여 CPU 계산 부하를 만듭니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
 CPU %와 MEM USAGE / LIMIT를 봅니다. 실습 CPU 사용률은 조건에 따라 약 25% 부근으로 관찰될 수 있으며 정확히 같은 숫자가 보장되지는 않습니다. 메모리는 한도 128 MiB보다 훨씬 적게 사용할 수 있습니다. **Ctrl+C는 stats 관찰만 끝내며 컨테이너를 종료하지 않습니다.**
 
 같은 작업을 호스트의 작업 관리자·활성 상태 보기에서도 봅니다. 전체 PC CPU에서 변화가 작아 보여도 docker stats에서 컨테이너의 활동을 확인할 수 있습니다.
@@ -57,6 +75,17 @@ CPU %와 MEM USAGE / LIMIT를 봅니다. 실습 CPU 사용률은 조건에 따�
 docker update --cpus=0.5 course-cpu-watch
 docker stats course-cpu-watch
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker update --cpus=0.5 course-cpu-watch</code> | 이미 만든 컨테이너의 설정을 바꿉니다. 이 예제는 CPU 한도를 0.25에서 0.5로 늘립니다. |
+| <code>docker stats course-cpu-watch</code> | 컨테이너별 CPU·메모리 사용량과 한도를 관찰합니다. `--no-stream`은 한 번만 출력합니다. 연속 관찰은 Ctrl+C로 마칩니다. |
+| `--cpus` | CPU 한 개 기준의 시간 한도입니다. 0.25는 25%, 1은 CPU 하나 분량이며 전용 CPU 예약이 아닙니다. |
+
+</details>
+
 CPU 한도가 1/4에서 1/2로 커졌습니다. 같은 계산 작업의 CPU 사용률이 높아지는 경향을 관찰합니다. 한도 자체가 사용량을 만드는 것이 아니라, 이 작업이 계속 계산하기 때문에 차이를 볼 수 있습니다. Ctrl+C로 관찰을 마칩니다.
 
 ### 3. 컨테이너 안의 top으로도 보기
@@ -64,6 +93,16 @@ CPU 한도가 1/4에서 1/2로 커졌습니다. 같은 계산 작업의 CPU 사�
 ```bash
 docker exec -it course-cpu-watch top
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker exec -it course-cpu-watch top</code> | 현재 실행 중인 컨테이너 안에서 추가 명령을 실행합니다. 정지한 컨테이너에서는 실패합니다. |
+| `-it` | 키보드 입력과 터미널 화면을 연결합니다. |
+
+</details>
+
 q로 top을 나옵니다. Alpine의 top은 0장 Ubuntu에서 본 화면과 다를 수 있습니다. top의 CPU 비율은 표시 방식에 따라 docker stats와 다를 수 있으므로 동일한 숫자를 기대하지 않습니다.
 
 ### 4. 정리하기
@@ -72,6 +111,16 @@ q로 top을 나옵니다. Alpine의 top은 0장 Ubuntu에서 본 화면과 다�
 docker stop course-cpu-watch
 docker rm course-cpu-watch
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker stop course-cpu-watch</code> | 지정한 컨테이너의 주 작업에 종료를 요청하고 기다립니다. 종료되지 않으면 강제 종료할 수 있습니다. 컨테이너 자체를 삭제하지는 않습니다. |
+| <code>docker rm course-cpu-watch</code> | 지정한 컨테이너를 삭제합니다. 내부에만 저장한 파일도 없어지지만 이미지와 연결한 외부 폴더는 삭제하지 않습니다. |
+
+</details>
+
 이름이 이미 사용 중이라는 오류는 이전 실습 대상인지 docker ps -a로 먼저 확인합니다.
 
 ### 메모리 한도와 사용량 비교 · 기다리는 작업 두 개
@@ -81,11 +130,37 @@ docker run -d --name course-mem-small --memory=64m alpine:3.21 sleep 120
 docker run -d --name course-mem-large --memory=128m alpine:3.21 sleep 120
 docker stats --no-stream course-mem-small course-mem-large
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run -d --name course-mem-small --memory=64m alpine:3.21 sleep 120</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| <code>docker run -d --name course-mem-large --memory=128m alpine:3.21 sleep 120</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| <code>docker stats --no-stream course-mem-small course-mem-large</code> | 컨테이너별 CPU·메모리 사용량과 한도를 관찰합니다. `--no-stream`은 한 번만 출력합니다. 연속 관찰은 Ctrl+C로 마칩니다. |
+| `-d` | 백그라운드로 실행합니다. 처음에는 작업 결과 대신 컨테이너 ID가 보입니다. |
+| `--name` | 바로 뒤의 이름을 컨테이너에 붙입니다. 같은 이름은 중복 사용할 수 없습니다. |
+| `--memory` | 컨테이너 RAM 사용 한도입니다. m은 MiB 단위이고, 실제 사용량이 항상 한도만큼인 것은 아닙니다. |
+| `sleep 초` | 지정한 시간 동안 기다리는 작업입니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
 LIMIT는 다르지만 두 sleep의 실제 USAGE는 비슷하게 작을 수 있습니다. 메모리 제한을 두 배로 주었다고 두 배를 사용하는 것은 아닙니다. 한 번의 snapshot에서 CPU가 0%처럼 보일 수 있으며 활동의 정확한 비교에는 연속 관찰을 사용합니다.
 ```bash
 docker stop course-mem-small course-mem-large
 docker rm course-mem-small course-mem-large
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker stop course-mem-small course-mem-large</code> | 지정한 컨테이너의 주 작업에 종료를 요청하고 기다립니다. 종료되지 않으면 강제 종료할 수 있습니다. 컨테이너 자체를 삭제하지는 않습니다. |
+| <code>docker rm course-mem-small course-mem-large</code> | 지정한 컨테이너를 삭제합니다. 내부에만 저장한 파일도 없어지지만 이미지와 연결한 외부 폴더는 삭제하지 않습니다. |
+
+</details>
+
 위 관찰은 **한도와 사용량 구분**을 배우는 실습입니다. 실제 메모리 요청이 한도를 넘는 상황은 [메모리 부족 실습](practice-memory.html)에서 작은 한도 안에서 별도로 확인합니다.
 
 ### 한도를 주었을 때와 주지 않았을 때
@@ -120,11 +195,38 @@ docker run -d --name course-with-limit \
 docker run -d --name course-without-limit alpine:3.21 sleep 120
 docker stats --no-stream course-with-limit course-without-limit
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker run -d --name course-with-limit  --cpus=0.25 --memory=64m alpine:3.21 sleep 120</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| <code>docker run -d --name course-without-limit alpine:3.21 sleep 120</code> | 이미지로 새 컨테이너(작업 자리)를 만들고 뒤의 프로그램을 실행합니다. |
+| <code>docker stats --no-stream course-with-limit course-without-limit</code> | 컨테이너별 CPU·메모리 사용량과 한도를 관찰합니다. `--no-stream`은 한 번만 출력합니다. 연속 관찰은 Ctrl+C로 마칩니다. |
+| `-d` | 백그라운드로 실행합니다. 처음에는 작업 결과 대신 컨테이너 ID가 보입니다. |
+| `--name` | 바로 뒤의 이름을 컨테이너에 붙입니다. 같은 이름은 중복 사용할 수 없습니다. |
+| `--cpus` | CPU 한 개 기준의 시간 한도입니다. 0.25는 25%, 1은 CPU 하나 분량이며 전용 CPU 예약이 아닙니다. |
+| `--memory` | 컨테이너 RAM 사용 한도입니다. m은 MiB 단위이고, 실제 사용량이 항상 한도만큼인 것은 아닙니다. |
+| `sleep 초` | 지정한 시간 동안 기다리는 작업입니다. |
+| `alpine:3.21` | 기본 도구를 갖춘 작은 Alpine Linux 이미지입니다. 3.21은 이미지의 태그입니다. |
+
+</details>
+
 두 컨테이너의 실제 CPU·메모리 사용은 모두 작을 수 있습니다. 메모리 LIMIT는 제한한 컨테이너가 64 MiB, 제한하지 않은 컨테이너는 엔진이 보는 실행 환경의 메모리 범위로 표시될 수 있습니다. 컨테이너별 설정도 확인합니다.
 ```bash
 docker inspect course-with-limit --format 'NanoCPUs={{.HostConfig.NanoCpus}} Memory={{.HostConfig.Memory}}'
 docker inspect course-without-limit --format 'NanoCPUs={{.HostConfig.NanoCpus}} Memory={{.HostConfig.Memory}}'
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker inspect course-with-limit --format &#x27;NanoCPUs={{.HostConfig.NanoCpus}} Memory={{.HostConfig.Memory}}&#x27;</code> | 컨테이너 설정·상태를 조회합니다. `--format`은 필요한 항목만 출력합니다. Mounts는 폴더 연결, ExitCode는 종료 상태, OOMKilled는 메모리 부족 종료 여부, HostConfig.Memory는 RAM 한도(바이트), NanoCpus는 CPU 시간 한도(1 CPU = 1000000000)입니다. |
+| <code>docker inspect course-without-limit --format &#x27;NanoCPUs={{.HostConfig.NanoCpus}} Memory={{.HostConfig.Memory}}&#x27;</code> | 컨테이너 설정·상태를 조회합니다. `--format`은 필요한 항목만 출력합니다. Mounts는 폴더 연결, ExitCode는 종료 상태, OOMKilled는 메모리 부족 종료 여부, HostConfig.Memory는 RAM 한도(바이트), NanoCpus는 CPU 시간 한도(1 CPU = 1000000000)입니다. |
+
+</details>
+
 제한한 경우는 250000000과 67108864, 제한하지 않은 경우는 0과 0이 기대됩니다. **여기서 0은 자원을 못 쓴다는 뜻이 아니라 컨테이너별 해당 한도를 지정하지 않았다는 뜻입니다.**
 
 정리합니다.
@@ -132,6 +234,16 @@ docker inspect course-without-limit --format 'NanoCPUs={{.HostConfig.NanoCpus}} 
 docker stop course-with-limit course-without-limit
 docker rm course-with-limit course-without-limit
 ```
+
+<details markdown="1"><summary>명령 한 줄씩 해석하기</summary>
+
+| 명령 또는 부분 | 하는 일 |
+|---|---|
+| <code>docker stop course-with-limit course-without-limit</code> | 지정한 컨테이너의 주 작업에 종료를 요청하고 기다립니다. 종료되지 않으면 강제 종료할 수 있습니다. 컨테이너 자체를 삭제하지는 않습니다. |
+| <code>docker rm course-with-limit course-without-limit</code> | 지정한 컨테이너를 삭제합니다. 내부에만 저장한 파일도 없어지지만 이미지와 연결한 외부 폴더는 삭제하지 않습니다. |
+
+</details>
+
 기본 수업에서는 한도 없는 고부하 작업을 실제로 실행하지 않습니다. 계산량 변화는 앞의 제한된 CPU 실습으로 관찰하고, 제한 없는 대기 작업으로 “한도 없음 ≠ 항상 많이 사용”을 확인합니다.
 
 ### 고쳐 보기와 설명하기
