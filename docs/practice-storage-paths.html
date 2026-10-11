@@ -1,0 +1,236 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>[실습] 저장 위치에 따른 공간 부족 - 15분 | 리눅스 응용 보충 과정</title><link rel="stylesheet" href="assets/style.css"></head>
+<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><a aria-current="page" href="practice-storage-paths.html">[실습] 저장 위치와 공간 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="section">[실습] 저장 위치에 따른 공간 부족 - 15분</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#section-1">작은 서랍은 가득 차도 큰 창고에는 자리가 있어요</a></li><li><a href="#section-2">1. 크기가 다른 두 공간 준비하기</a></li><li><a href="#section-3">2. 경로별 크기 확인하기</a></li><li><a href="#mib---">3. 작은 공간에 12MiB 쓰기: 예상된 실패</a></li><li><a href="#section-4">4. 저장 경로만 바꾸기: 예상된 성공</a></li><li><a href="#section-5">5. 한 공간을 정리하면 다른 공간도 비워질까요?</a></li><li><a href="#nas--">6. 교육 서버의 루트·NAS 사례로 연결하기</a></li><li><a href="#section-6">7. 종료와 정리</a></li><li><a href="#section-7">직접 확인할 질문</a></li></ul></details>
+
+<blockquote>
+  <p><strong>실습 환경:</strong> 호스트 Bash에서 시작하고, 이 실습 전용 컨테이너 안에서 관찰
+<strong>준비:</strong> Docker Desktop 실행, alpine:3.21 이미지, 5장의 df·du 개념</p>
+</blockquote>
+
+<p><strong>학습 목표:</strong> 같은 크기의 결과라도 저장하는 경로에 따라 실패하거나 성공할 수 있음을 확인합니다.</p>
+
+<h2 id="section-1">작은 서랍은 가득 차도 큰 창고에는 자리가 있어요</h2>
+
+<p>같은 컨테이너에 크기가 다른 저장공간 두 개를 연결합니다. 둘 중 하나가 가득 차도 다른 쪽에 자동으로 저장되지 않습니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>연결한 경로</th>
+      <th>최대 크기</th>
+      <th>비유</th>
+      <th>12MiB 파일 쓰기</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/small</td>
+      <td>8MiB</td>
+      <td>작은 기본 서랍</td>
+      <td>공간이 부족해 실패</td>
+    </tr>
+    <tr>
+      <td>/large</td>
+      <td>32MiB</td>
+      <td>별도로 연결한 큰 창고</td>
+      <td>저장 성공</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>MiB는 파일 크기를 나타내는 단위입니다. 이번에는 <strong>12가 8보다 크고 32보다 작다</strong>는 점만 생각하세요.</p>
+
+<h3 id="nas---">실제 NAS와 이 실습의 차이</h3>
+
+<p>실제 서버의 루트 디스크나 NAS를 채우는 대신, <strong>RAM 기반 임시 파일시스템인 tmpfs</strong>로 작은 공간을 재현합니다. <code>--tmpfs</code>가 컨테이너 안의 지정한 주소에 임시 저장공간을 연결합니다. macOS·Windows에서도 Docker Desktop의 Linux 컨테이너로 진행합니다.</p>
+
+<ul>
+  <li><code>/small</code>은 실제 루트 파일시스템 <code>/</code>가 아닙니다. 작은 저장공간을 비유한 실습 경로입니다.</li>
+  <li><code>/large</code>는 실제 NAS가 아닙니다. NAS 접속·성능·네트워크 오류를 재현하는 실습도 아닙니다.</li>
+  <li>두 공간의 데이터는 컨테이너 메모리 사용에 포함되고, 컨테이너가 정지하면 사라집니다. 중요한 결과를 보관하는 용도로 쓰지 않습니다.</li>
+  <li>실제 PC 디스크의 파티션이나 서버 설정은 변경하지 않습니다.</li>
+</ul>
+
+<p><strong>PC 폴더를 bind mount로 두 곳에 연결하는 것만으로 각각 8MiB·32MiB 한도가 생기지는 않습니다.</strong> 같은 파일시스템의 두 폴더라면 여유 공간도 공유할 수 있습니다. 실제 NAS의 전체 용량과 사용자별 quota는 별도 설정입니다.</p>
+
+<h2 id="section-2">1. 크기가 다른 두 공간 준비하기</h2>
+
+<p><strong>호스트 Bash</strong>에서 실행합니다. <code>course-linux</code> 안이라면 <code>exit</code>로 나옵니다. 새 실습은 <code>course-linux</code>와 별개의 컨테이너입니다.</p>
+
+<pre><code class="language-bash">docker run --rm -it --name course-storage-demo \
+  --cpus=0.25 --memory=128m --memory-swap=128m \
+  --network=none \
+  --tmpfs /small:rw,size=8m \
+  --tmpfs /large:rw,size=32m \
+  alpine:3.21 timeout 600 sh
+
+</code></pre>
+
+<p>이제 <strong>실습 컨테이너 안의 sh</strong>입니다. <code>--tmpfs</code> 두 줄이 이번에 연결한 작은 공간과 큰 공간입니다. <code>--memory</code>는 컨테이너 전체 RAM 한도이며 각 저장공간의 크기와 구분합니다. 데이터 최대 합계 40MiB보다 여유 있는 128MiB로 설정했습니다. 10분 뒤 자동 종료되므로 시간이 지나 연결이 끊기면 처음부터 다시 시작합니다.</p>
+
+<p>컨테이너 이름이 이미 사용 중이라는 오류가 나오면 <a href="08-troubleshooting.html#docker-trouble">8장 이름 충돌 사례</a>처럼 기존 대상이 이 실습인지 먼저 확인하세요.</p>
+
+<h2 id="section-3">2. 경로별 크기 확인하기</h2>
+
+<p>계속 <strong>실습 컨테이너 안</strong>에서 실행합니다.</p>
+
+<pre><code class="language-bash">df -h /small /large
+
+</code></pre>
+
+<p><code>Size</code>에서 <code>/small</code>은 약 8M, <code>/large</code>는 약 32M인지 봅니다. <code>Mounted on</code>은 이 공간을 어느 주소에서 사용하는지 보여줍니다.</p>
+
+<pre><code class="language-text">Filesystem   Size   Used   Available   Mounted on
+tmpfs        8M     ...    ...         /small
+tmpfs        32M    ...    ...         /large
+
+</code></pre>
+
+<p>위 표는 읽는 부분을 설명한 예시입니다. 실제 표시 형식과 숫자는 환경에 따라 다를 수 있습니다. 한 공간의 여유가 다른 공간에 자동으로 합쳐지지 않는다는 점이 중요합니다.</p>
+
+<h2 id="mib---">3. 작은 공간에 12MiB 쓰기: 예상된 실패</h2>
+
+<pre><code class="language-bash">dd if=/dev/zero of=/small/result.bin bs=1M count=12
+echo "$?"
+df -h /small /large
+wc -c /small/result.bin
+
+</code></pre>
+
+<table>
+  <thead>
+    <tr>
+      <th>명령의 부분</th>
+      <th>뜻</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dd</td>
+      <td>정해진 크기의 데이터를 쓰는 도구</td>
+    </tr>
+    <tr>
+      <td>if=/dev/zero</td>
+      <td>분석 데이터 대신 0으로 채운 예제 입력</td>
+    </tr>
+    <tr>
+      <td>of=/small/result.bin</td>
+      <td>결과를 저장할 경로</td>
+    </tr>
+    <tr>
+      <td>bs=1M count=12</td>
+      <td>1MiB씩 12번, 총 12MiB 쓰기 시도</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>예상 결과:</strong> <code>No space left on device</code>와 0이 아닌 종료 상태. <code>/small</code>은 가득 차고 <code>/large</code>는 여유가 있습니다.</p>
+
+<p><code>result.bin</code> 파일이 생겨도 12MiB 전체가 저장된 것은 아닙니다. 보통 약 8MiB까지만 저장된 불완전한 결과가 남습니다. <strong>파일 존재, 종료 상태, 실제 크기를 함께 확인</strong>합니다. 뒤의 명령으로 넘어가도 괜찮습니다. 이 실패가 실습의 목적입니다.</p>
+
+<h2 id="section-4">4. 저장 경로만 바꾸기: 예상된 성공</h2>
+
+<pre><code class="language-bash">dd if=/dev/zero of=/large/result.bin bs=1M count=12
+echo "$?"
+wc -c /large/result.bin
+df -h /small /large
+
+</code></pre>
+
+<p><strong>예상 결과:</strong> 종료 상태 0, 파일 크기 <strong>12582912바이트</strong>, 즉 12MiB. <code>/small</code>이 계속 가득 차 있어도 <code>/large</code>에 쓰는 작업은 성공합니다.</p>
+
+<p>바뀐 것은 입력 크기나 CPU가 아니라 <strong>저장하는 주소</strong>입니다. 실제 분석에서는 실패한 불완전한 결과를 성공 결과처럼 복사해 쓰기보다, 오류 원인을 해결하고 작업을 다시 실행해 완전한 출력을 확인합니다.</p>
+
+<h2 id="section-5">5. 한 공간을 정리하면 다른 공간도 비워질까요?</h2>
+
+<p>작은 공간의 <strong>이번 실습에서 만든 파일만</strong> 지웁니다.</p>
+
+<pre><code class="language-bash">rm /small/result.bin
+df -h /small /large
+wc -c /large/result.bin
+
+</code></pre>
+
+<p><strong>예상 결과:</strong> <code>/small</code>의 여유는 돌아오고, <code>/large</code>의 완전한 결과는 그대로 남습니다. 실제 서버에서도 어느 경로의 파일을 정리하는지 구분해야 합니다.</p>
+
+<h2 id="nas--">6. 교육 서버의 루트·NAS 사례로 연결하기</h2>
+
+<p>실제 서버에서는 예를 들어 다음처럼 공간이 나뉘어 있을 수 있습니다. <strong>아래는 실습 PC의 실제 구성이라고 가정하지 않습니다.</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>예시 경로</th>
+      <th>사용하는 공간</th>
+      <th>주의할 점</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/home/user/result</td>
+      <td>별도 연결이 없다면 루트 쪽일 수 있음</td>
+      <td>실제 파일시스템 확인</td>
+    </tr>
+    <tr>
+      <td>/data/user/result</td>
+      <td>NAS가 /data에 연결됐다면 그 저장공간</td>
+      <td>내 출력 경로를 이곳으로 지정</td>
+    </tr>
+    <tr>
+      <td>/tmp</td>
+      <td>별도 구성에 따라 루트·tmpfs 등 사용</td>
+      <td>임시 파일 경로도 확인</td>
+    </tr>
+    <tr>
+      <td>Docker 이미지·로그</td>
+      <td>엔진의 저장 설정에 따른 위치</td>
+      <td>입력 폴더 연결과 별개</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>NAS에 입력만 두었는데 출력·임시 파일·Docker 데이터는 루트에 쌓일 수 있습니다. NAS가 넉넉하다는 이유로 모든 경로가 넉넉하다고 판단하지 않습니다.</p>
+
+<p><strong>실제 Linux 서버에서 조사하는 명령의 형식</strong>입니다. 설명용 경로를 실제 경로로 바꿉니다. 없는 경로를 그대로 실행하지 않습니다.</p>
+
+<pre><code class="language-text">df -h 실제출력폴더
+df -h 실제임시폴더
+du -sh 자신의작업폴더
+docker system df
+
+</code></pre>
+
+<p>입출력·임시 경로는 프로그램 옵션으로 지정하고, NAS 연결 여부와 Docker 저장 설정은 관리자와 확인합니다. <strong>출력을 NAS로 옮기는 것과 Docker 이미지·로그의 저장 위치를 옮기는 것은 서로 다른 조치</strong>입니다.</p>
+
+<h2 id="section-6">7. 종료와 정리</h2>
+
+<p><strong>실습 컨테이너 안</strong>에서 실행합니다.</p>
+
+<pre><code class="language-bash">exit
+
+</code></pre>
+
+<p>호스트로 돌아오며 이 컨테이너는 <code>--rm</code>으로 삭제됩니다. 두 임시 공간의 파일도 남지 않습니다. 기존 <code>course-linux</code>와 PC 실습 폴더는 별개입니다.</p>
+
+<h2 id="section-7">직접 확인할 질문</h2>
+
+<ol>
+  <li>작은 공간에서 실패했을 때 큰 공간의 여유도 없어졌나요?</li>
+  <li>큰 공간에서 성공하도록 바꾼 것은 CPU인가요, 결과 경로인가요?</li>
+  <li>실제 NAS에 입력을 두면 Docker 이미지와 로그도 자동으로 그쪽에 저장될까요?</li>
+</ol>
+
+<details>
+  <summary>[답지] 확인 결과</summary>
+
+  <ol>
+    <li>두 공간은 별개이므로 <code>/large</code>에는 여유가 있었습니다.</li>
+    <li>결과 경로를 <code>/small</code>에서 <code>/large</code>로 바꿨습니다.</li>
+    <li>아닙니다. 이미지·로그는 Docker 엔진 설정에 따른 공간을 사용하므로 따로 확인합니다.</li>
+  </ol>
+
+</details>
+
+<p><a href="05-storage.html">5장 저장공간으로 돌아가기</a> · <a href="08-troubleshooting.html#resource-trouble">8장 공간 부족 진단</a></p>
+
+<p>참고: <a href="https://docs.docker.com/engine/storage/tmpfs/">Docker tmpfs 공식 안내</a>.</p>
+</article><footer><a href="practice-memory.html">← [실습] 메모리 부족</a><a href="index.html">과정 목차로 돌아가기</a></footer><p class="context-note">리눅스 응용 보충 과정 · 개인 실습 폴더와 자신의 작업을 확인한다.</p></main><script src="assets/app.js"></script></body></html>

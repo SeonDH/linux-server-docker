@@ -1,5 +1,5 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>리눅스 응용: 핵심 기초 복습과 Docker·Singularity | 리눅스 응용 보충 과정</title><link rel="stylesheet" href="assets/style.css"></head>
-<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a aria-current="page" href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="dockersingularity">리눅스 응용: 핵심 기초 복습과 Docker·Singularity</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#section">목차</a></li><li><a href="#section-1">반복 학습 방법</a></li><li><a href="#section-2">어디에서 실행하나요?</a></li><li><a href="#cpu-">[실습] CPU·메모리 비교</a></li><li><a href="#section-3">기본 학습과 선택 학습</a></li><li><a href="#section-4">기존 교재</a></li></ul></details>
+<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a aria-current="page" href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><a  href="practice-storage-paths.html">[실습] 저장 위치와 공간 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="dockersingularity">리눅스 응용: 핵심 기초 복습과 Docker·Singularity</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#section">목차</a></li><li><a href="#section-1">반복 학습 방법</a></li><li><a href="#section-2">어디에서 실행하나요?</a></li><li><a href="#section-3">[실습] 자원·저장공간 비교</a></li><li><a href="#section-4">기본 학습과 선택 학습</a></li><li><a href="#section-5">기존 교재</a></li></ul></details>
 <p>## 교육 대상과 학습 목적
 명령어를 배웠지만 “왜 쓰는지”, “어디에서 실행하는지”가 아직 헷갈리는 분을 위한 보충 교재입니다. 설명을 쉬운 비유로 읽고, 짧은 실습을 성공한 뒤 한 가지를 바꾸고 작은 오류를 고쳐 봅니다. 모든 명령과 옵션을 외울 필요는 없습니다.</p>
 
@@ -77,20 +77,21 @@
 <h2 id="section-2">어디에서 실행하나요?</h2>
 <p>각 실습 맨 위의 실행 위치를 읽으세요. Linux 명령은 course-linux 안, Docker 명령은 PC의 호스트 Bash입니다. 0장에서 준비한 폴더와 작은 예제 파일을 계속 사용합니다. 9장은 별도 설치 없이 이론만 진행합니다.</p>
 
-<h2 id="cpu-">[실습] CPU·메모리 비교</h2>
+<h2 id="section-3">[실습] 자원·저장공간 비교</h2>
 <ul>
   <li><a href="practice-resources.html">Docker CPU·메모리 관찰 - 20분</a></li>
   <li><a href="practice-cpu-sharing.html">CPU 공유와 자원 제한 - 20분</a></li>
   <li><a href="practice-memory.html">메모리 부족과 오류 확인 - 15분</a></li>
+  <li><a href="practice-storage-paths.html">저장 위치에 따른 공간 부족 - 15분</a></li>
 </ul>
 
-<p>6장에서 실습을 안내하고 별도 페이지에서 따라 한다. 실제 검증한 예시 숫자와 교육생 PC의 결과는 다를 수 있다.</p>
+<p>5·6장에서 실습을 안내하고 별도 페이지에서 따라 한다. 실제 검증한 예시 숫자와 교육생 PC의 결과는 다를 수 있다.</p>
 
-<h2 id="section-3">기본 학습과 선택 학습</h2>
+<h2 id="section-4">기본 학습과 선택 학습</h2>
 <p>이 페이지의 1~9장이 기본 경로입니다. 어려운 진단·파이프 설정·자원 제한·Dockerfile·볼륨 실습은 <a href="deep-dive.html">더 알고 싶을 때</a>로 옮겼습니다. 처음부터 읽거나 모두 따라 하지 않아도 됩니다.</p>
 
 <p>기본 학습을 마친 뒤 필요한 추가 실습을 선택하세요. 진도보다 결과와 이유를 이해하는 데 충분한 시간을 쓰세요.</p>
 
-<h2 id="section-4">기존 교재</h2>
+<h2 id="section-5">기존 교재</h2>
 <p><a href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재</a>는 추가 복습에 활용합니다. 이번 수업은 새 내용을 많이 배우기보다 이미 배운 내용을 이해하고 작은 성공을 반복하는 데 집중합니다.</p>
 </article><footer><span></span><a href="guide.html">교재 사용 안내 →</a></footer><p class="context-note">리눅스 응용 보충 과정 · 개인 실습 폴더와 자신의 작업을 확인한다.</p></main><script src="assets/app.js"></script></body></html>

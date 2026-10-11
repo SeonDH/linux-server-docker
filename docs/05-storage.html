@@ -1,5 +1,5 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>5. 서버 저장공간의 이해 | 리눅스 응용 보충 과정</title><link rel="stylesheet" href="assets/style.css"></head>
-<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a aria-current="page" href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="section">5. 서버 저장공간의 이해</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#section-1">작은 서랍과 큰 창고가 함께 있는 서버</a></li><li><a href="#section-2">[실습] 따라 하기 · 전체 공간과 내 폴더의 크기</a></li><li><a href="#section-3">사례 · 입력만 창고에 두면 충분할까요?</a></li><li><a href="#docker---">[실습] 따라 하기 · Docker가 보관하는 데이터 보기</a></li><li><a href="#section-4">공간이 부족하면 어떻게 할까요?</a></li><li><a href="#section-5">[실습] 반복 활동 · 어디가 가득 찼는지 찾기</a></li><li><a href="#section-9">확인 질문</a></li><li><a href="#section-10">이 장의 정리</a></li></ul></details>
+<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a aria-current="page" href="05-storage.html">5. 저장공간</a><a  href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><a  href="practice-storage-paths.html">[실습] 저장 위치와 공간 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="section">5. 서버 저장공간의 이해</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#section-1">작은 서랍과 큰 창고가 함께 있는 서버</a></li><li><a href="#section-2">[실습] 따라 하기 · 전체 공간과 내 폴더의 크기</a></li><li><a href="#section-3">사례 · 입력만 창고에 두면 충분할까요?</a></li><li><a href="#docker---">[실습] 따라 하기 · Docker가 보관하는 데이터 보기</a></li><li><a href="#section-4">[실습] 작은 공간에서는 실패하고 큰 공간에서는 성공하기</a></li><li><a href="#section-5">공간이 부족하면 어떻게 할까요?</a></li><li><a href="#section-6">[실습] 반복 활동 · 어디가 가득 찼는지 찾기</a></li><li><a href="#section-10">확인 질문</a></li><li><a href="#section-11">이 장의 정리</a></li></ul></details>
 
 <blockquote>
   <p><strong>실습 환경:</strong> Linux 명령은 컨테이너, Docker 명령은 호스트
@@ -11,7 +11,7 @@
 <h2 id="section-1">작은 서랍과 큰 창고가 함께 있는 서버</h2>
 <p>서버의 루트 파일시스템 <code>/</code>를 기본 서랍, 별도 대용량 스토리지를 큰 창고로 생각해 보세요. 큰 창고가 있어도 계속 작은 서랍에 물건을 넣으면 서랍은 가득 찹니다.</p>
 
-<p>별도 저장공간을 <code>/data</code> 같은 경로에 연결하는 것을 마운트라고 합니다. 이름이 /data인 폴더를 만들었다고 창고가 연결되는 것은 아닙니다. 이번 수업에서는 디스크 분할·마운트 실습을 하지 않습니다.</p>
+<p>별도 저장공간을 <code>/data</code> 같은 경로에 연결하는 것을 마운트라고 합니다. 이름이 /data인 폴더를 만들었다고 창고가 연결되는 것은 아닙니다. 이번 수업에서는 실제 디스크를 분할하거나 NAS를 새로 연결하지 않습니다. 작은 임시 공간을 연결하는 관찰 실습으로 저장 위치와 용량의 관계를 확인합니다.</p>
 
 <h2 id="section-2">[실습] 따라 하기 · 전체 공간과 내 폴더의 크기</h2>
 <p><strong>실습 환경: course-linux 컨테이너.</strong></p>
@@ -82,13 +82,19 @@ du -sh input output logs scratch
 </code></pre>
 <p>이미지·컨테이너·볼륨 등의 사용량을 봅니다. 이것만으로 로그를 포함한 모든 디스크 사용량을 설명하지는 못합니다. 자세한 위치·로그 설정은 <a href="deep-dive.html">선택 자료</a>에 있습니다.</p>
 
-<h2 id="section-4">공간이 부족하면 어떻게 할까요?</h2>
+<h2 id="section-4">[실습] 작은 공간에서는 실패하고 큰 공간에서는 성공하기</h2>
+
+<p>같은 12MiB 파일을 8MiB 공간과 32MiB 공간에 써 봅니다. 작은 공간은 <code>No space left on device</code>로 실패하지만 큰 공간은 성공합니다. 실제 디스크를 채우지 않고 RAM 기반 임시 공간으로 재현합니다.</p>
+
+<p><a href="practice-storage-paths.html">저장 위치에 따른 공간 부족 실습 - 15분</a></p>
+
+<h2 id="section-5">공간이 부족하면 어떻게 할까요?</h2>
 <p>먼저 어디가 찼는지 확인합니다. 다음으로 내 파일의 용도와 보존 여부를 확인합니다. 공용 데이터·타인의 작업·Docker 저장 폴더를 함부로 삭제하지 않습니다. 내가 판단하기 어려우면 경로와 오류를 기록해 관리자에게 요청합니다.</p>
 
-<h2 id="section-5">[실습] 반복 활동 · 어디가 가득 찼는지 찾기</h2>
+<h2 id="section-6">[실습] 반복 활동 · 어디가 가득 찼는지 찾기</h2>
 <p><strong>15분 · 작은 파일 관찰과 사례 토론.</strong></p>
 
-<h3 id="section-6">바꿔 보기</h3>
+<h3 id="section-7">바꿔 보기</h3>
 <p><strong>course-linux 안</strong>에서 실습용 로그 한 줄을 만들고 해당 폴더 크기를 확인하세요. 같은 파일이 있으면 덮어씁니다.</p>
 
 <pre><code class="language-bash">cd "$HOME/linux-server-lab"
@@ -106,7 +112,7 @@ du -sh logs
   <p>파일시스템 특성에 따라 크기는 달라집니다. 지정한 폴더의 사용량을 본다는 점이 핵심입니다.</p>
 </details>
 
-<h3 id="section-7">고쳐 보기</h3>
+<h3 id="section-8">고쳐 보기</h3>
 <p>아래는 <strong>교육용 가상 사례</strong>입니다. 실제 PC의 출력이 아닙니다.</p>
 
 <table>
@@ -146,16 +152,16 @@ du -sh logs
   <p>현재 결과·임시 파일·Docker 데이터가 사용하는 경로를 확인합니다. 어디가 찼는지 df로, 내 폴더가 얼마나 쓰는지 du로 봅니다. 경로와 오류를 기록하고 공용 데이터 정리는 관리자와 협의합니다. /data에 입력을 두었다고 이미지나 로그가 자동 이동하지 않습니다.</p>
 </details>
 
-<h3 id="section-8">설명하기</h3>
+<h3 id="section-9">설명하기</h3>
 <p>짝에게 “대용량 스토리지가 남아 있어도 루트가 찰 수 있는 이유”를 서랍·창고 비유로 말하세요.</p>
 
-<h2 id="section-9">확인 질문</h2>
+<h2 id="section-10">확인 질문</h2>
 <p>대용량 스토리지가 800 GB 남았으면 다른 경로에도 800 GB를 쓸 수 있을까요?</p>
 <details><summary>[답지] 해설 보기</summary>
 아니요. 저장하는 경로가 실제로 어느 공간을 사용하는지 확인해야 합니다.
 </details>
 
-<h2 id="section-10">이 장의 정리</h2>
+<h2 id="section-11">이 장의 정리</h2>
 
 <ul>
   <li>저장하는 경로에 따라 사용하는 파일시스템이 달라진다.</li>

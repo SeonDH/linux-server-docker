@@ -13,7 +13,7 @@ python3 -m http.server 8765 --bind 127.0.0.1 --directory docs
 ## 학습 자료
 - guide: 실행 위치·경로·기존 교재 연결
 - 0~9장: 기초 보충 학습
-- practice-resources, practice-cpu-sharing, practice-memory: 추가 자원 실습
+- practice-resources, practice-cpu-sharing, practice-memory, practice-storage-paths: 추가 자원 실습
 - glossary, checklist: 수강생 참고
 - deep-dive: 번외 상세 자료
 

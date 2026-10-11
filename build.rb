@@ -9,7 +9,7 @@ FileUtils.rm_f(File.join(out, 'instructor.html'))
 groups = {
   '교육 안내' => %w[index guide setup],
   '보충 학습' => %w[01-resources 02-docker 03-basics 04-io 05-storage 06-process 07-docker-practice 08-troubleshooting 09-singularity],
-  '[실습] 자원 비교' => %w[practice-resources practice-cpu-sharing practice-memory],
+  '[실습] 자원 비교' => %w[practice-resources practice-cpu-sharing practice-memory practice-storage-paths],
   '참고 자료' => %w[glossary checklist deep-dive appendix]
 }
 labels = {
@@ -17,7 +17,7 @@ labels = {
   '01-resources'=>'1. 컴퓨터 자원', '02-docker'=>'2. Docker 개념', '03-basics'=>'3. 경로와 권한',
   '04-io'=>'4. 파일과 파이프', '05-storage'=>'5. 저장공간', '06-process'=>'6. 프로세스와 자원',
   '07-docker-practice'=>'7. Docker 파일 연결', '08-troubleshooting'=>'8. 트러블슈팅', '09-singularity'=>'9. Singularity 이해',
-  'practice-resources'=>'[실습] 자원 관찰', 'practice-cpu-sharing'=>'[실습] CPU 공유', 'practice-memory'=>'[실습] 메모리 부족',
+  'practice-resources'=>'[실습] 자원 관찰', 'practice-cpu-sharing'=>'[실습] CPU 공유', 'practice-memory'=>'[실습] 메모리 부족', 'practice-storage-paths'=>'[실습] 저장 위치와 공간 부족',
   'glossary'=>'핵심 용어', 'checklist'=>'작업 체크리스트', 'deep-dive'=>'[번외] 더 알고 싶을 때',
   'appendix'=>'보충 학습 링크'
 }
