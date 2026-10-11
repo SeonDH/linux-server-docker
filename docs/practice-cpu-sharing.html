@@ -47,7 +47,7 @@
 <pre><code class="language-bash">bash cpu-sharing.sh
 
 </code></pre>
-<p>저장소 루트에서는 <code>bash labs/cpu-sharing.sh</code>로 실행합니다. 첫 실행은 Python 이미지를 내려받으므로 인터넷과 시간이 필요합니다. 코드를 외울 필요는 없습니다. 실행한 뒤 두 작업의 seconds만 읽습니다.</p>
+<p>저장소 루트에서는 <code>bash labs/cpu-sharing.sh</code>로 실행합니다. 첫 실행은 Python 이미지를 내려받으므로 인터넷과 시간이 필요합니다. 코드를 외울 필요는 없습니다. 실행하면 <strong>[1/2] CPU 사용 시간 제한 없음</strong>, <strong>[2/2] 내 작업 A만 CPU 25% 제한</strong>이 표시됩니다. 스크립트가 Docker의 실제 한도 설정을 조회해 각 작업의 제한 여부를 출력하고, 마지막에 두 실행의 완료 시간을 한국어 표로 비교합니다. 숫자는 직접 관찰한 결과이며 PC마다 다릅니다.</p>
 
 <h3 id="section-2">2. 기록하기</h3>
 
@@ -61,12 +61,12 @@
   </thead>
   <tbody>
     <tr>
-      <td>unlimited: 둘 다 CPU 시간 한도 없음</td>
+      <td>[1/2] 둘 다 CPU 시간 한도 없음</td>
       <td>직접 기록</td>
       <td>직접 기록</td>
     </tr>
     <tr>
-      <td>limited: A만 CPU 한도 0.25</td>
+      <td>[2/2] A만 CPU 25% 제한</td>
       <td>직접 기록</td>
       <td>직접 기록</td>
     </tr>
