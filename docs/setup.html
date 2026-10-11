@@ -182,6 +182,86 @@ docker run -it --name course-linux \
   ubuntu:24.04 bash
 
 </code></pre>
+<p>### 위 명령을 쉽게 읽어 보기</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>명령 또는 옵션</th>
+      <th>하는 일</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>docker pull ubuntu:24.04</code></td>
+      <td>Ubuntu 24.04 이미지를 내 컴퓨터에 내려받습니다.</td>
+    </tr>
+    <tr>
+      <td><code>docker pull alpine:3.21</code></td>
+      <td>Alpine 3.21 이미지도 미리 내려받습니다.</td>
+    </tr>
+    <tr>
+      <td><code>docker run</code></td>
+      <td>이미지로 새 컨테이너를 만들고 실행합니다.</td>
+    </tr>
+    <tr>
+      <td><code>-it</code></td>
+      <td>컨테이너 안에서 키보드로 명령을 입력하고 결과를 볼 수 있게 합니다.</td>
+    </tr>
+    <tr>
+      <td><code>--name course-linux</code></td>
+      <td>컨테이너 이름을 <code>course-linux</code>로 정합니다. 나중에 이 이름으로 다시 들어갑니다.</td>
+    </tr>
+    <tr>
+      <td><code>--cpus=1</code></td>
+      <td>CPU 사용량을 CPU 1개 분량까지로 제한합니다. CPU 하나를 독점 예약하는 뜻은 아닙니다.</td>
+    </tr>
+    <tr>
+      <td><code>--memory=512m</code></td>
+      <td>메모리 사용 한도를 512MiB로 정합니다. 스왑 한도는 별도 설정입니다.</td>
+    </tr>
+    <tr>
+      <td><code>--mount "type=bind,src=...,dst=..."</code></td>
+      <td>내 컴퓨터의 폴더를 컨테이너에 연결합니다. <code>src</code>는 내 컴퓨터의 경로, <code>dst</code>는 컨테이너에서 사용할 경로입니다.</td>
+    </tr>
+    <tr>
+      <td><code>--workdir /root/linux-server-lab</code></td>
+      <td>컨테이너에서 처음 작업할 폴더를 정합니다.</td>
+    </tr>
+    <tr>
+      <td><code>ubuntu:24.04 bash</code></td>
+      <td>Ubuntu 24.04 이미지로 만든 공간에서 Bash를 실행합니다. Bash는 입력한 명령을 받아 실행하는 셸입니다.</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>여기서 <code>$HOME</code>은 <strong>명령을 입력하는 호스트 터미널의 홈 폴더</strong>입니다. 내 컴퓨터의 <code>$HOME/linux-server-lab</code>과 컨테이너의 <code>/root/linux-server-lab</code>은 연결된 같은 파일을 봅니다. 파일을 복사하는 방식이 아닙니다.</p>
+
+<p>줄 끝의 <code>\</code>는 다음 줄까지 명령을 이어 쓰는 표시입니다. <code>docker pull</code> 두 줄은 각각 별도의 명령이고, <code>docker run</code>부터 마지막 <code>bash</code>까지는 하나의 명령입니다.</p>
+
+<h3 id="docker-pull---">docker pull은 어디에서 이미지를 가져오나요?</h3>
+<p><code>ubuntu:24.04</code>라고만 입력해도 Docker는 기본 이미지 저장소인 <strong>Docker Hub</strong>에서 해당 이미지를 찾습니다. 웹 브라우저로 파일을 찾아 직접 내려받을 필요가 없습니다.</p>
+
+<pre><code class="language-text">내가 docker pull ubuntu:24.04 입력
+    → Docker가 Docker Hub에서 Ubuntu의 24.04 태그를 찾음
+    → 내 컴퓨터에서 사용할 이미지 데이터를 내려받음
+    → 로컬 Docker 저장소에 보관
+
+</code></pre>
+
+<p><code>ubuntu</code>는 이미지 이름, <code>24.04</code>는 사용할 버전 계열을 가리키는 <strong>태그</strong>입니다. 내려받는 중에 여러 진행 줄이 보이는 것은 이미지가 여러 층의 데이터인 <strong>레이어</strong>로 구성되어 있기 때문입니다. 이미 받은 데이터가 있으면 재사용할 수 있습니다.</p>
+
+<p><strong><code>pull</code>은 작업 세트를 내려받는 단계입니다. 내려받기만 해서는 컨테이너가 실행되지 않습니다.</strong> 위 명령에서는 다음의 <code>docker run</code>이 실제 실습 공간을 만들고 실행합니다. 받은 이미지는 <code>docker image ls</code>로 확인할 수 있으며, 로컬 저장공간을 차지합니다.</p>
+
+<p>참고: <a href="https://docs.docker.com/reference/cli/docker/image/pull/">Docker 공식 이미지 다운로드 설명</a>.</p>
+
+<h3 id="alpine--ubuntu---">왜 Alpine 대신 Ubuntu로 리눅스 실습을 하나요?</h3>
+<p><strong>Alpine으로도 실습할 수 있지만, 이 교재의 명령을 같은 방식으로 따라 하기 위해 Ubuntu를 사용합니다.</strong> Ubuntu에서는 Bash와 <code>apt-get</code>을 사용하고, 다음 단계에서 <code>top</code>, <code>free</code> 같은 진단 도구를 설치합니다.</p>
+
+<p>기본 Alpine 이미지는 작고 가벼운 대신 Bash가 없고 <code>sh</code>를 사용합니다. 프로그램 설치 명령도 <code>apt-get</code>이 아니라 <code>apk</code>이며, 기본 명령의 옵션이 일부 다를 수 있습니다. 도구를 추가할 수도 있지만, 처음 배우는 단계에서는 환경을 Ubuntu로 통일하면 덜 헷갈립니다.</p>
+
+<p>비유하면 <strong>Ubuntu는 여러 연습을 할 실습실, Alpine은 짧은 작업에 쓰는 작은 도구 세트</strong>입니다. Ubuntu는 리눅스 기초 실습에, Alpine은 이후 인사 출력·파일 연결 같은 간단한 Docker 실습에 사용합니다. Ubuntu 이미지에도 모든 도구가 들어 있지는 않으므로 아래에서 필요한 도구를 추가합니다.</p>
+
 <p>이제 프롬프트가 <code>root@...</code> 형태로 바뀝니다. <strong>컨테이너 안</strong>으로 들어온 상태입니다. <code>--name</code>은 다시 접속할 컨테이너 이름, <code>-it</code>는 대화형 터미널, <code>--mount</code>는 PC 폴더 연결입니다. 자원 제한은 실습 컨테이너가 과도하게 자원을 사용하는 것을 줄입니다.</p>
 
 <p>이 컨테이너는 개인 실습 환경입니다. 컨테이너 안의 root와 PC의 관리자 권한은 동일한 개념이 아니지만, 연결한 폴더의 파일은 실제로 변경되므로 개인 실습 폴더만 연결합니다. Linux 서버에서는 일반 사용자로 작업하는 방식과 권한을 따로 학습합니다.</p>
