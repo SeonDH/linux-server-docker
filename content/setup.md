@@ -162,8 +162,8 @@ docker start -ai course-linux
 |---|---|
 | 1·3·4·5·6장 자원·Linux 기초·저장공간 | `course-linux` 컨테이너의 Bash |
 | 2·7장 Docker 개념·명령과 파일 연결 | `exit` 후 호스트 Bash |
-| 8장 Linux 오류 실습 A·B·C | `course-linux` 컨테이너의 Bash |
-| 8장의 Docker 오류 실습·6장의 별도 자원 실습 | 호스트 Bash |
+| 8장 Linux 오류 실습 A~H | `course-linux` 컨테이너의 Bash |
+| 8장의 Docker 오류 실습·6장의 docker stats·별도 자원 실습 | 호스트 Bash |
 
 Docker를 조작하는 명령은 호스트에서 실행합니다. 실습 컨테이너에는 Docker를 설치하거나 Docker 소켓을 연결하지 않습니다. 컨테이너 안에서 `docker: command not found`가 나면 `exit`로 돌아가 실행 위치를 확인하세요.
 

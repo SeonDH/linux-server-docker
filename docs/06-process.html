@@ -1,12 +1,12 @@
 <!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>6. 프로세스와 자원 관리 | 리눅스 응용 보충 과정</title><link rel="stylesheet" href="assets/style.css"></head>
-<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a aria-current="page" href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="section">6. 프로세스와 자원 관리</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#section-1">주문서와 진행 중인 작업</a></li><li><a href="#section-2">[실습] 따라 하기 · 기다리는 작업을 찾아 종료하기</a></li><li><a href="#section-3">실행과 관찰을 구분하기</a></li><li><a href="#section-4">공유 서버에서 지킬 세 가지</a></li><li><a href="#section-5">[실습] 반복 연습 · 내 작업 두 개 구분하기</a></li><li><a href="#docker---">[실습] Docker 자원 사용 비교</a></li><li><a href="#section-9">확인 질문</a></li><li><a href="#section-10">이 장의 정리</a></li></ul></details>
+<body><a class="skip" href="#main-content">본문으로 건너뛰기</a><aside><a class="brand" href="index.html">리눅스 응용<br>보충 과정</a><p class="subtitle">핵심 기초 복습과<br>Docker·Singularity 활용</p><nav aria-label="교재 전체 목차"><div class="nav-group">교육 안내</div><a  href="index.html">과정 목차</a><a  href="guide.html">교재 사용 안내</a><a  href="setup.html">0. Docker 설치</a><div class="nav-group">보충 학습</div><a  href="01-resources.html">1. 컴퓨터 자원</a><a  href="02-docker.html">2. Docker 개념</a><a  href="03-basics.html">3. 경로와 권한</a><a  href="04-io.html">4. 파일과 파이프</a><a  href="05-storage.html">5. 저장공간</a><a aria-current="page" href="06-process.html">6. 프로세스와 자원</a><a  href="07-docker-practice.html">7. Docker 파일 연결</a><a  href="08-troubleshooting.html">8. 트러블슈팅</a><a  href="09-singularity.html">9. Singularity 이해</a><div class="nav-group">[실습] 자원 비교</div><a  href="practice-resources.html">[실습] 자원 관찰</a><a  href="practice-cpu-sharing.html">[실습] CPU 공유</a><a  href="practice-memory.html">[실습] 메모리 부족</a><div class="nav-group">참고 자료</div><a  href="glossary.html">핵심 용어</a><a  href="checklist.html">작업 체크리스트</a><a  href="deep-dive.html">[번외] 더 알고 싶을 때</a><a  href="appendix.html">보충 학습 링크</a></nav><a class="old" href="https://seondh.github.io/bio_linux/">기존 바이오 리눅스 교재 ↗</a></aside><main id="main-content"><div class="eyebrow">바이오 리눅스 후속 교육 · 이해와 작은 실습</div><article><h1 id="section">6. 프로세스와 자원 관리</h1><details class="toc"><summary>이 페이지 목차</summary><ul><li><a href="#section-1">주문서와 진행 중인 작업</a></li><li><a href="#section-2">[실습] 따라 하기 · 기다리는 작업을 찾아 종료하기</a></li><li><a href="#section-3">실행과 관찰을 구분하기</a></li><li><a href="#docker-stats">[실습] docker stats로 컨테이너 사용량 보기</a></li><li><a href="#section-7">공유 서버에서 지킬 세 가지</a></li><li><a href="#section-8">[실습] 반복 연습 · 내 작업 두 개 구분하기</a></li><li><a href="#docker---">[실습] Docker 자원 사용 비교</a></li><li><a href="#section-12">확인 질문</a></li><li><a href="#section-13">이 장의 정리</a></li></ul></details>
 
 <blockquote>
   <p><strong>실습 환경:</strong> Linux 명령은 컨테이너, 별도 Docker 실습은 호스트
 <strong>준비:</strong> 0장 완료</p>
 </blockquote>
 
-<p><strong>학습 목표:</strong> 프로그램 파일과 실행 중인 작업은 다릅니다. 내 작업을 찾아 확인하고 종료합니다.</p>
+<p><strong>학습 목표:</strong> 프로그램 파일과 실행 중인 작업을 구분하고, 내 작업의 CPU·메모리 사용량과 한도를 확인합니다. 필요한 작업만 종료합니다.</p>
 
 <h2 id="section-1">주문서와 진행 중인 작업</h2>
 <p>셸 스크립트는 할 일을 적은 주문서처럼 생각하세요. 실행 중인 작업이 프로세스입니다. 같은 주문서로 두 번 시작하면 별도 작업 두 개가 생길 수 있습니다.</p>
@@ -40,7 +40,141 @@ kill -TERM "$lab_pid"
 </code></pre>
 <p>관찰 화면을 닫는 것과 분석 작업을 종료하는 것은 다른 일입니다. Ctrl+C는 보통 현재 전경 작업을 중단하며, Ctrl+Z는 정지시킬 수 있습니다. 상세한 작업 제어는 <a href="deep-dive.html">선택 자료</a>에서 다룹니다.</p>
 
-<h2 id="section-4">공유 서버에서 지킬 세 가지</h2>
+<h2 id="docker-stats">[실습] docker stats로 컨테이너 사용량 보기</h2>
+
+<p><strong>실습 환경: 호스트 Bash의 새 터미널 창.</strong> <code>course-linux</code>에 접속한 기존 창은 그대로 두고, 두 번째 창을 엽니다. Windows는 새 WSL Ubuntu 창, macOS는 새 터미널 창에서 Bash를 사용합니다. 기존 창에서 <code>exit</code>하면 <code>course-linux</code>가 정지하므로 관찰할 때는 접속을 유지합니다.</p>
+
+<p><code>top</code>이 컨테이너 안의 프로그램을 보는 화면이라면, <code>docker stats</code>는 Docker에서 <strong>컨테이너별 CPU·메모리 사용량을 보는 화면</strong>입니다.</p>
+
+<h3 id="section-4">1. 한 번만 확인하기</h3>
+
+<pre><code class="language-bash">docker ps --filter name=course-linux
+docker stats --no-stream course-linux
+
+</code></pre>
+
+<p><code>--no-stream</code>은 현재 값을 한 번 출력하고 끝낸다는 뜻입니다. 컨테이너를 멈추는 옵션은 아닙니다. 먼저 <code>docker ps</code>에 실행 중인 대상이 있는지 확인합니다.</p>
+
+<p>다음 숫자는 <strong>읽는 방법을 설명하기 위한 예시</strong>이며 PC의 정답 값이 아닙니다.</p>
+
+<pre><code class="language-text">NAME           CPU %     MEM USAGE / LIMIT     MEM %
+course-linux   0.12%     35MiB / 512MiB         6.84%
+
+</code></pre>
+
+<table>
+  <thead>
+    <tr>
+      <th>항목</th>
+      <th>쉽게 읽으면</th>
+      <th>예시에서 알 수 있는 것</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>NAME</td>
+      <td>관찰하는 작업 공간의 이름</td>
+      <td>course-linux</td>
+    </tr>
+    <tr>
+      <td>CPU %</td>
+      <td>지금 얼마나 계산하는지</td>
+      <td>기다리는 상태라면 낮을 수 있음</td>
+    </tr>
+    <tr>
+      <td>MEM USAGE / LIMIT</td>
+      <td>지금 사용하는 메모리 / 허용 한도</td>
+      <td>사용 약 35MiB, 한도 512MiB</td>
+    </tr>
+    <tr>
+      <td>MEM %</td>
+      <td>표시된 한도 대비 메모리 사용 비율</td>
+      <td>예시는 약 6.84%</td>
+    </tr>
+    <tr>
+      <td>NET I/O</td>
+      <td>네트워크로 주고받은 데이터량</td>
+      <td>현재 전송 속도와 구분</td>
+    </tr>
+    <tr>
+      <td>BLOCK I/O</td>
+      <td>블록 장치에서 읽고 쓴 데이터량</td>
+      <td>디스크 전체 용량·여유와 구분</td>
+    </tr>
+    <tr>
+      <td>PIDS</td>
+      <td>컨테이너의 프로세스·스레드 수</td>
+      <td>실제 작업의 흐름이 얼마나 있는지</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>처음에는 <strong>NAME, CPU %, MEM USAGE / LIMIT</strong>만 찾아도 충분합니다. 디스크가 얼마나 남았는지는 <code>docker stats</code> 대신 저장할 경로의 <code>df -h</code>로 확인합니다.</p>
+
+<h3 id="section-5">2. 계속 관찰하기</h3>
+
+<pre><code class="language-bash">docker stats course-linux
+
+</code></pre>
+
+<p>화면이 반복해서 갱신됩니다. <strong>Ctrl+C는 stats 관찰만 끝내며 컨테이너를 종료하지 않습니다.</strong> 한 번의 값보다 작업 중 변화를 봅니다.</p>
+
+<p>대상을 지정하지 않은 <code>docker stats</code>는 기본적으로 실행 중인 여러 컨테이너를 보여줍니다. 처음에는 이름을 지정해 내 실습 대상만 확인합니다.</p>
+
+<h3 id="free--h---">3. free -h와 숫자가 다른 이유</h3>
+
+<p>0장에서 <code>course-linux</code>는 <code>--memory=512m</code>으로 만들었습니다. 그런데 컨테이너 안의 <code>free -h</code>에는 7.7Gi처럼 더 큰 메모리가 보일 수 있습니다.</p>
+
+<ul>
+  <li><code>free -h</code>: 컨테이너가 보는 Linux 실행 환경의 메모리 상태입니다. 컨테이너별 제한을 그대로 표시하지 않을 수 있습니다.</li>
+  <li><code>docker stats</code>: 특정 컨테이너의 사용량과 메모리 한도를 확인합니다.</li>
+  <li>작업 관리자·활성 상태 보기: PC 전체와 Docker 실행 환경의 사용량도 포함합니다.</li>
+</ul>
+
+<p>건물 전체 책상 공간과 내 작업에 허용된 책상 공간이 다른 것처럼 <strong>전체 값과 내 한도를 구분</strong>합니다. <code>512m</code>을 지정했다고 항상 512MiB를 사용하거나 미리 전부 차지하는 것은 아닙니다.</p>
+
+<p><code>docker stats</code>의 Linux 메모리 사용량은 일부 캐시를 제외해 표시하므로 다른 화면의 값과 정확히 일치하지 않을 수 있습니다.</p>
+
+<h3 id="cpu-100-pc----">4. CPU 100%는 PC 전체를 다 쓴다는 뜻인가요?</h3>
+
+<p>Linux 컨테이너의 <code>docker stats</code>는 CPU 한 개를 바쁘게 쓰면 대략 100%로 표시할 수 있습니다. 여러 CPU를 사용하면 100%를 넘을 수도 있습니다. Windows 작업 관리자의 PC 전체 CPU 비율과 바로 비교하지 않습니다. 한도 설정과 실제 CPU 사용률도 서로 다른 값입니다.</p>
+
+<p>실제 숫자를 바꾸어 관찰하려면 <a href="practice-resources.html">CPU 한도를 0.25에서 0.5로 바꾸는 실습</a>을 이어서 진행합니다. <a href="practice-cpu-sharing.html">CPU 공유 실습</a>에서는 내 제한이 다른 작업의 완료 시간에 주는 영향을 확인합니다.</p>
+
+<h3 id="section-6">5. 값이 이상하면 먼저 확인하기</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>상황</th>
+      <th>먼저 볼 것</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>대상이 목록에 없음</td>
+      <td>컨테이너 이름, 실행·정지 상태</td>
+    </tr>
+    <tr>
+      <td>CPU가 거의 0%</td>
+      <td>기다리는 작업인지, 작업이 이미 끝났는지</td>
+    </tr>
+    <tr>
+      <td>메모리 한도가 예상과 다름</td>
+      <td>컨테이너를 처음 만들 때 지정한 한도</td>
+    </tr>
+    <tr>
+      <td>작업은 실패했는데 사용량은 낮음</td>
+      <td>지금 값 대신 실패 로그·종료 코드·OOMKilled</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>정지한 컨테이너의 현재 값으로 실패 직전 사용량을 알 수는 없습니다. <a href="08-troubleshooting.html#resource-trouble">8장 자원 문제 진단</a>에서 상태와 로그를 함께 확인합니다.</p>
+
+<p>참고: <a href="https://docs.docker.com/reference/cli/docker/container/stats/">docker stats 공식 안내</a>.</p>
+
+<h2 id="section-7">공유 서버에서 지킬 세 가지</h2>
 <ol>
   <li>작은 입력으로 먼저 성공하는지 확인합니다.</li>
   <li>관리자에게 할당받은 CPU·메모리 범위에서 실행합니다.</li>
@@ -49,10 +183,10 @@ kill -TERM "$lab_pid"
 
 <p>많은 작업을 한꺼번에 시작하면 다른 사용자도 느려질 수 있습니다. CPU가 많이 보인다고 전부 사용해도 되는 것은 아닙니다. 긴 작업은 기관에서 안내한 실행 방식과 스케줄러를 사용합니다.</p>
 
-<h2 id="section-5">[실습] 반복 연습 · 내 작업 두 개 구분하기</h2>
+<h2 id="section-8">[실습] 반복 연습 · 내 작업 두 개 구분하기</h2>
 <p><strong>15~20분 · course-linux의 같은 터미널.</strong></p>
 
-<h3 id="section-6">바꿔 보기</h3>
+<h3 id="section-9">바꿔 보기</h3>
 <p>기다리는 작업 두 개를 만들어 각 PID를 기록합니다. 아무 입력이 없어도 일정 시간이 지나면 스스로 끝납니다.</p>
 
 <pre><code class="language-bash">sleep 600 &amp;
@@ -78,7 +212,7 @@ ps -p "$first_pid","$second_pid" -o pid,command
   <p>정상 종료되면 첫 작업은 사라지고 두 번째 sleep이 남습니다. 변화가 바로 보이지 않으면 잠시 뒤 한 번 확인합니다.</p>
 </details>
 
-<h3 id="section-7">고쳐 보기</h3>
+<h3 id="section-10">고쳐 보기</h3>
 <p>다음은 셸 자신의 PID를 보고 있습니다. “남은 sleep을 확인했다”는 설명이 맞을까요? <strong>이 번호에 kill을 보내지 않습니다.</strong></p>
 
 <pre><code class="language-bash">ps -p "$$" -o pid,command
@@ -98,7 +232,7 @@ ps -p "$first_pid","$second_pid" -o pid,command
   <p>숫자만 보고 종료하지 말고 명령도 확인해야 합니다.</p>
 </details>
 
-<h3 id="section-8">설명하기와 정리</h3>
+<h3 id="section-11">설명하기와 정리</h3>
 <p>짝에게 “같은 sleep인데 작업은 두 개이고 PID도 다르다”는 것을 설명합니다. 이 실습에서 만든 두 번째 작업을 정리합니다.</p>
 
 <pre><code class="language-bash">kill -TERM "$second_pid"
@@ -145,7 +279,7 @@ ps -p "$first_pid","$second_pid" -o pid,command
 <h3 id="memory-limit-demo">메모리 부족 바로가기</h3>
 <p><a href="practice-memory.html">메모리 부족 실습으로 이동</a></p>
 
-<h2 id="section-9">확인 질문</h2>
+<h2 id="section-12">확인 질문</h2>
 <p>kill 명령을 쓰기 전에 무엇을 확인할까요?</p>
 <details><summary>[답지] 해설 보기</summary>
 PID와 명령을 확인해 자신의 실습 작업인지 봅니다. 종료가 필요한지도 판단합니다.
@@ -153,7 +287,7 @@ PID와 명령을 확인해 자신의 실습 작업인지 봅니다. 종료가 �
 
 <p>복습: <a href="https://seondh.github.io/bio_linux/day3/chapter12/">기존 프로세스 관리 교재</a>.</p>
 
-<h2 id="section-10">이 장의 정리</h2>
+<h2 id="section-13">이 장의 정리</h2>
 
 <ul>
   <li>PID와 명령을 확인한 뒤 자신의 작업만 정리한다.</li>

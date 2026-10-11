@@ -13,9 +13,9 @@
 | [3 경로와 권한](03-basics.html) | 파일 주소와 사용 허가 | 경로·실행 권한 확인 |
 | [4 결과와 오류](04-io.html) | 결과 파일만으로 성공을 판단하지 않는다 | 오류 로그 읽기 |
 | [5 저장공간](05-storage.html) | 큰 디스크가 있어도 저장 위치가 중요하다 | df·du 관찰 |
-| [6 내 작업 관리](06-process.html) | 내 작업을 확인하고 종료한다 | sleep의 PID 확인 |
+| [6 내 작업 관리](06-process.html) | 내 작업을 확인하고 종료한다 | PID·docker stats 확인 |
 | [7 파일 연결](07-docker-practice.html) | 컨테이너 결과를 PC에 남긴다 | 줄 수 결과 저장 |
-| [8 오류 해결 연습](08-troubleshooting.html) | 오류 → 확인 → 수정 → 재실행 | Linux·Docker 오류 사례 |
+| [8 오류 해결 연습](08-troubleshooting.html) | 오류 → 확인 → 수정 → 재실행 | Linux·Docker 오류·종합 미션 |
 | [9 Singularity 이해](09-singularity.html) | 다른 컨테이너 도구도 목적은 비슷하다 | 비유로 비교·이론만 |
 
 ## 반복 학습 방법
